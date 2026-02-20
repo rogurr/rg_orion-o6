@@ -1,24 +1,27 @@
 # PLATFORM NOTE:
 # This build needs code that is provided in a monolithic delivery that can not be easily divided into
-# a submodules that reside under this component.  Therefore, the COMMON_DISTRIBUTION_COMPONENTS path
-# is being used to reach outside this component folder and into the common folder.
-COMMON_DISTRIBUTION_COMPONENTS := $(CURDIR)/../common/
+# a submodules that reside under this component.  Therefore, the 'COMMON' path is being used to reach
+# outside this component folder and into the common folder.
 
-SHELL := /bin/bash
+SHELL        := /bin/bash
+COMMON       := $(CURDIR)/../common
+BUILD_OUTPUT ?= $(CURDIR)/Build
+BINS_DIR     ?= $(CURDIR)/Build
+RUST_OUT     := $(BUILD_OUTPUT)/DEBUG_Rust
 
-.PHONY: all
+export GCC5_AARCH64_PREFIX ?= $(CURDIR)/../tools/arm-gnu-toolchain-13.2.Rel1-x86_64-aarch64-none-elf/bin/aarch64-none-elf-
+export WORKSPACE           := $(CURDIR)
+export PACKAGES_PATH       := $(CURDIR)/edk2:$(CURDIR)/platform:$(COMMON)/edk2-platforms-cix-odp:$(COMMON)/edk2-non-osi-cix-odp:$(RUST_OUT)
+export IASL_PREFIX         := $(CURDIR)/tools/acpica/generate/unix/bin/
 
-all:
-	# Build BaseTools if needed
-	test -e edk2/BaseTools/Source/C/bin/VolInfo || $(MAKE) -C edk2/BaseTools
+.PHONY: all PatinaDxeCore_ru
 
-	# Build IASL if needed
-	test -e tools/acpica/generate/unix/bin/iasl || $(MAKE) -C tools/acpica
+# The UEFI build process
+all: PatinaDxeCore_ru
 
-	# Build UEFI firmware
-	export WORKSPACE=$(CURDIR) && \
-	export PACKAGES_PATH=$(CURDIR)/edk2:$(CURDIR)/platform:$(COMMON_DISTRIBUTION_COMPONENTS)/edk2-platforms-cix-odp:$(COMMON_DISTRIBUTION_COMPONENTS)/edk2-non-osi-cix-odp && \
-	export IASL_PREFIX=$(CURDIR)/tools/acpica/generate/unix/bin/ && \
+	$(MAKE) -C edk2/BaseTools
+	$(MAKE) -C tools/acpica
+
 	. edk2/edksetup.sh --reconfig && \
 	build \
 		-a AARCH64 \
@@ -35,4 +38,14 @@ all:
 		-D VARIABLE_TYPE=SPI \
 		-D STANDARD_MM=TRUE \
 		-D SYSTEM_LOADER=common
+
+	mkdir -p $(BINS_DIR)
 	cp $(BUILD_OUTPUT)/DEBUG_GCC5/FV/SKY1_BL33_UEFI.fd $(BINS_DIR)/
+
+# Build targets for each rust module
+PatinaDxeCore_ru:
+	cd platform/Drivers/PatinaDxeCore_ru && cargo build --target-dir $(RUST_OUT)/Drivers/PatinaDxeCore_ru
+
+# Clean target
+clean:
+	rm -rf $(BUILD_OUTPUT)

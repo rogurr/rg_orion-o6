@@ -25,7 +25,7 @@
   SUPPORTED_ARCHITECTURES        = AARCH64
   BUILD_TARGETS                  = DEBUG|RELEASE|NOOPT
   SKUID_IDENTIFIER               = DEFAULT
-  FLASH_DEFINITION               = Platform/Radxa/Orion/$(PLATFORM_NAME)/$(PLATFORM_NAME).fdf
+  FLASH_DEFINITION               = platform/O6.fdf
   PCD_DYNAMIC_AS_DYNAMICEX       = TRUE
 
 !include  Platform/CIX/Sky1/Sky1Define.dsc.inc
@@ -42,6 +42,9 @@
 ##################################################
 # Define override here for evb
 ##################################################
+
+  DEFINE DEBUG_PRINT_ERROR_LEVEL    = 0x800000CF          #### PATINA
+
   DEFINE DTB_UPDATE_ENABLE          = FALSE
   DEFINE SMBIOS_ENABLE              = FALSE
   DEFINE ACPI_ENABLE                = FALSE
@@ -134,7 +137,7 @@
 
   DEFINE LINUX_ACPI_CONFIG_OVERRIDE = TRUE
 
-!include Platform/CIX/Sky1/Sky1Common.dsc.inc
+!include platform/OVERRIDE/Platform/CIX/Sky1/Sky1Common.dsc.inc    #### PATINA
 !include Platform/Radxa/RadxaCommon.dsc.inc
 !include Platform/Radxa/Platforms/CIX/Sky1/Sky1Common.dsc.inc
 !include NetworkPkg/NetworkDefines.dsc.inc
@@ -147,9 +150,9 @@
 ################################################################################
 
 [LibraryClasses.common]
-  PlatformConfigParamsHookLib|Platform/Radxa/Orion/O6/Library/PlatformConfigParamsHookLib/PlatformConfigParamsHookLib.inf
-  PlatformEnvHookLib|Platform/Radxa/Orion/O6/Library/PlatformEnvHookLib/PlatformEnvHookLib.inf
-  RealTimeClockLib|Platform/Radxa/Orion/O6/Library/Hym8563RealTimeClockLib/Hym8563RealTimeClockLib.inf
+  PlatformConfigParamsHookLib|platform/Library/PlatformConfigParamsHookLib/PlatformConfigParamsHookLib.inf
+  PlatformEnvHookLib|platform/Library/PlatformEnvHookLib/PlatformEnvHookLib.inf
+  RealTimeClockLib|platform/Library/Hym8563RealTimeClockLib/Hym8563RealTimeClockLib.inf
 
   PlatformBootHookLib|Platform/CIX/Sky1/Merak/Library/PlatformBootHookLib/PlatformBootHookLib.inf
 
@@ -197,13 +200,13 @@
 !endif
   Platform/CIX/Sky1/Drivers/DtbUpdateDxeSi/DtbUpdateDxe.inf
 !if $(ACPI_ENABLE) == TRUE
-  Platform/Radxa/Orion/O6/Drivers/AcpiPlatfomTables/AcpiPlatfomTables.inf
-  Platform/Radxa/Orion/O6//Drivers/AcpiPlatformDxe/AcpiPlatformDxe.inf
+  platform/Drivers/AcpiPlatfomTables/AcpiPlatfomTables.inf
+  platform/Drivers/AcpiPlatformDxe/AcpiPlatformDxe.inf
 !endif
 !if $(SMBIOS_ENABLE) == TRUE
-  Platform/Radxa/Orion/O6/Drivers/PlatformSmbios/PlatformSmbios.inf
+  platform/Drivers/PlatformSmbios/PlatformSmbios.inf
 !endif
-  Platform/Radxa/Orion/O6/DeviceTree/DeviceTree.inf
+  platform/bins/DeviceTree/DeviceTree.inf
 
 ###################################################################################################
 # BuildOptions Section - Define the module specific tool chain flags that should be used as
