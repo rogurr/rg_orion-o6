@@ -25,7 +25,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Compile repository
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
