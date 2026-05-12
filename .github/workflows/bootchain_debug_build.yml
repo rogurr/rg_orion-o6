@@ -49,8 +49,11 @@ jobs:
     container:
       # FORK TESTING: rogurr namespace. Revert to opendevicepartnership before merging to upstream.
       image: ghcr.io/rogurr/odp-platform-radxa-orion-o6/devcontainer:latest
-      # Run as the container's non-root user so build outputs are owned by that user; no chown needed.
-      options: --user 1000:1000
+      # Run as root inside the container. The runner mounts /__w (workspace) and /__w/_temp
+      # (file-command channel) as root-owned; if we run as the image's default `vscode` user
+      # (UID 1000), actions/checkout fails with EACCES on /__w/_temp/_runner_file_commands/...
+      # Outputs end up root-owned inside the ephemeral runner workspace, which is harmless.
+      options: --user root
     steps:
       - name: Clone Repository
         uses: actions/checkout@v6

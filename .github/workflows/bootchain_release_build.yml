@@ -48,7 +48,9 @@ jobs:
     container:
       # FORK TESTING: rogurr namespace. Revert to opendevicepartnership before merging to upstream.
       image: ghcr.io/rogurr/odp-platform-radxa-orion-o6/devcontainer:latest
-      options: --user 1000:1000
+      # Run as root; see bootchain_debug_build.yml for the rationale (actions/checkout needs
+      # write access to /__w/_temp, which is mounted root-owned by the runner).
+      options: --user root
     steps:
       - name: Clone Repository
         uses: actions/checkout@v6
