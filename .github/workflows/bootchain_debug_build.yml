@@ -1,5 +1,9 @@
 # Builds the ODP debug bootchain for the Radxa Orion O6 platform inside the published devcontainer image.
 #
+# Every step in this job runs INSIDE the devcontainer image via `jobs.<id>.container:`. The image is the
+# single source of truth for build, package, and publish tooling; CI uses exactly the same environment a
+# local user would.
+#
 # Behavior:
 #   - pull_request:               build only, output discarded.
 #   - workflow_dispatch on the upstream repo's `main` branch:
@@ -19,9 +23,8 @@ permissions:
 env:
   # FORK TESTING: all coordinates point at rogurr's personal namespace.
   # Revert to OpenDevicePartnership equivalents before merging to upstream.
-  DEVCONTAINER_IMAGE: "ghcr.io/rogurr/odp-platform-radxa-orion-o6/devcontainer:latest"
-  PACKAGE_ID:         "Rogurr.OrionO6.SpiNorDebug"
-  UPSTREAM_REPO:      "rogurr/rg_orion-o6"
+  PACKAGE_ID:    "Rogurr.OrionO6.SpiNorDebug"
+  UPSTREAM_REPO: "rogurr/rg_orion-o6"
 
 on:
   pull_request:
@@ -43,40 +46,26 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: Build Orion O6 debug bootchain
-    outputs:
-      stage_dir: ${{ steps.stage.outputs.dir }}
+    container:
+      # FORK TESTING: rogurr namespace. Revert to opendevicepartnership before merging to upstream.
+      image: ghcr.io/rogurr/odp-platform-radxa-orion-o6/devcontainer:latest
+      # Run as the container's non-root user so build outputs are owned by that user; no chown needed.
+      options: --user 1000:1000
     steps:
       - name: Clone Repository
         uses: actions/checkout@v6
         with:
           submodules: recursive
 
-      - name: Pull Container
-        run: docker pull "${{ env.DEVCONTAINER_IMAGE }}"
-
-      - name: Update Workspace Ownership
-        run: |
-          docker run --rm --user root \
-            -v "${{ github.workspace }}:/workspace" \
-            "${{ env.DEVCONTAINER_IMAGE }}" \
-            chown -R 1000:1000 /workspace
-
       - name: Build Debug Firmware
-        run: |
-          docker run --rm \
-            -w /workspace \
-            -v "${{ github.workspace }}:/workspace" \
-            "${{ env.DEVCONTAINER_IMAGE }}" \
-            make all
+        run: make all
 
       # The remaining steps only run for workflow_dispatch.
       - name: Stage binary output
         if: github.event_name == 'workflow_dispatch'
-        id: stage
         run: |
           mkdir -p staging
           cp -r build/postbuild/bootchain/. staging/
-          echo "dir=staging" >> "$GITHUB_OUTPUT"
           ls -la staging
 
       # ----- Path A: ephemeral artifact for forks / non-main branches -----

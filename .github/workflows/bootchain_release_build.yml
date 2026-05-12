@@ -1,5 +1,9 @@
 # Builds the ODP release bootchain for the Radxa Orion O6 platform inside the published devcontainer image.
 #
+# Every step in this job runs INSIDE the devcontainer image via `jobs.<id>.container:`. The image is the
+# single source of truth for build, package, and publish tooling; CI uses exactly the same environment a
+# local user would.
+#
 # Behavior mirrors bootchain_debug_build.yml; see that file for the full description.
 #
 # NOTE: A distinct release build target is not yet wired into the root Makefile. For this iteration this
@@ -18,9 +22,8 @@ permissions:
 env:
   # FORK TESTING: all coordinates point at rogurr's personal namespace.
   # Revert to OpenDevicePartnership equivalents before merging to upstream.
-  DEVCONTAINER_IMAGE: "ghcr.io/rogurr/odp-platform-radxa-orion-o6/devcontainer:latest"
-  PACKAGE_ID:         "Rogurr.OrionO6.SpiNorRelease"
-  UPSTREAM_REPO:      "rogurr/rg_orion-o6"
+  PACKAGE_ID:    "Rogurr.OrionO6.SpiNorRelease"
+  UPSTREAM_REPO: "rogurr/rg_orion-o6"
 
 on:
   pull_request:
@@ -42,30 +45,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: Build Orion O6 release bootchain
+    container:
+      # FORK TESTING: rogurr namespace. Revert to opendevicepartnership before merging to upstream.
+      image: ghcr.io/rogurr/odp-platform-radxa-orion-o6/devcontainer:latest
+      options: --user 1000:1000
     steps:
       - name: Clone Repository
         uses: actions/checkout@v6
         with:
           submodules: recursive
 
-      - name: Pull Container
-        run: docker pull "${{ env.DEVCONTAINER_IMAGE }}"
-
-      - name: Update Workspace Ownership
-        run: |
-          docker run --rm --user root \
-            -v "${{ github.workspace }}:/workspace" \
-            "${{ env.DEVCONTAINER_IMAGE }}" \
-            chown -R 1000:1000 /workspace
-
       - name: Build Release Firmware
         # TODO: switch to a real release target when the Makefile supports it.
-        run: |
-          docker run --rm \
-            -w /workspace \
-            -v "${{ github.workspace }}:/workspace" \
-            "${{ env.DEVCONTAINER_IMAGE }}" \
-            make all
+        run: make all
 
       - name: Stage binary output
         if: github.event_name == 'workflow_dispatch'
