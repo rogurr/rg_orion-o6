@@ -10,6 +10,11 @@
 #   - workflow_dispatch elsewhere (any branch, or any fork):
 #                                 build, then upload the WIM as a workflow artifact (7-day retention).
 #
+# TEMPORARY: push to main is also enabled as a trigger (no path filters) and the publish path is
+# unblocked for push events, so the full build+publish flow can be tested in the fork without
+# requiring a workflow_dispatch. Remove the push trigger and revert the event_name conditions
+# before merging to upstream.
+#
 # SPDX-License-Identifier: MIT
 #
 # =====================================================================================================================
@@ -49,6 +54,8 @@ env:
   UPSTREAM_REPO: "rogurr/rg_orion-o6"
 
 on:
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
     paths:
@@ -88,9 +95,9 @@ jobs:
             Dismount-DiskImage -ImagePath $mount.ImagePath
           }
 
-      # ----- workflow_dispatch only: stage + publish -----
+      # ----- not pull_request only: stage + publish -----
       - name: Stage WIM with build date
-        if: github.event_name == 'workflow_dispatch'
+        if: github.event_name != 'pull_request'
         shell: pwsh
         run: |
           $date = (Get-Date).ToUniversalTime().ToString("yyyyMMdd")
@@ -100,7 +107,7 @@ jobs:
 
       - name: Upload ephemeral artifact
         if: >
-          github.event_name == 'workflow_dispatch' &&
+          github.event_name != 'pull_request' &&
           !(github.repository == env.UPSTREAM_REPO && github.ref == 'refs/heads/main')
         uses: actions/upload-artifact@v7
         with:
@@ -111,7 +118,7 @@ jobs:
 
       - name: Compute NuGet version
         if: >
-          github.event_name == 'workflow_dispatch' &&
+          github.event_name != 'pull_request' &&
           github.repository == env.UPSTREAM_REPO &&
           github.ref == 'refs/heads/main'
         id: version

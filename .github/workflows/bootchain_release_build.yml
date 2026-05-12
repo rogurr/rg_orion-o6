@@ -10,6 +10,11 @@
 # workflow runs the same `make all` target as the debug build. When a release flag is added, update the
 # Build step.
 #
+# TEMPORARY: push to main is also enabled as a trigger (no path filters) and the publish path is
+# unblocked for push events, so the full build+publish flow can be tested in the fork without
+# requiring a workflow_dispatch. Remove the push trigger and revert the event_name conditions
+# before merging to upstream.
+#
 # SPDX-License-Identifier: MIT
 #
 
@@ -26,6 +31,8 @@ env:
   UPSTREAM_REPO: "rogurr/rg_orion-o6"
 
 on:
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
     paths-ignore:
@@ -66,7 +73,7 @@ jobs:
         run: make all
 
       - name: Stage binary output
-        if: github.event_name == 'workflow_dispatch'
+        if: github.event_name != 'pull_request'
         run: |
           mkdir -p staging
           cp -r build/postbuild/bootchain/. staging/
@@ -74,7 +81,7 @@ jobs:
 
       - name: Upload ephemeral artifact
         if: >
-          github.event_name == 'workflow_dispatch' &&
+          github.event_name != 'pull_request' &&
           !(github.repository == env.UPSTREAM_REPO && github.ref == 'refs/heads/main')
         uses: actions/upload-artifact@v7
         with:
@@ -85,7 +92,7 @@ jobs:
 
       - name: Compute NuGet version
         if: >
-          github.event_name == 'workflow_dispatch' &&
+          github.event_name != 'pull_request' &&
           github.repository == env.UPSTREAM_REPO &&
           github.ref == 'refs/heads/main'
         id: version

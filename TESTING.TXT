@@ -1,0 +1,2 @@
+This file exists solely to trigger CI workflows on push to main.
+It should be deleted before merging to the upstream repository.

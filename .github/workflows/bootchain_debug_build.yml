@@ -11,6 +11,11 @@
 #   - workflow_dispatch elsewhere (any branch, or any fork):
 #                                 build, then upload the binary as a workflow artifact (7-day retention).
 #
+# TEMPORARY: push to main is also enabled as a trigger (no path filters) and the publish path is
+# unblocked for push events, so the full build+publish flow can be tested in the fork without
+# requiring a workflow_dispatch. Remove the push trigger and revert the event_name conditions
+# before merging to upstream.
+#
 # SPDX-License-Identifier: MIT
 #
 
@@ -27,6 +32,8 @@ env:
   UPSTREAM_REPO: "rogurr/rg_orion-o6"
 
 on:
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
     paths-ignore:
@@ -68,9 +75,9 @@ jobs:
       - name: Build Debug Firmware
         run: make all
 
-      # The remaining steps only run for workflow_dispatch.
+      # The remaining steps only run when not triggered by a pull_request.
       - name: Stage binary output
-        if: github.event_name == 'workflow_dispatch'
+        if: github.event_name != 'pull_request'
         run: |
           mkdir -p staging
           cp -r build/postbuild/bootchain/. staging/
@@ -79,7 +86,7 @@ jobs:
       # ----- Path A: ephemeral artifact for forks / non-main branches -----
       - name: Upload ephemeral artifact
         if: >
-          github.event_name == 'workflow_dispatch' &&
+          github.event_name != 'pull_request' &&
           !(github.repository == env.UPSTREAM_REPO && github.ref == 'refs/heads/main')
         uses: actions/upload-artifact@v7
         with:
@@ -91,7 +98,7 @@ jobs:
       # ----- Path B: NuGet publish from upstream main -----
       - name: Compute NuGet version
         if: >
-          github.event_name == 'workflow_dispatch' &&
+          github.event_name != 'pull_request' &&
           github.repository == env.UPSTREAM_REPO &&
           github.ref == 'refs/heads/main'
         id: version

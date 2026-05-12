@@ -9,8 +9,13 @@ name: test
 permissions:
   contents: read
 
+# TEMPORARY: push to main is also enabled so the test workflow runs on every commit to main
+# in the fork, matching pull_request behavior. Remove before merging to upstream.
+#
 # Trigger the workflow on pull requests to the main branch and allow manual triggering
 on:
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
