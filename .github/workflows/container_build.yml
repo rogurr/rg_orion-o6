@@ -51,12 +51,14 @@ jobs:
         run: echo "tag=$(date -u +%Y.%m.%d)" >> "$GITHUB_OUTPUT"
 
       - name: Build container image
+        # FORK TESTING: image namespace points at rogurr's personal GHCR namespace.
+        # Revert to ghcr.io/opendevicepartnership/... before merging to upstream.
         run: |
           docker build \
             -f .devcontainer/Dockerfile \
-            -t "ghcr.io/opendevicepartnership/odp-platform-radxa-orion-o6/devcontainer:latest" \
-            -t "ghcr.io/opendevicepartnership/odp-platform-radxa-orion-o6/devcontainer:${{ steps.date.outputs.tag }}" \
-            -t "ghcr.io/opendevicepartnership/odp-platform-radxa-orion-o6/devcontainer:${{ github.sha }}" \
+            -t "ghcr.io/rogurr/odp-platform-radxa-orion-o6/devcontainer:latest" \
+            -t "ghcr.io/rogurr/odp-platform-radxa-orion-o6/devcontainer:${{ steps.date.outputs.tag }}" \
+            -t "ghcr.io/rogurr/odp-platform-radxa-orion-o6/devcontainer:${{ github.sha }}" \
             .
 
       - name: Push container image
@@ -64,6 +66,6 @@ jobs:
         # write to GHCR and PRs in general should not mutate the published tag.
         if: github.event_name != 'pull_request'
         run: |
-          docker push "ghcr.io/opendevicepartnership/odp-platform-radxa-orion-o6/devcontainer:latest"
-          docker push "ghcr.io/opendevicepartnership/odp-platform-radxa-orion-o6/devcontainer:${{ steps.date.outputs.tag }}"
-          docker push "ghcr.io/opendevicepartnership/odp-platform-radxa-orion-o6/devcontainer:${{ github.sha }}"
+          docker push "ghcr.io/rogurr/odp-platform-radxa-orion-o6/devcontainer:latest"
+          docker push "ghcr.io/rogurr/odp-platform-radxa-orion-o6/devcontainer:${{ steps.date.outputs.tag }}"
+          docker push "ghcr.io/rogurr/odp-platform-radxa-orion-o6/devcontainer:${{ github.sha }}"

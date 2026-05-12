@@ -1,40 +1,49 @@
-# Builds and publishes a dated release set for the Radxa Orion O6 platform.
+# Bundles previously-published artifacts into a single dated GitHub Release for the Radxa Orion O6 platform.
 #
-# Manually dispatched. Takes a specific git commit as input; everything in the release is built from
-# exactly that source tree so a release is reproducible from a single SHA.
+# This workflow does NOT build anything. It consumes:
+#   - The devcontainer image from GHCR (just records the pinned tag in the release notes).
+#   - The three NuGet packages previously published by their per-artifact workflows from upstream `main`.
 #
-# Pipeline:
-#   1. prepare         - Compute the dated release tag (ODP-Orion-O6-YYYY.MM.DD with optional a/b/c suffix
-#                        when multiple releases are cut on the same UTC day).
-#   2. build-container - Build the devcontainer image from the input commit and push it to GHCR with the
-#                        dated release tag. Downstream firmware jobs pin to this exact tag for reproducibility.
-#   3. build-debug     - Inside the dated container, build the debug bootchain. Upload artifact.
-#   4. build-release   - Inside the dated container, build the release bootchain. Upload artifact.
-#   5. build-os        - On a Windows runner, build the OS WIM image (does not use the container). Upload artifact.
-#   6. publish         - Download all three binary artifacts, create a GitHub Release named with the dated tag,
-#                        and attach the binaries as release assets.
+# Each version input may be set to "latest" to resolve the most recent published version, or pinned to a
+# specific version (e.g. "2026.5.12.1") for reproducibility. Whatever version is actually used is recorded
+# in the release notes so the manifest is auditable after the fact.
 #
-# NOTE: NuGet packaging of the three binaries is intentionally NOT implemented in this iteration. The release
-# delivers the binaries as Release assets (browser-downloadable). Add a NuGet pack/push job before `publish`
-# (or in parallel with it) when the .nuspec scaffolding for each artifact is ready.
+# Output: one GitHub Release named "ODP-Orion-O6-YYYY.MM.DD[a-z]?" with the three binaries attached as
+# release assets and the container coordinates documented in the notes.
 #
 # SPDX-License-Identifier: MIT
 #
 
 name: release-publish
 
-# contents:write   -> create the git tag and the GitHub Release
-# packages:write   -> push the dated container image to GHCR
+# contents:write -> create the git tag and the GitHub Release
+# packages:read  -> read NuGet/GHCR package versions and download nupkg files
 permissions:
   contents: write
-  packages: write
+  packages: read
 
 on:
   workflow_dispatch:
     inputs:
-      commit:
-        description: 'Full git commit SHA to build the release from'
+      container_version:
+        description: 'GHCR tag for the devcontainer image, or "latest"'
         required: true
+        default: 'latest'
+        type: string
+      bootchain_debug_version:
+        description: 'NuGet version for Rogurr.OrionO6.SpiNorDebug, or "latest"'
+        required: true
+        default: 'latest'
+        type: string
+      bootchain_release_version:
+        description: 'NuGet version for Rogurr.OrionO6.SpiNorRelease, or "latest"'
+        required: true
+        default: 'latest'
+        type: string
+      os_image_version:
+        description: 'NuGet version for Rogurr.OrionO6.OsImage, or "latest"'
+        required: true
+        default: 'latest'
         type: string
 
 concurrency:
@@ -43,33 +52,71 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  IMAGE_REPO: "ghcr.io/opendevicepartnership/odp-platform-radxa-orion-o6/devcontainer"
+  # FORK TESTING: all coordinates point at rogurr's personal namespace.
+  # Revert to opendevicepartnership equivalents before merging to upstream.
+  OWNER:               "rogurr"
+  OWNER_KIND:          "users"   # "users" for personal accounts, "orgs" for org accounts
+  CONTAINER_IMAGE:     "ghcr.io/rogurr/odp-platform-radxa-orion-o6/devcontainer"
+  PKG_DEBUG:           "Rogurr.OrionO6.SpiNorDebug"
+  PKG_RELEASE:         "Rogurr.OrionO6.SpiNorRelease"
+  PKG_OS:              "Rogurr.OrionO6.OsImage"
+  NUGET_FEED:          "https://nuget.pkg.github.com/rogurr/index.json"
 
 jobs:
-  # ---------------------------------------------------------------------------------------------------------
-  # Determine the dated release tag, including an a/b/c/... suffix when multiple releases land on the same UTC day.
-  # ---------------------------------------------------------------------------------------------------------
-  prepare:
+  publish:
     runs-on: ubuntu-latest
-    name: Compute release tag
-    outputs:
-      release_tag: ${{ steps.compute.outputs.release_tag }}
-      image_ref:   ${{ steps.compute.outputs.image_ref }}
+    name: Bundle dated release
     steps:
-      - name: Compute dated release tag
-        id: compute
+      - name: Clone repository
+        uses: actions/checkout@v6
+
+      # ----------------------------------------------------------------------------------------
+      # Resolve "latest" inputs to concrete versions and compute the dated release tag.
+      # ----------------------------------------------------------------------------------------
+      - name: Resolve manifest
+        id: manifest
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REPO:  ${{ github.repository }}
+          IN_CONTAINER: ${{ inputs.container_version }}
+          IN_DEBUG:     ${{ inputs.bootchain_debug_version }}
+          IN_RELEASE:   ${{ inputs.bootchain_release_version }}
+          IN_OS:        ${{ inputs.os_image_version }}
         run: |
           set -euo pipefail
-          base="ODP-Orion-O6-$(date -u +%Y.%m.%d)"
 
-          # Count existing releases that match today's base tag (with or without an a-z suffix).
-          # Up to 200 releases scanned; far more than expected per UTC day.
+          # ---- Resolve a NuGet package "latest" to its newest version, or echo back the pin.
+          resolve_nuget () {
+            local pkg="$1"
+            local req="$2"
+            if [ "$req" != "latest" ]; then
+              echo "$req"
+              return
+            fi
+            gh api -H "Accept: application/vnd.github+json" \
+                   "/${OWNER_KIND}/${OWNER}/packages/nuget/${pkg}/versions" \
+                   --jq '.[0].name'
+          }
+
+          # ---- Resolve a GHCR tag "latest" to a more specific tag (we just keep the literal "latest"
+          # ---- for the container; pinning to a digest is overkill for the release notes use case).
+          resolve_container () {
+            local req="$1"
+            if [ "$req" = "latest" ]; then
+              echo "latest"
+            else
+              echo "$req"
+            fi
+          }
+
+          container_ver=$(resolve_container "${IN_CONTAINER}")
+          debug_ver=$(resolve_nuget   "${PKG_DEBUG}"   "${IN_DEBUG}")
+          release_ver=$(resolve_nuget "${PKG_RELEASE}" "${IN_RELEASE}")
+          os_ver=$(resolve_nuget      "${PKG_OS}"      "${IN_OS}")
+
+          # ---- Compute the dated release tag, with a/b/c suffix for same-UTC-day re-cuts.
+          base="ODP-Orion-O6-$(date -u +%Y.%m.%d)"
           existing=$(gh release list --limit 200 --json tagName --jq '.[].tagName' \
                        | grep -cE "^${base}[a-z]?$" || true)
-
           letters=(a b c d e f g h i j k l m n o p q r s t u v w x y z)
           if [ "$existing" -eq 0 ]; then
             release_tag="${base}"
@@ -82,248 +129,108 @@ jobs:
             release_tag="${base}${letters[$idx]}"
           fi
 
-          image_ref="${IMAGE_REPO}:${release_tag}"
-          echo "release_tag=${release_tag}" >> "$GITHUB_OUTPUT"
-          echo "image_ref=${image_ref}"     >> "$GITHUB_OUTPUT"
-          echo "Resolved release tag: ${release_tag}"
-          echo "Resolved image ref:   ${image_ref}"
+          {
+            echo "release_tag=${release_tag}"
+            echo "container_version=${container_ver}"
+            echo "debug_version=${debug_ver}"
+            echo "release_version=${release_ver}"
+            echo "os_version=${os_ver}"
+          } >> "$GITHUB_OUTPUT"
 
-  # ---------------------------------------------------------------------------------------------------------
-  # Build the devcontainer image from the input commit and push it under the dated release tag.
-  # Downstream firmware jobs pull this exact tag so the entire release is built against a single, immutable image.
-  # ---------------------------------------------------------------------------------------------------------
-  build-container:
-    runs-on: ubuntu-latest
-    needs: prepare
-    name: Build & publish dated devcontainer
-    steps:
-      - name: Clone Repository at input commit
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ inputs.commit }}
+          echo "Resolved manifest:"
+          echo "  release_tag       = ${release_tag}"
+          echo "  container         = ${CONTAINER_IMAGE}:${container_ver}"
+          echo "  bootchain-debug   = ${PKG_DEBUG}@${debug_ver}"
+          echo "  bootchain-release = ${PKG_RELEASE}@${release_ver}"
+          echo "  os-image          = ${PKG_OS}@${os_ver}"
 
-      - name: Log in to GitHub Container Registry
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" \
-            | docker login "ghcr.io" -u "${{ github.actor }}" --password-stdin
-
-      - name: Build container image
-        run: |
-          docker build \
-            -f .devcontainer/Dockerfile \
-            -t "${{ needs.prepare.outputs.image_ref }}" \
-            .
-
-      - name: Push container image
-        run: docker push "${{ needs.prepare.outputs.image_ref }}"
-
-  # ---------------------------------------------------------------------------------------------------------
-  # Build the debug bootchain inside the dated container image.
-  # ---------------------------------------------------------------------------------------------------------
-  build-debug:
-    runs-on: ubuntu-latest
-    needs: [prepare, build-container]
-    name: Build debug bootchain
-    steps:
-      - name: Clone Repository at input commit
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ inputs.commit }}
-          submodules: recursive
-
-      - name: Log in to GitHub Container Registry
-        # Required because the dated tag is freshly pushed and may not yet be public-anonymously-pullable.
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" \
-            | docker login "ghcr.io" -u "${{ github.actor }}" --password-stdin
-
-      - name: Pull dated container
-        run: docker pull "${{ needs.prepare.outputs.image_ref }}"
-
-      - name: Update Workspace Ownership
-        run: |
-          docker run --rm --user root \
-            -v "${{ github.workspace }}:/workspace" \
-            "${{ needs.prepare.outputs.image_ref }}" \
-            chown -R 1000:1000 /workspace
-
-      - name: Build Debug Bootchain
-        run: |
-          docker run --rm \
-            -w /workspace \
-            -v "${{ github.workspace }}:/workspace" \
-            "${{ needs.prepare.outputs.image_ref }}" \
-            make all
-
-      - name: Stage debug binary
-        # Collect the bootchain output. The exact filename is platform-dependent; staging the whole
-        # build/postbuild/bootchain tree lets the publish job pick the right file regardless.
-        run: |
-          mkdir -p staging/debug
-          cp -r build/postbuild/bootchain/. staging/debug/
-
-      - name: Upload debug bootchain artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: bootchain-debug
-          path: staging/debug/**
-          if-no-files-found: error
-
-  # ---------------------------------------------------------------------------------------------------------
-  # Build the release bootchain inside the dated container image.
-  # TODO: switch to a real release target when the Makefile supports it.
-  # ---------------------------------------------------------------------------------------------------------
-  build-release:
-    runs-on: ubuntu-latest
-    needs: [prepare, build-container]
-    name: Build release bootchain
-    steps:
-      - name: Clone Repository at input commit
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ inputs.commit }}
-          submodules: recursive
-
-      - name: Log in to GitHub Container Registry
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" \
-            | docker login "ghcr.io" -u "${{ github.actor }}" --password-stdin
-
-      - name: Pull dated container
-        run: docker pull "${{ needs.prepare.outputs.image_ref }}"
-
-      - name: Update Workspace Ownership
-        run: |
-          docker run --rm --user root \
-            -v "${{ github.workspace }}:/workspace" \
-            "${{ needs.prepare.outputs.image_ref }}" \
-            chown -R 1000:1000 /workspace
-
-      - name: Build Release Bootchain
-        # TODO: pass a release flag once the Makefile differentiates targets.
-        run: |
-          docker run --rm \
-            -w /workspace \
-            -v "${{ github.workspace }}:/workspace" \
-            "${{ needs.prepare.outputs.image_ref }}" \
-            make all
-
-      - name: Stage release binary
-        run: |
-          mkdir -p staging/release
-          cp -r build/postbuild/bootchain/. staging/release/
-
-      - name: Upload release bootchain artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: bootchain-release
-          path: staging/release/**
-          if-no-files-found: error
-
-  # ---------------------------------------------------------------------------------------------------------
-  # Build the OS WIM image on a Windows runner. Mirrors os_build.yml but pinned to the input commit and
-  # named with the dated release tag so the asset uploaded to the Release is unambiguous.
-  # ---------------------------------------------------------------------------------------------------------
-  build-os:
-    runs-on: windows-latest
-    needs: prepare
-    name: Build Validation OS WIM
-    defaults:
-      run:
-        working-directory: postbuild/os
-    steps:
-      - name: Clone Repository at input commit
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ inputs.commit }}
-
-      - name: Download Validation OS ISO
-        shell: pwsh
-        run: |
-          Invoke-WebRequest -Uri "https://aka.ms/DownloadValidationOS_arm64" -OutFile ValidationOS.iso
-
-      - name: Build WIM
-        shell: pwsh
-        run: |
-          $mount = Mount-DiskImage -ImagePath (Resolve-Path ValidationOS.iso).Path -PassThru
-          $drive = ($mount | Get-Volume).DriveLetter
-          try {
-            cmd /c "${drive}:\GenImage\GenImage.cmd -PackagesList:O6_config.pkg -PackagePath:${drive}:\cabs -ImagePath:${drive}:\ -RegistryImport:O6_policy.reg -OutPath:build -wim -NoWait"
-            if ($LASTEXITCODE -ne 0) { throw "GenImage.cmd failed with exit code $LASTEXITCODE" }
-          } finally {
-            Dismount-DiskImage -ImagePath $mount.ImagePath
-          }
-
-      - name: Rename WIM with release tag
-        shell: pwsh
+      # ----------------------------------------------------------------------------------------
+      # Download each NuGet package's contained payload files. NuGet packages are zips; the
+      # binary lives under content/ inside the .nupkg.
+      # ----------------------------------------------------------------------------------------
+      - name: Download NuGet payloads
         env:
-          RELEASE_TAG: ${{ needs.prepare.outputs.release_tag }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEBUG_VER:   ${{ steps.manifest.outputs.debug_version }}
+          RELEASE_VER: ${{ steps.manifest.outputs.release_version }}
+          OS_VER:      ${{ steps.manifest.outputs.os_version }}
         run: |
-          Rename-Item -Path build/ValidationOS-1.wim -NewName "${env:RELEASE_TAG}-ValidationOS.wim"
+          set -euo pipefail
+          mkdir -p assets
+          # NuGet v3 flat container URL serves the raw .nupkg by lower-cased package id + version.
+          fetch_nupkg () {
+            local pkg="$1"  # original-case package id
+            local ver="$2"
+            local lower
+            lower=$(echo "$pkg" | tr '[:upper:]' '[:lower:]')
+            local url="https://nuget.pkg.github.com/${OWNER}/download/${lower}/${ver}/${lower}.${ver}.nupkg"
+            local out="downloads/${pkg}.${ver}.nupkg"
+            mkdir -p downloads "extracted/${pkg}"
+            echo "Fetching ${pkg}@${ver}"
+            curl -fsSL -H "Authorization: Bearer ${GH_TOKEN}" -o "${out}" "${url}"
+            unzip -q -o "${out}" -d "extracted/${pkg}"
+            # Copy every payload file in content/ into the flat assets directory, prefixing with the
+            # package id + version so the source of each asset is unambiguous on the release page.
+            if [ -d "extracted/${pkg}/content" ]; then
+              find "extracted/${pkg}/content" -type f -print0 \
+                | while IFS= read -r -d '' f; do
+                    base="${pkg}-${ver}-$(basename "$f")"
+                    cp "$f" "assets/${base}"
+                  done
+            fi
+          }
+          fetch_nupkg "${PKG_DEBUG}"   "${DEBUG_VER}"
+          fetch_nupkg "${PKG_RELEASE}" "${RELEASE_VER}"
+          fetch_nupkg "${PKG_OS}"      "${OS_VER}"
+          ls -la assets
 
-      - name: Upload OS WIM artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: os-image
-          path: postbuild/os/build/*-ValidationOS.wim
-          if-no-files-found: error
-
-  # ---------------------------------------------------------------------------------------------------------
-  # Gather all binary artifacts and publish a single GitHub Release named with the dated tag.
-  # The container is NOT attached here - it lives on GHCR and is referenced by the release notes.
-  # ---------------------------------------------------------------------------------------------------------
-  publish:
-    runs-on: ubuntu-latest
-    needs: [prepare, build-container, build-debug, build-release, build-os]
-    name: Publish dated GitHub Release
-    steps:
-      - name: Clone Repository at input commit
-        # Needed so `gh release create` can create the git tag against the requested commit SHA.
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ inputs.commit }}
-          fetch-depth: 0
-
-      - name: Download all binary artifacts
-        uses: actions/download-artifact@v6
-        with:
-          path: release-assets
-
-      - name: List staged assets
-        run: ls -laR release-assets
-
+      # ----------------------------------------------------------------------------------------
+      # Create the dated GitHub Release with the binaries attached and the container pinned in notes.
+      # ----------------------------------------------------------------------------------------
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO:  ${{ github.repository }}
-          RELEASE_TAG: ${{ needs.prepare.outputs.release_tag }}
-          IMAGE_REF:   ${{ needs.prepare.outputs.image_ref }}
-          COMMIT_SHA:  ${{ inputs.commit }}
+          RELEASE_TAG:       ${{ steps.manifest.outputs.release_tag }}
+          CONTAINER_VERSION: ${{ steps.manifest.outputs.container_version }}
+          DEBUG_VER:         ${{ steps.manifest.outputs.debug_version }}
+          RELEASE_VER:       ${{ steps.manifest.outputs.release_version }}
+          OS_VER:            ${{ steps.manifest.outputs.os_version }}
         run: |
           set -euo pipefail
 
           notes=$(cat <<EOF
           # ${RELEASE_TAG}
 
-          Dated release of the Radxa Orion O6 platform deliverables.
+          Dated release of the Radxa Orion O6 platform deliverables, assembled from previously-published
+          artifacts.
 
-          - **Source commit:** \`${COMMIT_SHA}\`
-          - **DevContainer image:** \`${IMAGE_REF}\`
+          ## Manifest
 
-          ## Assets
+          | Component | Source | Version |
+          |---|---|---|
+          | DevContainer image | \`${CONTAINER_IMAGE}\` (GHCR) | \`${CONTAINER_VERSION}\` |
+          | Debug bootchain    | \`${PKG_DEBUG}\` (NuGet)      | \`${DEBUG_VER}\`        |
+          | Release bootchain  | \`${PKG_RELEASE}\` (NuGet)    | \`${RELEASE_VER}\`      |
+          | Validation OS WIM  | \`${PKG_OS}\` (NuGet)         | \`${OS_VER}\`           |
 
-          - Debug bootchain    (\`bootchain-debug/\`)
-          - Release bootchain  (\`bootchain-release/\`)
-          - Validation OS WIM  (\`${RELEASE_TAG}-ValidationOS.wim\`)
+          ## Pulling the container
+
+          \`\`\`
+          docker pull ${CONTAINER_IMAGE}:${CONTAINER_VERSION}
+          \`\`\`
+
+          ## Downloading the binaries
+
+          The three binary artifacts are attached as release assets below, and are also available
+          as independently versioned NuGet packages on the repository's Packages tab.
           EOF
           )
 
-          # Collect every staged file under release-assets/ as a release asset.
-          mapfile -t assets < <(find release-assets -type f)
-          printf 'Attaching asset: %s\n' "${assets[@]}"
+          mapfile -t files < <(find assets -type f)
+          printf 'Attaching asset: %s\n' "${files[@]}"
 
           gh release create "${RELEASE_TAG}" \
-            --target "${COMMIT_SHA}" \
-            --title  "${RELEASE_TAG}" \
-            --notes  "${notes}" \
-            "${assets[@]}"
+            --title "${RELEASE_TAG}" \
+            --notes "${notes}" \
+            "${files[@]}"
