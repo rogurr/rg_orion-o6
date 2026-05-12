@@ -1,0 +1,60 @@
+# Builds the DevContainer image for this repository and publishes it to the GitHub Container Registry (GHCR)
+#
+# SPDX-License-Identifier: MIT
+#
+
+name: container-build
+
+# Trigger on changes to container information and manual triggering
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.devcontainer/**'
+      - '.github/workflows/container_build.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.devcontainer/**'
+      - '.github/workflows/container_build.yml'
+  workflow_dispatch:
+
+# Cancel in-progress runs for the same PR/branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+# GHCR publishing requires write access to packages. Contents is read-only.
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    name: Build and publish devcontainer image
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v6
+
+      - name: Log in to GitHub Container Registry
+        # GITHUB_TOKEN is provisioned automatically and can push images to this repo's GHCR namespace.
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" \
+            | docker login "ghcr.io" -u "${{ github.actor }}" --password-stdin
+
+      - name: Build container image
+        run: |
+          docker build \
+            -f .devcontainer/Dockerfile \
+            -t "ghcr.io/opendevicepartnership/odp-platform-radxa-orion-o6/devcontainer:latest" \
+            -t "ghcr.io/opendevicepartnership/odp-platform-radxa-orion-o6/devcontainer:${{ github.sha }}" \
+            .
+
+      - name: Push container image
+        # Only publish from pushes to main or manual runs; PRs from forks cannot
+        # write to GHCR and PRs in general should not mutate the published tag.
+        if: github.event_name != 'pull_request'
+        run: |
+          docker push "ghcr.io/opendevicepartnership/odp-platform-radxa-orion-o6/devcontainer:latest"
+          docker push "ghcr.io/opendevicepartnership/odp-platform-radxa-orion-o6/devcontainer:${{ github.sha }}"

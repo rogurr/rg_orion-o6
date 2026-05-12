@@ -1,16 +1,18 @@
-# This workflow is responsible for building and verifying the ODP version of the bootchain firmware for a Radxa Orion
-# O6 platform
+# Workflow to build the ODP version of the bootchain for a Radxa Orion O6 platform
 #
 # SPDX-License-Identifier: MIT
 #
 
 name: bootchain-build
 
-# Restrict GitHub permissions to only what is necessary for the workflow
 permissions:
   contents: read
 
-# Trigger the workflow on pull requests to the main branch and allow manual triggering
+env:
+  # The container image is built in a separate workflow and published to GHCR.
+  DEVCONTAINER_IMAGE: "ghcr.io/opendevicepartnership/odp-platform-radxa-orion-o6/devcontainer:latest"
+
+# Trigger on pull requests and manual triggering
 on:
   pull_request:
     branches: [main]
@@ -22,48 +24,17 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Build the bootchain using Docker per the documentation
-  build-docker:
+  build:
     runs-on: ubuntu-latest
-    name: Compile repository (Docker)
+    name: Build Orion O6 bootchain
     steps:
       - name: Clone Repository
         uses: actions/checkout@v6
         with:
           submodules: recursive
 
-      - name: Build Container
-        run: docker build -q -t odp-orion-o6-build -f .devcontainer/Dockerfile .
-
-      - name: Update Workspace Ownership
-        # The runner checks out files as a different UID than the container user (UID 1000).
-        run: |
-          docker run --rm \
-            --user root \
-            -v "${{ github.workspace }}:/workspace" \
-            odp-orion-o6-build \
-            chown -R 1000:1000 /workspace
-
-      - name: Build Firmware
-        run: |
-          docker run --rm \
-            -w /workspace \
-            -v "${{ github.workspace }}:/workspace" \
-            odp-orion-o6-build \
-            make all
-
-  # Build the bootchain using Podman per the documentation
-  build-podman:
-    runs-on: ubuntu-latest
-    name: Compile repository (Podman)
-    steps:
-      - name: Clone Repository
-        uses: actions/checkout@v6
-        with:
-          submodules: recursive
-
-      - name: Build Container
-        run: podman build -q -t odp-orion-o6-build -f .devcontainer/Dockerfile .
+      - name: Pull Container
+        run: podman pull "${{ env.DEVCONTAINER_IMAGE }}"
 
       - name: Update Workspace Ownership
         # The runner checks out files as a different UID than the container user (UID 1000).
@@ -71,7 +42,7 @@ jobs:
           podman run --rm \
             --user root \
             -v "${{ github.workspace }}:/workspace" \
-            odp-orion-o6-build \
+            "${{ env.DEVCONTAINER_IMAGE }}" \
             chown -R 1000:1000 /workspace
 
       - name: Build Firmware
@@ -79,5 +50,5 @@ jobs:
           podman run --rm \
             -w /workspace \
             -v "${{ github.workspace }}:/workspace" \
-            odp-orion-o6-build \
+            "${{ env.DEVCONTAINER_IMAGE }}" \
             make all
