@@ -19,10 +19,7 @@ on:
     paths-ignore:
       - '.devcontainer/**'
       - 'postbuild/os/**'
-      - '.github/workflows/publish_container.yml'
-      - '.github/workflows/build_os_image.yml'
-      - '.github/workflows/publish_release_image.yml'
-      - '**/*.md'
+      - '.github/**'
   workflow_dispatch:
     inputs:
       container_tag:
