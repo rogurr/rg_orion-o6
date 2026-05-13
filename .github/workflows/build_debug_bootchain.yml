@@ -63,7 +63,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          common/tools/upload_nuget_artifact.sh \
+          python3 common/tools/upload_nuget_artifact.py \
             --package-id  "ODP.OrionO6.BootchainDebug" \
             --description "Radxa Orion O6 debug bootchain" \
             --input_dir  "${GITHUB_WORKSPACE}/build/postbuild/bootchain" \

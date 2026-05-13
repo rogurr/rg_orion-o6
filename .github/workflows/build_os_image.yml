@@ -1,40 +1,7 @@
-# Builds the ODP Validation OS WIM image on a Windows runner using the steps provided by the
-# learn.microsoft.com documentation to download the Validation OS ISO, mount it, and run GenImage.cmd.
-#
-# https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/validation-os-overview?view=windows-11
-#
-# Behavior:
-#   - pull_request:               build only, output discarded.
-#   - workflow_dispatch on the upstream repo's `main` branch:
-#                                 build, then publish a NuGet package to GitHub Packages.
-#   - workflow_dispatch elsewhere (any branch, or any fork):
-#                                 build, then upload the WIM as a workflow artifact (7-day retention).
+# Builds the ODP Validation OS WIM image on a Windows runner.
 #
 # SPDX-License-Identifier: MIT
 #
-# =====================================================================================================================
-# To run these steps locally on a Windows PC:
-#
-#   1. Download the Validation OS Arm64 ISO from Microsoft
-#      https://learn.microsoft.com/en-us/legal/windows/hardware/validation-os-license
-#
-#   2. Mount the ISO (double-click or right-click > Mount) and note the drive letter assigned
-#
-#   3. Open an Administrator terminal and run GenImage.cmd from the mounted ISO replacing the <iso drive> tag with
-#      the drive letter, the <repo path> tag with the path to this repository, and the <output path> with the desired
-#      output directory for the WIM file
-#
-#        <iso drive>:\GenImage\GenImage.cmd  ^
-#            -PackagesList:<repo path>\postbuild\os\O6_config.pkg  ^
-#            -RegistryImport:<repo path>\postbuild\os\O6_policy.reg  ^
-#            -PackagePath:<iso drive>:\cabs  ^
-#            -ImagePath:<iso drive>:\  ^
-#            -OutPath:<output path>  ^
-#            -wim -NoWait
-#
-#   4. The output will be ValidationOS-1.wim in the provided output directory
-#
-# =====================================================================================================================
 
 name: os-build
 
@@ -42,18 +9,11 @@ permissions:
   contents: read
   packages: write
 
-env:
-  # FORK TESTING: all coordinates point at rogurr's personal namespace.
-  # Revert to OpenDevicePartnership equivalents before merging to upstream.
-  PACKAGE_ID:    "Rogurr.OrionO6.OsImage"
-  UPSTREAM_REPO: "rogurr/rg_orion-o6"
-
 on:
   pull_request:
     branches: [main]
     paths:
       - 'postbuild/os/**'
-      - '.github/workflows/os_build.yml'
   workflow_dispatch:
 
 concurrency:
@@ -61,123 +21,57 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-wim:
+  build:
     runs-on: windows-latest
-    name: Build Validation OS WIM
+    name: Build Orion O6 OS image
     defaults:
       run:
-        working-directory: postbuild/os
+        shell: pwsh
     steps:
       - name: Clone Repository
         uses: actions/checkout@v6
 
       - name: Download Validation OS ISO
-        shell: pwsh
-        run: |
-          Invoke-WebRequest -Uri "https://aka.ms/DownloadValidationOS_arm64" -OutFile ValidationOS.iso
+        run: Invoke-WebRequest -Uri "https://aka.ms/DownloadValidationOS_arm64" -OutFile ValidationOS.iso
 
       - name: Build WIM
-        shell: pwsh
         run: |
           $mount = Mount-DiskImage -ImagePath (Resolve-Path ValidationOS.iso).Path -PassThru
           $drive = ($mount | Get-Volume).DriveLetter
           try {
-            cmd /c "${drive}:\GenImage\GenImage.cmd -PackagesList:O6_config.pkg -PackagePath:${drive}:\cabs -ImagePath:${drive}:\ -RegistryImport:O6_policy.reg -OutPath:build -wim -NoWait"
+            cmd /c "${drive}:\GenImage\GenImage.cmd -PackagesList:postbuild\os\O6_config.pkg -PackagePath:${drive}:\cabs -ImagePath:${drive}:\ -RegistryImport:postbuild\os\O6_policy.reg -OutPath:build\postbuild\os -wim -NoWait"
             if ($LASTEXITCODE -ne 0) { throw "GenImage.cmd failed with exit code $LASTEXITCODE" }
           } finally {
             Dismount-DiskImage -ImagePath $mount.ImagePath
           }
 
-      # ----- workflow_dispatch only: stage + publish -----
-      - name: Stage WIM with build date
-        if: github.event_name == 'workflow_dispatch'
-        shell: pwsh
+      - name: Stage WIM
         run: |
           $date = (Get-Date).ToUniversalTime().ToString("yyyyMMdd")
-          New-Item -ItemType Directory -Force -Path staging | Out-Null
-          Move-Item -Path build/ValidationOS-1.wim -Destination "staging/ODP-O6-ValidationOS-$date.wim"
-          Get-ChildItem staging
+          Rename-Item -Path build\postbuild\os\ValidationOS-1.wim -NewName "ODP-O6-ValidationOS-$date.wim"
 
+      # Upload ephemeral artifact for any dispatch except manually on main
       - name: Upload ephemeral artifact
         if: >
-          github.event_name == 'workflow_dispatch' &&
-          !(github.repository == env.UPSTREAM_REPO && github.ref == 'refs/heads/main')
+          !(github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
         uses: actions/upload-artifact@v7
         with:
           name: os-image-${{ github.run_id }}
-          path: postbuild/os/staging/*.wim
+          path: build/postbuild/os/**
           retention-days: 7
           if-no-files-found: error
 
-      - name: Compute NuGet version
+      # Publish NuGet package when dispatched manually on main
+      - name: Upload nuget artifact
         if: >
-          github.event_name == 'workflow_dispatch' &&
-          github.repository == env.UPSTREAM_REPO &&
-          github.ref == 'refs/heads/main'
-        id: version
-        shell: pwsh
+          (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
         run: |
-          $now  = (Get-Date).ToUniversalTime()
-          $base = "{0}.{1}.{2}" -f $now.Year, $now.Month, $now.Day
-          # 404 (first publish ever) is a non-error here.
-          $existing = @()
-          # NOTE: user-owned packages use /users/<user>/... not /orgs/<org>/...
-          try {
-            $existing = gh api -H "Accept: application/vnd.github+json" `
-                          "/users/rogurr/packages/nuget/${env:PACKAGE_ID}/versions" `
-                          --jq '.[].name' 2>$null
-          } catch {}
-          $count = ($existing | Where-Object { $_ -match "^$([regex]::Escape($base))(\.\d+)?$" } | Measure-Object).Count
-          if ($count -eq 0) {
-            $version = $base
-          } else {
-            $version = "$base.$count"
-          }
-          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
-          Write-Host "Computed NuGet version: $version"
-
-      - name: Generate .csproj for packaging
-        if: steps.version.outputs.version
-        shell: pwsh
-        env:
-          PKG_VERSION: ${{ steps.version.outputs.version }}
-        run: |
-          New-Item -ItemType Directory -Force -Path nupkg-src | Out-Null
-          $csproj = @"
-          <Project Sdk="Microsoft.NET.Sdk">
-            <PropertyGroup>
-              <TargetFramework>netstandard2.0</TargetFramework>
-              <PackageId>${env:PACKAGE_ID}</PackageId>
-              <Version>${env:PKG_VERSION}</Version>
-              <Authors>rogurr</Authors>
-              <Description>Radxa Orion O6 Validation OS WIM image.</Description>
-              <RepositoryUrl>https://github.com/${env:UPSTREAM_REPO}</RepositoryUrl>
-              <PackageLicenseExpression>MIT</PackageLicenseExpression>
-              <IncludeBuildOutput>false</IncludeBuildOutput>
-              <NoBuild>true</NoBuild>
-              <NoWarn>NU5128;NU5100;NU5110;NU5111</NoWarn>
-            </PropertyGroup>
-            <ItemGroup>
-              <None Include="..\staging\*.wim" Pack="true" PackagePath="content\" />
-            </ItemGroup>
-          </Project>
-          "@
-          Set-Content -Path "nupkg-src/$($env:PACKAGE_ID).csproj" -Value $csproj
-
-      - name: Pack NuGet package
-        if: steps.version.outputs.version
-        shell: pwsh
-        run: dotnet pack "nupkg-src/$($env:PACKAGE_ID).csproj" -o nupkg-out
-
-      - name: Push NuGet package to GitHub Packages
-        if: steps.version.outputs.version
-        shell: pwsh
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          dotnet nuget push "nupkg-out/*.nupkg" `
-            --source "https://nuget.pkg.github.com/rogurr/index.json" `
-            --api-key "${env:GH_TOKEN}" `
-            --skip-duplicate
+          # TODO: rogurr namespace. Revert to opendevicepartnership before merging to upstream.
+          python3 common/tools/upload_nuget_artifact.py \
+            --package-id  "Rogurr.OrionO6.OsImage" \
+            --description "Radxa Orion O6 Validation OS WIM image" \
+            --input_dir  "${GITHUB_WORKSPACE}/build/postbuild/os" \
+            --output_dir "${GITHUB_WORKSPACE}/build/nuget"
