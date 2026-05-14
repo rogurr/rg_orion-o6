@@ -73,6 +73,8 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: bootchain-release
-          path: build/postbuild/bootchain/**
+          path: |
+            build/postbuild/bootchain/**
+            build/postbuild/cix_flash_all.bin
           retention-days: 1
           if-no-files-found: error
