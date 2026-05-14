@@ -27,7 +27,7 @@ permissions:
 
 env:
   # TODO: rogurr namespace. Revert to opendevicepartnership before merging to upstream.
-  CONTAINER_IMAGE: "ghcr.io/rogurr/odp-platform-radxa-orion-o6/devcontainer"
+  CONTAINER_IMAGE: "ghcr.io/rogurr/odp-platform-radxa-orion-o6_devcontainer"
 
 jobs:
   publish:
