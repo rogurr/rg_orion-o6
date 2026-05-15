@@ -1,4 +1,4 @@
-# OS Image Installation
+# EEEEEE - OS Image Installation
 
 This guide covers how to format an NVMe drive using a USB-to-NVMe adapter and install a bootable Windows 11 image to support the Radxa Orion O6.  The process uses standard Windows tools (`diskpart`, `dism`, `bcdboot`), so it will need to be run from a development PC running Windows 11.
 
