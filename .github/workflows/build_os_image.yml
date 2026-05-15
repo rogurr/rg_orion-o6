@@ -57,21 +57,10 @@ jobs:
             Dismount-DiskImage -ImagePath $mount.ImagePath
           }
 
-      - name: Stage WIM
-        env:
-          GIT_REF: ${{ inputs.git_ref || '' }}
-        run: |
-          if ($env:GIT_REF -match '^v(\d{4})\.(\d{1,2})\.(\d{1,2})$') {
-            $date = $Matches[1] + $Matches[2].PadLeft(2,'0') + $Matches[3].PadLeft(2,'0')
-          } else {
-            $date = (Get-Date).ToUniversalTime().ToString("yyyyMMdd")
-          }
-          Rename-Item -Path build\postbuild\os\ValidationOS-1.wim -NewName "ODP-O6-ValidationOS-$date.wim"
-
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
           name: os-image
-          path: build/postbuild/os/**
+          path: build/postbuild/os/ValidationOS-1.wim
           retention-days: 1
           if-no-files-found: error

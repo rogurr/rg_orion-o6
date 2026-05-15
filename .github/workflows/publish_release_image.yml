@@ -1,14 +1,9 @@
-# Builds all platform deliverables at a specific git tag and publishes them as a GitHub Release with NuGet packages.
+# Builds all platform deliverables and publishes them as a GitHub Release with NuGet packages.
 #
 # SPDX-License-Identifier: MIT
 #
-# This workflow is manual-only. The user must create the git tag before triggering.
-# Access is gated by the "release" GitHub Environment — only repo managers can approve execution.
-#
-# Flow:
-#   1. authorize   — waits for environment approval (no builds wasted if unauthorized)
-#   2. build-*     — three parallel builds at the specified git ref (reusable workflow calls)
-#   3. publish     — downloads artifacts, packs NuGet packages, creates the GitHub Release
+# Triggered by pushing a tag matching v*. The tag name is used as the release name.
+# The publish job is gated by the "release" GitHub Environment — only repo managers can approve execution.
 #
 
 name: publish_release_image
@@ -18,80 +13,44 @@ permissions:
   packages: write
 
 on:
-  workflow_dispatch:
-    inputs:
-      git_ref:
-        description: 'Git tag in vYYYY.MM.DD format (must already exist)'
-        required: true
-        type: string
-      container_tag:
-        description: 'GHCR devcontainer image tag, format: vYYYY.MM.DD (must match a published image)'
-        required: true
-        type: string
+  push:
+    tags:
+      - 'v*'
 
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: false
 
+# TODO: rogurr namespace. Revert to opendevicepartnership before merging to upstream.
 env:
-  # TODO: rogurr namespace. Revert to opendevicepartnership before merging to upstream.
-  OWNER:           "rogurr"
-  CONTAINER_IMAGE: "ghcr.io/rogurr/odp-platform-radxa-orion-o6/devcontainer"
-  PKG_DEBUG:       "Rogurr.OrionO6.SpiNorDebug"
-  PKG_RELEASE:     "Rogurr.OrionO6.SpiNorRelease"
-  PKG_OS:          "Rogurr.OrionO6.OsImage"
+  # Pinned devcontainer image used by the build_*_bootchain workflows; keep in sync with their `image:` line.
+  CONTAINER_IMAGE: "ghcr.io/rogurr/odp-platform-radxa-orion-o6_devcontainer:v2026.05.14"
 
 jobs:
-  # ---------- Gate: only repo managers can approve ----------
-  authorize:
-    runs-on: ubuntu-latest
-    environment: release
-    steps:
-      - name: Validate inputs
-        env:
-          GIT_REF: ${{ inputs.git_ref }}
-          CONTAINER_TAG: ${{ inputs.container_tag }}
-        run: |
-          if [[ ! "$GIT_REF" =~ ^v[0-9]{4}\.[0-9]{1,2}\.[0-9]{1,2}$ ]]; then
-            echo "::error::git_ref must match vYYYY.MM.DD (got: $GIT_REF)"
-            exit 1
-          fi
-          if [[ ! "$CONTAINER_TAG" =~ ^v[0-9]{4}\.[0-9]{1,2}\.[0-9]{1,2}$ ]]; then
-            echo "::error::container_tag must match vYYYY.MM.DD (got: $CONTAINER_TAG)"
-            exit 1
-          fi
-          echo "Release approved for $GIT_REF with container tag $CONTAINER_TAG"
-
-  # ---------- Parallel builds at the target ref ----------
+  # ---------- Parallel builds at the tagged ref ----------
   build-debug:
-    needs: authorize
     uses: ./.github/workflows/build_debug_bootchain.yml
     with:
-      git_ref: ${{ inputs.git_ref }}
-      container_tag: ${{ inputs.container_tag }}
+      git_ref: ${{ github.ref_name }}
 
   build-release:
-    needs: authorize
     uses: ./.github/workflows/build_release_bootchain.yml
     with:
-      git_ref: ${{ inputs.git_ref }}
-      container_tag: ${{ inputs.container_tag }}
+      git_ref: ${{ github.ref_name }}
 
   build-os:
-    needs: authorize
     uses: ./.github/workflows/build_os_image.yml
     with:
-      git_ref: ${{ inputs.git_ref }}
+      git_ref: ${{ github.ref_name }}
 
-  # ---------- Collect artifacts, pack NuGet, create release ----------
+  # ---------- Collect artifacts, pack NuGet, create GitHub Release ----------
   publish:
     runs-on: ubuntu-latest
+    environment: release
     needs: [build-debug, build-release, build-os]
     steps:
       - name: Clone repository
         uses: actions/checkout@v6
-        with:
-          ref: ${{ inputs.git_ref }}
 
       - name: Download all build artifacts
         uses: actions/download-artifact@v7
@@ -105,20 +64,20 @@ jobs:
           set -euo pipefail
 
           python3 common/tools/upload_nuget_artifact.py \
-            --package-id  "$PKG_DEBUG" \
-            --description "Radxa Orion O6 debug bootchain" \
+            --package-id  "ODP.OrionO6.DebugBootchain" \
+            --description "ODP Version of the Radxa Orion O6 debug bootchain" \
             --input_dir   "artifacts/bootchain-debug" \
             --output_dir  "nuget-out"
 
           python3 common/tools/upload_nuget_artifact.py \
-            --package-id  "$PKG_RELEASE" \
-            --description "Radxa Orion O6 release bootchain" \
+            --package-id  "ODP.OrionO6.ReleaseBootchain" \
+            --description "ODP Version of the Radxa Orion O6 release bootchain" \
             --input_dir   "artifacts/bootchain-release" \
             --output_dir  "nuget-out"
 
           python3 common/tools/upload_nuget_artifact.py \
-            --package-id  "$PKG_OS" \
-            --description "Radxa Orion O6 Validation OS WIM image" \
+            --package-id  "ODP.OrionO6.OsImage" \
+            --description "ODP Version of the Radxa Orion O6 Validation OS WIM image" \
             --input_dir   "artifacts/os-image" \
             --output_dir  "nuget-out"
 
@@ -126,11 +85,10 @@ jobs:
         id: notes
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GIT_REF: ${{ inputs.git_ref }}
         run: |
           python3 common/tools/prepare_release.py \
-            --git-ref       "$GIT_REF" \
-            --container     "${CONTAINER_IMAGE}:${{ inputs.container_tag }}" \
+            --git-ref       "${{ github.ref_name }}" \
+            --container     "${CONTAINER_IMAGE}" \
             --nuget-dir     "nuget-out" \
             --output        "release-notes.md"
           echo "notes_file=release-notes.md" >> "$GITHUB_OUTPUT"
@@ -139,13 +97,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO:  ${{ github.repository }}
-          GIT_REF: ${{ inputs.git_ref }}
         run: |
           set -euo pipefail
           mapfile -t assets < <(find artifacts -type f)
           mapfile -t nupkgs < <(find nuget-out -name '*.nupkg' -type f)
           printf 'Attaching: %s\n' "${assets[@]}" "${nupkgs[@]}"
-          gh release create "$GIT_REF" \
-            --title "$GIT_REF" \
+          gh release create "${{ github.ref_name }}" \
+            --title "${{ github.ref_name }}" \
             --notes-file "${{ steps.notes.outputs.notes_file }}" \
             "${assets[@]}" "${nupkgs[@]}"
