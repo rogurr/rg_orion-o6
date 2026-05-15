@@ -22,7 +22,7 @@ on:
   workflow_call:
     inputs:
       git_ref:
-        description: 'Git tag in Release_YYYY.MM.DD format'
+        description: 'Git tag in vYYYY.MM.DD format'
         required: true
         type: string
 
@@ -61,7 +61,7 @@ jobs:
         env:
           GIT_REF: ${{ inputs.git_ref || '' }}
         run: |
-          if ($env:GIT_REF -match '^Release_(\d{4})\.(\d{1,2})\.(\d{1,2})$') {
+          if ($env:GIT_REF -match '^v(\d{4})\.(\d{1,2})\.(\d{1,2})$') {
             $date = $Matches[1] + $Matches[2].PadLeft(2,'0') + $Matches[3].PadLeft(2,'0')
           } else {
             $date = (Get-Date).ToUniversalTime().ToString("yyyyMMdd")

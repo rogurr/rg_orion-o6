@@ -21,11 +21,11 @@ on:
   workflow_dispatch:
     inputs:
       git_ref:
-        description: 'Git tag in Release_YYYY.MM.DD format (must already exist)'
+        description: 'Git tag in vYYYY.MM.DD format (must already exist)'
         required: true
         type: string
       container_tag:
-        description: 'GHCR devcontainer image tag, format: YYYY.MM.DD (must match a published image)'
+        description: 'GHCR devcontainer image tag, format: vYYYY.MM.DD (must match a published image)'
         required: true
         type: string
 
@@ -52,12 +52,12 @@ jobs:
           GIT_REF: ${{ inputs.git_ref }}
           CONTAINER_TAG: ${{ inputs.container_tag }}
         run: |
-          if [[ ! "$GIT_REF" =~ ^Release_[0-9]{4}\.[0-9]{1,2}\.[0-9]{1,2}$ ]]; then
-            echo "::error::git_ref must match Release_YYYY.MM.DD (got: $GIT_REF)"
+          if [[ ! "$GIT_REF" =~ ^v[0-9]{4}\.[0-9]{1,2}\.[0-9]{1,2}$ ]]; then
+            echo "::error::git_ref must match vYYYY.MM.DD (got: $GIT_REF)"
             exit 1
           fi
-          if [[ ! "$CONTAINER_TAG" =~ ^[0-9]{4}\.[0-9]{1,2}\.[0-9]{1,2}$ ]]; then
-            echo "::error::container_tag must match YYYY.MM.DD (got: $CONTAINER_TAG)"
+          if [[ ! "$CONTAINER_TAG" =~ ^v[0-9]{4}\.[0-9]{1,2}\.[0-9]{1,2}$ ]]; then
+            echo "::error::container_tag must match vYYYY.MM.DD (got: $CONTAINER_TAG)"
             exit 1
           fi
           echo "Release approved for $GIT_REF with container tag $CONTAINER_TAG"

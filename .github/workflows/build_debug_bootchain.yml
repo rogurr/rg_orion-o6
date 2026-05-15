@@ -23,18 +23,18 @@ on:
   workflow_dispatch:
     inputs:
       container_tag:
-        description: 'Devcontainer image tag, format: yyyy.mm.dd'
+        description: 'Devcontainer image tag, format: vYYYY.MM.DD'
         required: false
         default: 'latest'
         type: string
   workflow_call:
     inputs:
       git_ref:
-        description: 'Git tag in Release_YYYY.MM.DD format'
+        description: 'Git tag in vYYYY.MM.DD format'
         required: true
         type: string
       container_tag:
-        description: 'Devcontainer image tag, format: yyyy.mm.dd'
+        description: 'Devcontainer image tag, format: vYYYY.MM.DD'
         required: true
         type: string
 
