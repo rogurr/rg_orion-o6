@@ -21,20 +21,10 @@ on:
       - 'postbuild/os/**'
       - '.github/**'
   workflow_dispatch:
-    inputs:
-      container_tag:
-        description: 'Devcontainer image tag, format: vYYYY.MM.DD'
-        required: false
-        default: 'latest'
-        type: string
   workflow_call:
     inputs:
       git_ref:
         description: 'Git tag in vYYYY.MM.DD format'
-        required: true
-        type: string
-      container_tag:
-        description: 'Devcontainer image tag, format: vYYYY.MM.DD'
         required: true
         type: string
 
@@ -47,19 +37,14 @@ jobs:
     runs-on: ubuntu-latest
     name: Build Orion O6 release bootchain
     container:
+      # Pinned devcontainer image. Update tag here when bumping the container version.
       # TODO: rogurr namespace. Revert to opendevicepartnership before merging to upstream.
-      image: ghcr.io/rogurr/odp-platform-radxa-orion-o6_devcontainer:${{ inputs.container_tag || 'latest' }}
+      image: ghcr.io/rogurr/odp-platform-radxa-orion-o6_devcontainer:v2026.05.14
       options: --user root
     defaults:
       run:
         shell: bash
     steps:
-      - name: Validate container tag
-        if: inputs.git_ref && inputs.container_tag == 'latest'
-        run: |
-          echo "::error::workflow_call requires a specific container_tag, not 'latest'"
-          exit 1
-
       - name: Clone Repository
         uses: actions/checkout@v6
         with:
