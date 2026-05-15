@@ -7,7 +7,7 @@
 # The git tag is used as the version tag on the container image.
 #
 
-name: container-publish
+name: publish_container
 
 on:
   workflow_dispatch:

@@ -8,7 +8,7 @@
 #   - workflow_call:   invoked by the release workflow with a specific git ref.
 #
 
-name: os-build
+name: build_os_image
 
 permissions:
   contents: read

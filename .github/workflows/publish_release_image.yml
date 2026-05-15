@@ -11,7 +11,7 @@
 #   3. publish     — downloads artifacts, packs NuGet packages, creates the GitHub Release
 #
 
-name: release-publish
+name: publish_release_image
 
 permissions:
   contents: write

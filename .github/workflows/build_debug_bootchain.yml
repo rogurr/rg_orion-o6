@@ -8,7 +8,7 @@
 #   - workflow_call:   invoked by the release workflow with a specific git ref.
 #
 
-name: bootchain-debug-build
+name: build_debug_bootchain
 
 permissions:
   contents: read
@@ -48,7 +48,7 @@ jobs:
     name: Build Orion O6 debug bootchain
     container:
       # TODO: rogurr namespace. Revert to opendevicepartnership before merging to upstream.
-      image: ghcr.io/rogurr/odp-platform-radxa-orion-o6/devcontainer:${{ inputs.container_tag || 'latest' }}
+      image: ghcr.io/rogurr/odp-platform-radxa-orion-o6_devcontainer:${{ inputs.container_tag || 'latest' }}
       options: --user root
     defaults:
       run:
