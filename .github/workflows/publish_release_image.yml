@@ -21,7 +21,8 @@ concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: false
 
-# TODO: rogurr namespace. Revert to opendevicepartnership before merging to upstream.
+# TODO: Revert to 'rogurr' namespace tags to 'opendevicepartnership' before merging to upstream.
+
 env:
   # Pinned devcontainer image used by the build_*_bootchain workflows; keep in sync with their `image:` line.
   CONTAINER_IMAGE: "ghcr.io/rogurr/odp-platform-radxa-orion-o6_devcontainer:v2026.05.14"
@@ -63,23 +64,55 @@ jobs:
         run: |
           set -euo pipefail
 
-          python3 common/tools/upload_nuget_artifact.py \
-            --package-id  "ODP.OrionO6.DebugBootchain" \
-            --description "ODP Version of the Radxa Orion O6 debug bootchain" \
-            --input_dir   "artifacts/bootchain-debug" \
-            --output_dir  "nuget-out"
+          # ---------- Derive the NuGet version from the git tag ----------
+          # NuGet requires SemVer-compatible versions, so:
+          #   - strip the leading `v` from the tag (e.g. v2026.05.14 -> 2026.05.14)
+          #   - strip leading zeros from each numeric segment   (2026.05.14 -> 2026.5.14)
+          TAG="${{ github.ref_name }}"
+          VERSION="${TAG#v}"
+          VERSION="$(echo "$VERSION" | sed -E 's/(^|\.)0+([0-9])/\1\2/g')"
+          echo "Packaging NuGet artifacts as version: $VERSION"
 
-          python3 common/tools/upload_nuget_artifact.py \
-            --package-id  "ODP.OrionO6.ReleaseBootchain" \
-            --description "ODP Version of the Radxa Orion O6 release bootchain" \
-            --input_dir   "artifacts/bootchain-release" \
-            --output_dir  "nuget-out"
+          # Shared csproj used for every package; only the metadata properties differ per call.
+          CSPROJ="common/tools/nuget_release_project.csproj"
+          NUGET_SOURCE="https://nuget.pkg.github.com/rogurr/index.json"
+          mkdir -p nuget-out
 
-          python3 common/tools/upload_nuget_artifact.py \
-            --package-id  "ODP.OrionO6.OsImage" \
-            --description "ODP Version of the Radxa Orion O6 Validation OS WIM image" \
-            --input_dir   "artifacts/os-image" \
-            --output_dir  "nuget-out"
+          # ---------- ODP.OrionO6.DebugBootchain ----------
+          dotnet pack "$CSPROJ" \
+            -p:PackageId=ODP.OrionO6.DebugBootchain \
+            -p:Version="$VERSION" \
+            -p:Description="ODP Version of the Radxa Orion O6 debug bootchain" \
+            -p:PayloadPath="artifacts/bootchain-debug" \
+            -o nuget-out
+          dotnet nuget push "nuget-out/ODP.OrionO6.DebugBootchain.$VERSION.nupkg" \
+            --source "$NUGET_SOURCE" \
+            --api-key "$GH_TOKEN" \
+            --skip-duplicate
+
+          # ---------- ODP.OrionO6.ReleaseBootchain ----------
+          dotnet pack "$CSPROJ" \
+            -p:PackageId=ODP.OrionO6.ReleaseBootchain \
+            -p:Version="$VERSION" \
+            -p:Description="ODP Version of the Radxa Orion O6 release bootchain" \
+            -p:PayloadPath="artifacts/bootchain-release" \
+            -o nuget-out
+          dotnet nuget push "nuget-out/ODP.OrionO6.ReleaseBootchain.$VERSION.nupkg" \
+            --source "$NUGET_SOURCE" \
+            --api-key "$GH_TOKEN" \
+            --skip-duplicate
+
+          # ---------- ODP.OrionO6.OsImage ----------
+          dotnet pack "$CSPROJ" \
+            -p:PackageId=ODP.OrionO6.OsImage \
+            -p:Version="$VERSION" \
+            -p:Description="ODP Version of the Radxa Orion O6 Validation OS WIM image" \
+            -p:PayloadPath="artifacts/os-image" \
+            -o nuget-out
+          dotnet nuget push "nuget-out/ODP.OrionO6.OsImage.$VERSION.nupkg" \
+            --source "$NUGET_SOURCE" \
+            --api-key "$GH_TOKEN" \
+            --skip-duplicate
 
       - name: Generate release notes
         id: notes
