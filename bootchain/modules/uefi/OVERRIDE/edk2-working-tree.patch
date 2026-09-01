@@ -1,0 +1,122 @@
+diff --git a/BaseTools/Conf/build_rule.template b/BaseTools/Conf/build_rule.template
+old mode 100755
+new mode 100644
+index af4819de92cb8ea30872da1602efaba6a0283f3e..b5254a092c983d6bafde18e2494e5df41dbddde2
+--- a/BaseTools/Conf/build_rule.template
++++ b/BaseTools/Conf/build_rule.template
+@@ -276,6 +276,44 @@
+     <Command.XCODE>
+         "$(SLINK)" $(SLINK_FLAGS) ${dst} -filelist $(OBJECT_FILES_LIST)
+ 
++
++###
++### RUST CHANGES - BEGIN
++###
++
++[Toml-File.RUST_MODULE]
++    <InputFile>
++        ?.toml
++
++    <OutputFile>
++        $(OUTPUT_DIR)(+)$(MODULE_NAME).efi
++
++    <Command>
++        $(CARGO) rustc --manifest-path ${src} --target $(TARGET_TRIPLE) --target-dir $(DEBUG_DIR) $(CARGO_FLAGS) -- -C link-arg=/MAP:$(DEBUG_DIR)(+)$(MODULE_NAME).map -C link-arg=/base:0x0 -C link-arg=/subsystem:efi_boot_service_driver $(RUST_FLAGS)
++        "$(GENFW)" -e $(MODULE_TYPE) -o $(DEBUG_DIR)(+)$(MODULE_NAME).efi $(DEBUG_DIR)(+)$(TARGET_TRIPLE)(+)$(RUST_TARGET)(+)$(MODULE_NAME).efi $(GENFW_FLAGS)
++        $(CP) $(DEBUG_DIR)(+)$(MODULE_NAME).efi $(OUTPUT_DIR)(+)$(MODULE_NAME).efi
++        $(CP) $(OUTPUT_DIR)(+)$(MODULE_NAME).efi $(BIN_DIR)(+)$(MODULE_NAME_GUID).efi
++        -$(CP) $(DEBUG_DIR)(+)$(MODULE_NAME).map $(OUTPUT_DIR)
++        -$(CP) $(DEBUG_DIR)(+)$(TARGET_TRIPLE)(+)$(RUST_TARGET)(+)$(MODULE_NAME).pdb $(OUTPUT_DIR)
++
++# Rust modules link their own .efi, so the AutoGen-only static library that every
++# module produces must not be linked a second time into the same output file.
++[Static-Library-File.RUST_MODULE]
++    <InputFile>
++        *.lib
++
++    <ExtraDependency>
++        $(MAKE_FILE)
++
++    <OutputFile>
++
++    <Command>
++
++###
++### RUST CHANGES - END
++###
++
++
+ [Static-Library-File]
+     <InputFile>
+         *.lib
+diff --git a/BaseTools/Conf/tools_def.template b/BaseTools/Conf/tools_def.template
+old mode 100755
+new mode 100644
+index c4e4c7ded0afa31efdafcd11f08579570bbfc025..3ff9e7dbbfa7de292cd5aa5d8ea91e49af3a5439
+--- a/BaseTools/Conf/tools_def.template
++++ b/BaseTools/Conf/tools_def.template
+@@ -3143,6 +3143,40 @@ RELEASE_XCODE5_X64_CC_FLAGS   = -target x86_64-pc-win32-macho -c    -Os       -W
+ # NASMB uses NASM produce a .bin from a .nasmb NASM source file
+ *_*_*_NASMB_FLAGS              = -f bin
+ 
++
++###
++### RUST CHANGES - BEGIN
++###
++
++##################
++# RUST definitions
++##################
++*_*_X64_TARGET_TRIPLE      = x86_64-unknown-uefi
++*_*_IA32_TARGET_TRIPLE     = i686-unknown-uefi
++*_*_AARCH64_TARGET_TRIPLE  = aarch64-unknown-uefi
++
++DEBUG_*_*_RUST_TARGET      = debug
++RELEASE_*_*_RUST_TARGET    = release
++NOOPT_*_*_RUST_TARGET      = debug
++
++*_*_*_RUST_FLAGS           =
++
++####################
++# CARGO definitions #
++####################
++*_*_*_CARGO_PATH           = cargo
++
++# Cargo profile selection. Must stay aligned with RUST_TARGET above, because
++# cargo emits the dev profile into a directory named "debug".
++DEBUG_*_*_CARGO_FLAGS      =
++RELEASE_*_*_CARGO_FLAGS    = --release
++NOOPT_*_*_CARGO_FLAGS      =
++
++###
++### RUST CHANGES - END
++###
++
++
+ #################
+ # Build rule order
+ #################
+diff --git a/BaseTools/Source/Python/Workspace/InfBuildData.py b/BaseTools/Source/Python/Workspace/InfBuildData.py
+index e4ff1c6686669b4789d236fd11245139c879a5e4..1ec008244f393479f917907413777b3644b48c02 100644
+--- a/BaseTools/Source/Python/Workspace/InfBuildData.py
++++ b/BaseTools/Source/Python/Workspace/InfBuildData.py
+@@ -293,6 +293,19 @@ class InfBuildData(ModuleBuildClassObject):
+         elif 'UEFI_HII_RESOURCE_SECTION' in self._Defs \
+            and self._Defs['UEFI_HII_RESOURCE_SECTION'] == 'TRUE':
+             self._BuildType = 'UEFI_HII'
++
++
++        ###
++        ### RUST CHANGES - BEGIN
++        ###
++        elif self._Defs.get('RUST_MODULE', '').upper() == 'TRUE' \
++           and self._LibraryClass is None:
++            self._BuildType = 'RUST_MODULE'
++        ###
++        ### RUST CHANGES - END
++        ###
++
++
+         else:
+             self._BuildType = self._ModuleType.upper()
+ 

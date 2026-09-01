@@ -222,6 +222,8 @@
 !endif
   $(ODP_O6_PLATFORM_PATH)/DeviceTree/DeviceTree.inf
 
+  RustHelloWorld/RustHelloWorld.inf
+
 ###################################################################################################
 # BuildOptions Section - Define the module specific tool chain flags that should be used as
 #                        the default flags for a module. These flags are appended to any

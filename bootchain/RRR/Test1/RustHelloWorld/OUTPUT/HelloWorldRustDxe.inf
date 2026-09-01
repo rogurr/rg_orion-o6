@@ -1,0 +1,106 @@
+### @file
+#
+# Hello World Rust DXE driver.
+#
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# SPDX-License-Identifier: BSD-2-Clause-Patent
+#
+###
+
+# DO NOT EDIT
+# FILE auto-generated
+
+[Defines]
+  INF_VERSION                = 0x00010033
+  BASE_NAME                  = HelloWorldRustDxe
+  FILE_GUID                  = 1B7DDF6A-9B42-4D63-A3C8-5A1E64E05E31
+  MODULE_TYPE                = DXE_DRIVER
+
+[Packages.AARCH64]
+  MdePkg/MdePkg.dec
+
+[Binaries.AARCH64]
+  PE32|HelloWorldRustDxe.efi
+  DXE_DEPEX|HelloWorldRustDxe.depex
+
+[PatchPcd.AARCH64]
+
+[Protocols.AARCH64]
+  ## SOMETIMES_CONSUMES
+  gPcdProtocolGuid
+
+  ## CONSUMES
+  gEfiPcdProtocolGuid
+
+  ## SOMETIMES_CONSUMES
+  gGetPcdInfoProtocolGuid
+
+  ## SOMETIMES_CONSUMES
+  gEfiGetPcdInfoProtocolGuid
+
+
+[Ppis.AARCH64]
+
+[Guids.AARCH64]
+
+[PcdEx.AARCH64]
+
+[LibraryClasses.AARCH64]
+## @LIB_INSTANCES
+#  MdePkg/Library/DxePcdLib/DxePcdLib.inf
+#  MdePkg/Library/BaseMemoryLib/BaseMemoryLib.inf
+#  MdePkg/Library/BaseLib/BaseLib.inf
+#  MdePkg/Library/RegisterFilterLibNull/RegisterFilterLibNull.inf
+#  MdePkg/Library/BaseIoLibIntrinsic/BaseIoLibIntrinsic.inf
+#  Silicon/CIX/Sky1/Library/SocInitLib/SocInitLib.inf
+#  Silicon/CIX/Sky1/Library/ShMemLib/ShMemLib.inf
+#  ArmPlatformPkg/Library/PL011UartLib/PL011UartLib.inf
+#  Silicon/CIX/Sky1/Library/PL011UartClockLib/PL011UartClockLib.inf
+#  Platform/CIX/Sky1/Library/CixFwBootPerfLib/CixFwBootPerfLib.inf
+#  MdePkg/Library/BasePrintLib/BasePrintLib.inf
+#  Silicon/CIX/Sky1/Library/PL011SerialPortLib/PL011SerialPortLib.inf
+#  Silicon/CIX/Sky1/Library/CixBasePostCodeLibMmio/BasePostCodeLibMmio.inf
+#  MdePkg/Library/BaseDebugPrintErrorLevelLib/BaseDebugPrintErrorLevelLib.inf
+#  Platform/CIX/Sky1/Library/BaseDebugLibSerialPort/BaseDebugLibSerialPort.inf
+#  ArmPkg/Library/ArmLib/ArmBaseLib.inf
+#  ArmPkg/Library/ArmGenericTimerPhyCounterLib/ArmGenericTimerPhyCounterLib.inf
+#  Silicon/CIX/Sky1/Library/ArmArchTimerLib/ArmArchTimerLib.inf
+#  MdePkg/Library/UefiBootServicesTableLib/UefiBootServicesTableLib.inf
+#  ArmPkg/Library/CompilerIntrinsicsLib/CompilerIntrinsicsLib.inf
+#  MdePkg/Library/BaseStackCheckLib/BaseStackCheckLib.inf
+
+[Depex.AARCH64]
+#  (TRUE) AND (gEfiPcdProtocolGuid) AND (gEfiPcdProtocolGuid) AND (gEfiPcdProtocolGuid) AND (gEfiPcdProtocolGuid)
+
+
+
+#[Packages]
+#  MdePkg/MdePkg.dec
+
+[BuildOptions.AARCH64]
+## @AsBuilt
+##   GCC:DEBUG_GCC5_AARCH64_ASMLINK_FLAGS = /nologo /tiny
+##   GCC:DEBUG_GCC5_AARCH64_DLINK2_FLAGS = -Wl,--script=$(EDK_TOOLS_PATH)/Scripts/GccBase.lds -Wl,--defsym=PECOFF_HEADER_SIZE=0x228 -Wno-error
+##   GCC:DEBUG_GCC5_AARCH64_DTC_FLAGS = -H epapr
+##   GCC:DEBUG_GCC5_AARCH64_DTCPP_FLAGS = -E -x assembler-with-cpp -imacros AutoGen.h -nostdinc -undef
+##   GCC:DEBUG_GCC5_AARCH64_VFRPP_FLAGS = $(ARCHCC_FLAGS) $(PLATFORM_FLAGS) -x c -E -P -DVFRCOMPILE --include $(MODULE_NAME)StrDefs.h -DFW_CONFIG_UPDATE_SUPPORT=1
+##   GCC:DEBUG_GCC5_AARCH64_DLINK_FLAGS = -Wl,--emit-relocs -nostdlib -Wl,--gc-sections -u $(IMAGE_ENTRY_POINT) -Wl,-e,$(IMAGE_ENTRY_POINT),-Map,$(DEST_DIR_DEBUG)/$(BASE_NAME).map -z common-page-size=0x20 -z common-page-size=0x1000 -flto -Os -L/home/rogurr/src/rg_orion-o6/bootchain/modules/uefi/edk2/ArmPkg/Library/GccLto -llto-aarch64 -Wl,-plugin-opt=-pass-through=-llto-aarch64 -Wno-lto-type-mismatch
+##   GCC:DEBUG_GCC5_AARCH64_CARGO_FLAGS = 
+##   GCC:DEBUG_GCC5_AARCH64_OPTROM_FLAGS = -e
+##   GCC:DEBUG_GCC5_AARCH64_APP_FLAGS = 
+##   GCC:DEBUG_GCC5_AARCH64_ASL_FLAGS = 
+##   GCC:DEBUG_GCC5_AARCH64_PP_FLAGS = $(ARCHCC_FLAGS) $(PLATFORM_FLAGS) -E -x assembler-with-cpp -include AutoGen.h -DOPENSBI_EXTERNAL_SBI_TYPES=OpensbiTypes.h -DUPDATE_MEMORY_TOP
+##   GCC:DEBUG_GCC5_AARCH64_PLATFORM_FLAGS = 
+##   GCC:DEBUG_GCC5_AARCH64_OBJCOPY_FLAGS = objcopy not needed for
+##   GCC:DEBUG_GCC5_AARCH64_ASLCC_FLAGS = -x c -fno-lto -DMULTICORE_ENABLE
+##   GCC:DEBUG_GCC5_AARCH64_SYMRENAME_FLAGS = Symbol renaming not needed for
+##   GCC:DEBUG_GCC5_AARCH64_NASMB_FLAGS = -f bin
+##   GCC:DEBUG_GCC5_AARCH64_ASLPP_FLAGS = -x c -E -include AutoGen.h -DMULTICORE_ENABLE -DDYNAMIC_ACPI_CPU_ENABLE -DLINUX_ACPI_CONFIG_OVERRIDE -I/home/rogurr/src/rg_orion-o6/common/cix-edk2-platforms/../../common/cix-edk2-platforms/Platform/Radxa/Orion/O6/Drivers
+##   GCC:DEBUG_GCC5_AARCH64_ASLDLINK_FLAGS = -Wl,--emit-relocs -nostdlib -Wl,--gc-sections -u $(IMAGE_ENTRY_POINT) -Wl,-e,$(IMAGE_ENTRY_POINT),-Map,$(DEST_DIR_DEBUG)/$(BASE_NAME).map -z common-page-size=0x20 -Wl,--entry,ReferenceAcpiTable -u $(IMAGE_ENTRY_POINT) -Wl,--defsym=PECOFF_HEADER_SIZE=0 -Wl,--script=$(EDK_TOOLS_PATH)/Scripts/GccBase.lds -z common-page-size=0x20
+##   GCC:DEBUG_GCC5_AARCH64_RUST_FLAGS = 
+##   GCC:DEBUG_GCC5_AARCH64_GENFW_FLAGS = 
+##   GCC:DEBUG_GCC5_AARCH64_DEPS_FLAGS = -MMD -MF $@.deps
+##   GCC:DEBUG_GCC5_AARCH64_VFR_FLAGS = -l -n
+##   GCC:DEBUG_GCC5_AARCH64_RC_FLAGS = -I binary -O elf64-littleaarch64 -B aarch64     --rename-section .data=.hii
+##   GCC:DEBUG_GCC5_AARCH64_ASM_FLAGS = $(ARCHASM_FLAGS) $(PLATFORM_FLAGS) -c -x assembler -imacros AutoGen.h -mlittle-endian
+##   GCC:DEBUG_GCC5_AARCH64_CC_FLAGS = $(ARCHCC_FLAGS) $(PLATFORM_FLAGS) -g -Os -fshort-wchar -fno-builtin -fno-strict-aliasing -Wall -Werror -Wno-array-bounds -include AutoGen.h -fno-common -ffunction-sections -fdata-sections -DSTRING_ARRAY_NAME=$(BASE_NAME)Strings -g -Os -fshort-wchar -fno-builtin -fno-strict-aliasing -Wall -Werror -Wno-array-bounds -include AutoGen.h -fno-common -mlittle-endian -fno-short-enums -fverbose-asm -funsigned-char  -ffunction-sections -fdata-sections -Wno-address -fno-asynchronous-unwind-tables -fno-unwind-tables -fno-pic -fno-pie -ffixed-x18 -mcmodel=small -flto -Wno-unused-but-set-variable -Wno-unused-const-variable -fno-common -DCOMPILE_BUILD_DATE=36M260901154548N -DUEFI_FW_VERSION=9.0.3"-"cc7803410582"-debug:"36M260901154548N -DFASTBOOT_NVME -DMULTICORE_ENABLE -DUPDATE_MEMORY_TOP -DREBOOT_REASON_ENABLE -DPHYSICAL_PHY -DFV_MAIN_COMPRESSED -DDYNAMIC_ACPI_CPU_ENABLE -DSTMM_SUPPORT -DDEBUG_MODE

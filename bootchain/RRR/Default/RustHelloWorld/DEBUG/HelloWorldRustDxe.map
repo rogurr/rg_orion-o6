@@ -1,0 +1,61 @@
+ HelloWorldRustDxe-fe6ee8b1ffd37460
+
+ Timestamp is 6a97535b (Tue Sep  1 15:36:11 2026)
+
+ Preferred load address is 0000000000000000
+
+ Start         Length     Name                   Class
+ 0001:00000000 00000e74H .text                   CODE
+ 0002:00000000 0000017cH .rdata                  DATA
+ 0003:00000000 00000018H .data                   DATA
+ 0003:00000018 00000020H .bss                    DATA
+
+  Address         Publics by Value              Rva+Base               Lib:Object
+
+ 0001:00000000       _RNvXs1i_NtCshY7GFnqGkdJ_4core3fmtRNtB6_9ArgumentsNtB6_7Display3fmtCs675nZG1luY9_17HelloWorldRustDxe 0000000000001000     HelloWorldRustDxe-fe6ee8b1ffd37460.2i9em64yofeaqd9lzmzmchv0m.0ucfb95.rcgu.o
+ 0001:00000008       _RINvNtCs8zcUjoZ7Kml_3log13___private_api3loguNtB2_12GlobalLoggerECs675nZG1luY9_17HelloWorldRustDxe 0000000000001008     HelloWorldRustDxe-fe6ee8b1ffd37460.76tyti420p9bkz7voqsoduemy.0ucfb95.rcgu.o
+ 0001:0000005c       _RNvYNtCsfbOekrowm12_14arm_pl011_uart4UartNtNtCshY7GFnqGkdJ_4core3fmt5Write10write_charCs675nZG1luY9_17HelloWorldRustDxe.llvm.13239343551780022853 000000000000105c     HelloWorldRustDxe-fe6ee8b1ffd37460.dczcrsls8klguunlj6nat6ndn.0ucfb95.rcgu.o
+ 0001:000000fc       _RNvYNtCsfbOekrowm12_14arm_pl011_uart4UartNtNtCshY7GFnqGkdJ_4core3fmt5Write9write_fmtCs675nZG1luY9_17HelloWorldRustDxe 00000000000010fc     HelloWorldRustDxe-fe6ee8b1ffd37460.dczcrsls8klguunlj6nat6ndn.0ucfb95.rcgu.o
+ 0001:000001c0       _RNvNtCs8zcUjoZ7Kml_3log13___private_api3loc 00000000000011c0     liblog-81a1e0e0c07b5481:log-81a1e0e0c07b5481.log.63cb9ab91b5c247b-cgu.0.rcgu.o
+ 0001:000001cc       efi_main                   00000000000011cc     HelloWorldRustDxe-fe6ee8b1ffd37460.e6hpwgnw5vkqjluj979r9tt4t.0ucfb95.rcgu.o
+ 0001:000002a8       _RNvCs8zcUjoZ7Kml_3log10set_logger 00000000000012a8     liblog-81a1e0e0c07b5481:log-81a1e0e0c07b5481.log.63cb9ab91b5c247b-cgu.0.rcgu.o
+ 0001:00000318       _RNvXs0_NtCs8zcUjoZ7Kml_3log13___private_apiNtB5_12GlobalLoggerNtB7_3Log3log 0000000000001318     liblog-81a1e0e0c07b5481:log-81a1e0e0c07b5481.log.63cb9ab91b5c247b-cgu.0.rcgu.o
+ 0001:00000358       _RNvXs1_Cs8zcUjoZ7Kml_3logNtB5_5LevelNtNtCshY7GFnqGkdJ_4core3fmt7Display3fmt 0000000000001358     liblog-81a1e0e0c07b5481:log-81a1e0e0c07b5481.log.63cb9ab91b5c247b-cgu.0.rcgu.o
+ 0001:00000380       _RNvXs1_CsfbOekrowm12_14arm_pl011_uartNtB5_4UartNtNtCshY7GFnqGkdJ_4core3fmt5Write9write_str 0000000000001380     libarm_pl011_uart-b0a7a01957b2178e:arm_pl011_uart-b0a7a01957b2178e.arm_pl011_uart.b0eed8bec6a279ba-cgu.0.rcgu.o
+ 0001:000003b0       _RNvMsa_NtCshY7GFnqGkdJ_4core3fmtNtB5_9Formatter3pad 00000000000013b0     libcore-51f92e4ab864d16a:core-51f92e4ab864d16a.core.d14e00c5bb875f55-cgu.0.rcgu.o
+ 0001:000006c4       _RNvNtCshY7GFnqGkdJ_4core3fmt5write 00000000000016c4     libcore-51f92e4ab864d16a:core-51f92e4ab864d16a.core.d14e00c5bb875f55-cgu.0.rcgu.o
+ 0001:00000878       _RNvNtNtCshY7GFnqGkdJ_4core3str5count14do_count_chars 0000000000001878     libcore-51f92e4ab864d16a:core-51f92e4ab864d16a.core.d14e00c5bb875f55-cgu.0.rcgu.o
+ 0001:00000e64       _RNvXs8_NtCshY7GFnqGkdJ_4core3fmtNtB5_9ArgumentsNtB5_7Display3fmt 0000000000001e64     libcore-51f92e4ab864d16a:core-51f92e4ab864d16a.core.d14e00c5bb875f55-cgu.0.rcgu.o
+ 0002:00000000       anon.d273693e863e95468bb62719b70c7420.0.llvm.13239343551780022853 0000000000002000     HelloWorldRustDxe-fe6ee8b1ffd37460.dczcrsls8klguunlj6nat6ndn.0ucfb95.rcgu.o
+ 0002:000000e8       _RNvCs8zcUjoZ7Kml_3log15LOG_LEVEL_NAMES 00000000000020e8     liblog-81a1e0e0c07b5481:log-81a1e0e0c07b5481.log.63cb9ab91b5c247b-cgu.0.rcgu.o
+ 0003:00000010       __imp__RNvCs8zcUjoZ7Kml_3log20MAX_LOG_LEVEL_FILTER 0000000000003010     liblog-81a1e0e0c07b5481:log-81a1e0e0c07b5481.log.63cb9ab91b5c247b-cgu.0.rcgu.o
+ 0003:00000028       _RNvCs8zcUjoZ7Kml_3log20MAX_LOG_LEVEL_FILTER 0000000000003028     liblog-81a1e0e0c07b5481:log-81a1e0e0c07b5481.log.63cb9ab91b5c247b-cgu.0.rcgu.o
+
+ entry point at         0001:000001cc
+
+ Static symbols
+
+ 0001:00000110       _RNvXs_Cs675nZG1luY9_17HelloWorldRustDxeNtB4_12SimpleLoggerNtCs8zcUjoZ7Kml_3log3Log3log 0000000000001110     HelloWorldRustDxe-fe6ee8b1ffd37460.e6hpwgnw5vkqjluj979r9tt4t.0ucfb95.rcgu.o
+ 0001:000001c0       _RNvXs_Cs675nZG1luY9_17HelloWorldRustDxeNtB4_12SimpleLoggerNtCs8zcUjoZ7Kml_3log3Log5flush 00000000000011c0     HelloWorldRustDxe-fe6ee8b1ffd37460.e6hpwgnw5vkqjluj979r9tt4t.0ucfb95.rcgu.o
+ 0001:000001c0       _RNvXsk_Cs8zcUjoZ7Kml_3logNtB5_9NopLoggerNtB5_3Log3log 00000000000011c0     liblog-81a1e0e0c07b5481:log-81a1e0e0c07b5481.log.63cb9ab91b5c247b-cgu.0.rcgu.o
+ 0001:000001c0       _RNvXsk_Cs8zcUjoZ7Kml_3logNtB5_9NopLoggerNtB5_3Log5flush 00000000000011c0     liblog-81a1e0e0c07b5481:log-81a1e0e0c07b5481.log.63cb9ab91b5c247b-cgu.0.rcgu.o
+ 0001:000001c4       _RNvXs_Cs675nZG1luY9_17HelloWorldRustDxeNtB4_12SimpleLoggerNtCs8zcUjoZ7Kml_3log3Log7enabled 00000000000011c4     HelloWorldRustDxe-fe6ee8b1ffd37460.e6hpwgnw5vkqjluj979r9tt4t.0ucfb95.rcgu.o
+ 0001:00000378       _RNvXsk_Cs8zcUjoZ7Kml_3logNtB5_9NopLoggerNtB5_3Log7enabled 0000000000001378     liblog-81a1e0e0c07b5481:log-81a1e0e0c07b5481.log.63cb9ab91b5c247b-cgu.0.rcgu.o
+ 0002:00000030       anon.306cddbfdc2f8cdcd3b2de3e50dda580.0 0000000000002030     HelloWorldRustDxe-fe6ee8b1ffd37460.e6hpwgnw5vkqjluj979r9tt4t.0ucfb95.rcgu.o
+ 0002:0000003c       anon.306cddbfdc2f8cdcd3b2de3e50dda580.1 000000000000203c     HelloWorldRustDxe-fe6ee8b1ffd37460.e6hpwgnw5vkqjluj979r9tt4t.0ucfb95.rcgu.o
+ 0002:00000050       anon.306cddbfdc2f8cdcd3b2de3e50dda580.2 0000000000002050     HelloWorldRustDxe-fe6ee8b1ffd37460.e6hpwgnw5vkqjluj979r9tt4t.0ucfb95.rcgu.o
+ 0002:00000080       anon.306cddbfdc2f8cdcd3b2de3e50dda580.3 0000000000002080     HelloWorldRustDxe-fe6ee8b1ffd37460.e6hpwgnw5vkqjluj979r9tt4t.0ucfb95.rcgu.o
+ 0002:000000a0       anon.306cddbfdc2f8cdcd3b2de3e50dda580.4 00000000000020a0     HelloWorldRustDxe-fe6ee8b1ffd37460.e6hpwgnw5vkqjluj979r9tt4t.0ucfb95.rcgu.o
+ 0002:000000b8       anon.306cddbfdc2f8cdcd3b2de3e50dda580.5 00000000000020b8     HelloWorldRustDxe-fe6ee8b1ffd37460.e6hpwgnw5vkqjluj979r9tt4t.0ucfb95.rcgu.o
+ 0002:000000c9       anon.6350bb9c5e55f4f3da09c1bbe21bf700.0 00000000000020c9     liblog-81a1e0e0c07b5481:log-81a1e0e0c07b5481.log.63cb9ab91b5c247b-cgu.0.rcgu.o
+ 0002:000000cc       anon.6350bb9c5e55f4f3da09c1bbe21bf700.1 00000000000020cc     liblog-81a1e0e0c07b5481:log-81a1e0e0c07b5481.log.63cb9ab91b5c247b-cgu.0.rcgu.o
+ 0002:000000d1       anon.6350bb9c5e55f4f3da09c1bbe21bf700.2 00000000000020d1     liblog-81a1e0e0c07b5481:log-81a1e0e0c07b5481.log.63cb9ab91b5c247b-cgu.0.rcgu.o
+ 0002:000000d5       anon.6350bb9c5e55f4f3da09c1bbe21bf700.3 00000000000020d5     liblog-81a1e0e0c07b5481:log-81a1e0e0c07b5481.log.63cb9ab91b5c247b-cgu.0.rcgu.o
+ 0002:000000d9       anon.6350bb9c5e55f4f3da09c1bbe21bf700.4 00000000000020d9     liblog-81a1e0e0c07b5481:log-81a1e0e0c07b5481.log.63cb9ab91b5c247b-cgu.0.rcgu.o
+ 0002:000000de       anon.6350bb9c5e55f4f3da09c1bbe21bf700.5 00000000000020de     liblog-81a1e0e0c07b5481:log-81a1e0e0c07b5481.log.63cb9ab91b5c247b-cgu.0.rcgu.o
+ 0002:00000148       anon.6350bb9c5e55f4f3da09c1bbe21bf700.11 0000000000002148     liblog-81a1e0e0c07b5481:log-81a1e0e0c07b5481.log.63cb9ab91b5c247b-cgu.0.rcgu.o
+ 0002:00000178       _RNvNvCs8zcUjoZ7Kml_3log6logger3NOP 0000000000002178     liblog-81a1e0e0c07b5481:log-81a1e0e0c07b5481.log.63cb9ab91b5c247b-cgu.0.rcgu.o
+ 0003:00000000       _RNvCs8zcUjoZ7Kml_3log6LOGGER.0 0000000000003000     liblog-81a1e0e0c07b5481:log-81a1e0e0c07b5481.log.63cb9ab91b5c247b-cgu.0.rcgu.o
+ 0003:00000008       _RNvCs8zcUjoZ7Kml_3log6LOGGER.1 0000000000003008     liblog-81a1e0e0c07b5481:log-81a1e0e0c07b5481.log.63cb9ab91b5c247b-cgu.0.rcgu.o
+ 0003:00000018       _RNvCs675nZG1luY9_17HelloWorldRustDxe6LOGGER 0000000000003018     HelloWorldRustDxe-fe6ee8b1ffd37460.e6hpwgnw5vkqjluj979r9tt4t.0ucfb95.rcgu.o
+ 0003:00000030       _RNvCs8zcUjoZ7Kml_3log5STATE 0000000000003030     liblog-81a1e0e0c07b5481:log-81a1e0e0c07b5481.log.63cb9ab91b5c247b-cgu.0.rcgu.o

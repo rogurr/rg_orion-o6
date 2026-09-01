@@ -170,6 +170,8 @@ READ_LOCK_STATUS   = TRUE
 
   INF $(ODP_O6_PLATFORM_PATH)/DeviceTree/DeviceTree.inf
 
+  INF RustHelloWorld/RustHelloWorld.inf
+
 [FV.FVMAIN_COMPACT]
 FvAlignment        = 16
 ERASE_POLARITY     = 1
