@@ -1,0 +1,1 @@
+/home/rogurr/src/rg_orion-o6/bootchain/build/mod/uefi/DEBUG_GCC5/AARCH64/RustHelloWorld/RustHelloWorld/DEBUG/aarch64-unknown-uefi/debug/HelloWorldRustDxe.efi: /home/rogurr/src/rg_orion-o6/bootchain/modules/uefi/RustHelloWorld/src/main.rs
