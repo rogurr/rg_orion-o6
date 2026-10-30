@@ -216,8 +216,6 @@
   gArmPlatformTokenSpaceGuid.PcdCoreCount|12
   gArmTokenSpaceGuid.PcdArmPrimaryCore|0x400  #core4
   gArmPlatformTokenSpaceGuid.PcdCPUCorePrimaryStackSize|0x40000
-  gEfiMdeModulePkgTokenSpaceGuid.PcdMaxVariableSize|0x2000
-  gEfiMdeModulePkgTokenSpaceGuid.PcdMaxAuthVariableSize|0x2800
   gArmTokenSpaceGuid.PcdSystemMemoryBase|0x80000000
   gArmPlatformTokenSpaceGuid.PcdArmLcdDdrFrameBufferBase|0x84800000
   gArmPlatformTokenSpaceGuid.PcdArmLcdDdrFrameBufferSize|0x00800000
@@ -260,7 +258,6 @@
   gEmbeddedTokenSpaceGuid.PcdDefaultDtPref|FALSE
   gEfiMdePkgTokenSpaceGuid.PcdPerformanceLibraryPropertyMask|1
   gEfiMdePkgTokenSpaceGuid.PcdReportStatusCodePropertyMask|0x07
-  gEfiMdeModulePkgTokenSpaceGuid.PcdExtFpdtBootRecordPadSize|0x300000
   gFmpDevicePkgTokenSpaceGuid.PcdFmpDeviceImageTypeIdGuid|{GUID("351c9808-4b53-4363-9314-d339386e5685")}
   gCixPlatformTokenSpaceGuid.PcdSiliconDtbUpdateFileName|L"sky1-orion-o6.dtb"
   gCixPlatformTokenSpaceGuid.PcdSiliconDtbUpdateEnable|TRUE

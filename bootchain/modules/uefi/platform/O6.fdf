@@ -49,8 +49,7 @@ READ_LOCK_STATUS   = TRUE
 #      are forced to have a TRUE DEPEX and are placed at the beginning of the FV to be loaded first.
 # ODP_PRIORI  APRIORI DXE {
     INF RuleOverride = COMPILE_TRUE_DEPEX MdeModulePkg/Universal/PCD/Dxe/Pcd.inf
-    # ODP: Patina provides CpuDxe support
-    # INF ArmPkg/Drivers/CpuDxe/CpuDxe.inf
+    # ODP: INF RuleOverride = COMPILE_TRUE_DEPEX ArmPkg/Drivers/CpuDxe/CpuDxe.inf
     INF RuleOverride = COMPILE_TRUE_DEPEX MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
     INF RuleOverride = COMPILE_TRUE_DEPEX Platform/CIX/Sky1/Drivers/ArmScmiDxe/ArmScmiDxe.inf
     INF RuleOverride = BINARY_TRUE_DEPEX Silicon/CIX/Sky1/Drivers/PowerDxe/PowerDxe.inf
@@ -61,8 +60,7 @@ READ_LOCK_STATUS   = TRUE
     INF RuleOverride = BINARY_TRUE_DEPEX Platform/CIX/Sky1/Drivers/MmCommunicationDxe/ArmMmCommunication.inf
     INF RuleOverride = COMPILE_TRUE_DEPEX platform/OVERRIDE/Silicon/CIX/Sky1/Drivers/NorFlashStmmRuntimeDxe/NorFlashStmmRuntimeDxe.inf
     INF RuleOverride = COMPILE_TRUE_DEPEX MdeModulePkg/Universal/Variable/RuntimeDxe/VariableSmmRuntimeDxe.inf
-    # ODP: Patina provides ArmGicDxe support
-    # INF ArmPkg/Drivers/ArmGic/ArmGicDxe.inf
+    # ODP: INF RuleOverride = COMPILE_TRUE_DEPEX ArmPkg/Drivers/ArmGic/ArmGicDxe.inf
     INF RuleOverride = COMPILE_TRUE_DEPEX ArmPkg/Drivers/TimerDxe/TimerDxe.inf
     INF RuleOverride = COMPILE_TRUE_DEPEX Silicon/CIX/Sky1/Drivers/GenericWatchdogDxe/GenericWatchdogDxe.inf
     INF RuleOverride = COMPILE_TRUE_DEPEX Platform/CIX/Sky1/Drivers/PlatformConfigParamsManageDxe/PlatformConfigParamsManageDxe.inf
@@ -140,8 +138,6 @@ READ_LOCK_STATUS   = TRUE
   INF MdeModulePkg/Universal/Console/TerminalDxe/TerminalDxe.inf
   INF MdeModulePkg/Universal/SerialDxe/SerialDxe.inf
   INF EmbeddedPkg/Drivers/ConsolePrefDxe/ConsolePrefDxe.inf
-  # ODP: Patina provides ArmGicDxe support
-  # INF ArmPkg/Drivers/ArmGic/ArmGicDxe.inf
   INF Platform/CIX/Sky1/Drivers/PowerButtonDxe/PowerButtonDxe.inf
   INF MdeModulePkg/Universal/EbcDxe/EbcDxe.inf
   INF Silicon/CIX/Sky1/Drivers/I2cDxe/I2cDxe.inf
@@ -176,8 +172,8 @@ READ_LOCK_STATUS   = TRUE
   INF Platform/CIX/Sky1/Drivers/Pci/PciBusDxe/PciBusDxe.inf
   INF EmbeddedPkg/Drivers/NonCoherentIoMmuDxe/NonCoherentIoMmuDxe.inf
   INF Platform/CIX/Sky1/Drivers/NvmExpressDxe/NvmExpressDxe.inf
-  INF  MdeModulePkg/Universal/EsrtDxe/EsrtDxe.inf
-  INF  Platform/CIX/Sky1/Drivers/SystemFirmwareUpdate/SystemFirmwareReportDxe.inf
+  INF MdeModulePkg/Universal/EsrtDxe/EsrtDxe.inf
+  INF Platform/CIX/Sky1/Drivers/SystemFirmwareUpdate/SystemFirmwareReportDxe.inf
   INF Platform/CIX/Sky1/Drivers/CapsuleUpdateDxe/CapsuleUpdateDxe.inf
   FILE FREEFORM = PCD(gEfiSignedCapsulePkgTokenSpaceGuid.PcdEdkiiPkcs7TestPublicKeyFileGuid) {
     SECTION RAW = BaseTools/Source/Python/Pkcs7Sign/TestRoot.cer
