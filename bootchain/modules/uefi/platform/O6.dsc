@@ -26,8 +26,6 @@
 
 [LibraryClasses]
   RegisterFilterLib|MdePkg/Library/RegisterFilterLibNull/RegisterFilterLibNull.inf
-  CpuLib|MdePkg/Library/BaseCpuLib/BaseCpuLib.inf
-  SmmCpuRendezvousLib|MdePkg/Library/SmmCpuRendezvousLibNull/SmmCpuRendezvousLibNull.inf
   DebugLib|Platform/CIX/Sky1/Library/BaseDebugLibSerialPort/BaseDebugLibSerialPort.inf
   PostCodeLib|Silicon/CIX/Sky1/Library/CixBasePostCodeLibMmio/BasePostCodeLibMmio.inf
   DebugPrintErrorLevelLib|MdePkg/Library/BaseDebugPrintErrorLevelLib/BaseDebugPrintErrorLevelLib.inf
@@ -35,14 +33,11 @@
   SafeIntLib|MdePkg/Library/BaseSafeIntLib/BaseSafeIntLib.inf
   BmpSupportLib|MdeModulePkg/Library/BaseBmpSupportLib/BaseBmpSupportLib.inf
   SynchronizationLib|MdePkg/Library/BaseSynchronizationLib/BaseSynchronizationLib.inf
-  PerformanceLib|MdePkg/Library/BasePerformanceLibNull/BasePerformanceLibNull.inf
-  ReportStatusCodeLib|MdePkg/Library/BaseReportStatusCodeLibNull/BaseReportStatusCodeLibNull.inf
   PrintLib|MdePkg/Library/BasePrintLib/BasePrintLib.inf
   PeCoffGetEntryPointLib|MdePkg/Library/BasePeCoffGetEntryPointLib/BasePeCoffGetEntryPointLib.inf
   PeCoffLib|MdePkg/Library/BasePeCoffLib/BasePeCoffLib.inf
   IoLib|MdePkg/Library/BaseIoLibIntrinsic/BaseIoLibIntrinsic.inf
   UefiDecompressLib|MdePkg/Library/BaseUefiDecompressLib/BaseUefiDecompressLib.inf
-  CpuLib|MdePkg/Library/BaseCpuLib/BaseCpuLib.inf
   UefiLib|MdePkg/Library/UefiLib/UefiLib.inf
   UefiUsbLib|MdePkg/Library/UefiUsbLib/UefiUsbLib.inf
   HobLib|MdePkg/Library/DxeHobLib/DxeHobLib.inf
@@ -58,22 +53,15 @@
   SortLib|MdeModulePkg/Library/UefiSortLib/UefiSortLib.inf
   UefiRuntimeLib|MdePkg/Library/UefiRuntimeLib/UefiRuntimeLib.inf
   OrderedCollectionLib|MdePkg/Library/BaseOrderedCollectionRedBlackTreeLib/BaseOrderedCollectionRedBlackTreeLib.inf
-  FileExplorerLib|MdeModulePkg/Library/FileExplorerLib/FileExplorerLib.inf
   PcdLib|MdePkg/Library/DxePcdLib/DxePcdLib.inf
   BaseMemoryLib|MdePkg/Library/BaseMemoryLib/BaseMemoryLib.inf
   NULL|ArmPkg/Library/CompilerIntrinsicsLib/CompilerIntrinsicsLib.inf
   NULL|MdePkg/Library/BaseStackCheckLib/BaseStackCheckLib.inf
   CacheMaintenanceLib|ArmPkg/Library/ArmCacheMaintenanceLib/ArmCacheMaintenanceLib.inf
-  DefaultExceptionHandlerLib|Silicon/CIX/Sky1/Library/DefaultExceptionHandlerLib/DefaultExceptionHandlerLib.inf
-  CpuExceptionHandlerLib|ArmPkg/Library/ArmExceptionLib/ArmExceptionLib.inf
-  ArmDisassemblerLib|ArmPkg/Library/ArmDisassemblerLib/ArmDisassemblerLib.inf
-  ArmGicLib|ArmPkg/Drivers/ArmGic/ArmGicLib.inf
-  ArmGicArchLib|ArmPkg/Library/ArmGicArchLib/ArmGicArchLib.inf
   DmaLib|EmbeddedPkg/Library/NonCoherentDmaLib/NonCoherentDmaLib.inf
   TimeBaseLib|EmbeddedPkg/Library/TimeBaseLib/TimeBaseLib.inf
   ArmPlatformStackLib|ArmPlatformPkg/Library/ArmPlatformStackLib/ArmPlatformStackLib.inf
   ArmSmcLib|ArmPkg/Library/ArmSmcLib/ArmSmcLib.inf
-  ArmHvcLib|ArmPkg/Library/ArmHvcLib/ArmHvcLib.inf
   ArmGenericTimerCounterLib|ArmPkg/Library/ArmGenericTimerPhyCounterLib/ArmGenericTimerPhyCounterLib.inf
   UncachedMemoryAllocationLib|Silicon/CIX/Sky1/Library/UncachedMemoryAllocationLib/UncachedMemoryAllocationLib.inf
   PL011UartClockLib|Silicon/CIX/Sky1/Library/PL011UartClockLib/PL011UartClockLib.inf
@@ -82,32 +70,15 @@
   TimerLib|Silicon/CIX/Sky1/Library/ArmArchTimerLib/ArmArchTimerLib.inf
   PeCoffExtraActionLib|ArmPkg/Library/DebugPeCoffExtraActionLib/DebugPeCoffExtraActionLib.inf
   DebugAgentLib|MdeModulePkg/Library/DebugAgentLibNull/DebugAgentLibNull.inf
-  DebugAgentTimerLib|EmbeddedPkg/Library/DebugAgentTimerLibNull/DebugAgentTimerLibNull.inf
   FdtLib|EmbeddedPkg/Library/FdtLib/FdtLib.inf
   PartitionLib|Platform/CIX/Sky1/Library/PartitionLib/PartitionLib.inf
   FlashUpdateLib|Platform/CIX/Sky1/Library/FlashUpdateLib/FlashUpdateLib.inf
-  AvbLib|Platform/CIX/Sky1/Library/avb/AvbLib.inf
-  BootLib|Platform/CIX/Sky1/Library/BootLib/BootLib.inf
-  LaunchEfiLib|Platform/CIX/Sky1/Library/LaunchEfiLib/LaunchEfiLib.inf
-  MiniFastbootLib|Platform/CIX/Sky1/Library/FastbootLib/MiniFastbootLib.inf
   OpteeLib|Platform/CIX/Sky1/Library/OpteeLib/OpteeLib.inf
-  EfusePublicKeyLib|Platform/CIX/Sky1/Library/EfusePublicKeyLib/EfusePublicKeyLib.inf
-  FctMiscLib|Platform/CIX/Sky1/Library/FctMiscLib/FctMiscLib.inf
   StmmInfoLib|Platform/CIX/Sky1/Library/StmmInfoLib/StmmInfoLib.inf
-  TpmMeasurementLib|SecurityPkg/Library/DxeTpmMeasurementLib/DxeTpmMeasurementLib.inf
-  AuthVariableLib|SecurityPkg/Library/AuthVariableLib/AuthVariableLib.inf
   SecureBootVariableLib|SecurityPkg/Library/SecureBootVariableLib/SecureBootVariableLib.inf
   SecureBootVariableProvisionLib|SecurityPkg/Library/SecureBootVariableProvisionLib/SecureBootVariableProvisionLib.inf
   PlatformSecureLib|OvmfPkg/Library/PlatformSecureLib/PlatformSecureLib.inf
-  BaseCryptLib|CryptoPkg/Library/BaseCryptLib/BaseCryptLib.inf
-  IntrinsicLib|CryptoPkg/Library/IntrinsicLib/IntrinsicLib.inf
-  OpensslLib|CryptoPkg/Library/OpensslLib/OpensslLib.inf
-  TlsLib|CryptoPkg/Library/TlsLib/TlsLib.inf
   PlatformPKProtectionLib|SecurityPkg/Library/PlatformPKProtectionLibVarPolicy/PlatformPKProtectionLibVarPolicy.inf
-  RngLib|MdePkg/Library/BaseRngLibTimerLib/BaseRngLibTimerLib.inf
-  VarCheckLib|MdeModulePkg/Library/VarCheckLib/VarCheckLib.inf
-  VariableFlashInfoLib|MdeModulePkg/Library/BaseVariableFlashInfoLib/BaseVariableFlashInfoLib.inf
-  VariablePolicyLib|MdeModulePkg/Library/VariablePolicyLib/VariablePolicyLib.inf
   VariablePolicyHelperLib|MdeModulePkg/Library/VariablePolicyHelperLib/VariablePolicyHelperLib.inf
   CustomizedDisplayLib|MdeModulePkg/Library/CustomizedDisplayLib/CustomizedDisplayLib.inf
   ConfigParamsDataBlockLib|Silicon/CIX/Sky1/Library/ConfigParamsDataBlockLib/ConfigParamsDataBlockLib.inf
@@ -123,24 +94,16 @@
   I2cLib|Silicon/CIX/Sky1/Library/I2cLib/I2cLib.inf
   EcLib|Platform/CIX/Sky1/Library/Ite5570EcLib/Ite5570EcLib.inf
   ConfigParamsHookLib|Silicon/CIX/Sky1/Library/ConfigParamsHookNullLib/ConfigParamsHookNullLib.inf
-  PlatformConfigParamsHookLib|Platform/CIX/Sky1/Library/PlatformConfigParamsHookNullLib/PlatformConfigParamsHookNullLib.inf
-  PlatformEnvHookLib|Platform/CIX/Sky1/Library/PlatformEnvHookNullLib/PlatformEnvHookNullLib.inf
-  PlatformBootHookLib|Platform/CIX/Sky1/Library/PlatformBootHookNullLib/PlatformBootHookNullLib.inf
   NorFlashLib|Silicon/CIX/Sky1/Library/NorFlashLib/NorFlashStmmRuntimeLib.inf
-  NorFlashBasicLib|Silicon/CIX/Sky1/Library/NorFlashBasicLib/NorFlashBasicStmmLib.inf
   PciHostBridgeLib|Silicon/CIX/Sky1/Library/PciHostBridgeLib/PciHostBridgeLib.inf
   PciSegmentLib|Silicon/CIX/Sky1/Library/PciSegmentLib/PciSegmentLib.inf
   PlatformPcieLib|Silicon/CIX/Sky1/Library/PlatformPcieLib/PlatformPcieLib.inf
-  NetLib|NetworkPkg/Library/DxeNetLib/DxeNetLib.inf
-  DpuDxe|Silicon/CIX/Sky1/Drivers/DpuDxe/DpuDxe.inf
   DisplayLib|Silicon/CIX/Sky1/Library/DisplayLib/DisplayLib.inf
   ArmMtlLib|Silicon/CIX/Sky1/Library/CixMtlLib/CixMtlLib.inf
-  DtbUpdateLib|Platform/CIX/Sky1/Library/DtbUpdateLib/DtbUpdateLib.inf
   DtbCommonLib|Platform/CIX/Sky1/Library/DtbCommonLib/DtbCommonLib.inf
   ArmLib|ArmPkg/Library/ArmLib/ArmBaseLib.inf
   ArmMmuLib|ArmPkg/Library/ArmMmuLib/ArmMmuBaseLib.inf
   ArmPlatformLib|platform/Library/PlatformLib/PlatformLib.inf # ArmPlatformLib|Platform/CIX/Sky1/Library/PlatformLib/PlatformLib.inf
-  CapsuleLib|MdeModulePkg/Library/DxeCapsuleLibNull/DxeCapsuleLibNull.inf
   UefiBootManagerLib|MdeModulePkg/Library/UefiBootManagerLib/UefiBootManagerLib.inf
   BootLogoLib|MdeModulePkg/Library/BootLogoLib/BootLogoLib.inf
   PlatformBootManagerLib|Platform/CIX/Sky1/Library/PlatformBootManagerLib/PlatformBootManagerLib.inf
@@ -149,20 +112,13 @@
   SocInitLib|Silicon/CIX/Sky1/Library/SocInitLib/SocInitLib.inf
   FirmwareParseLib|Silicon/CIX/Sky1/Library/FirmwareParseLib/FirmwareParseLib.inf
   HwMutexLib|Silicon/CIX/Sky1/Library/HwMutexLib/HwMutexLib.inf
-  OpensslLib|CryptoPkg/Library/OpensslLib/OpensslLib.inf
-  IntrinsicLib|CryptoPkg/Library/IntrinsicLib/IntrinsicLib.inf
-  BaseCryptLib|CryptoPkg/Library/BaseCryptLib/BaseCryptLib.inf
   CapsuleLib|MdeModulePkg/Library/DxeCapsuleLibNull/DxeCapsuleLibNull.inf
   EdkiiSystemCapsuleLib|Platform/CIX/Sky1/Library/EdkiiSystemCapsuleLib/EdkiiSystemCapsuleLib.inf
   FmpAuthenticationLib|SecurityPkg/Library/FmpAuthenticationLibPkcs7/FmpAuthenticationLibPkcs7.inf
-  IniParsingLib|SignedCapsulePkg/Library/IniParsingLib/IniParsingLib.inf
-  PlatformFlashAccessLib|SignedCapsulePkg/Library/PlatformFlashAccessLibNull/PlatformFlashAccessLibNull.inf
-  DisplayUpdateProgressLib|MdeModulePkg/Library/DisplayUpdateProgressLibGraphics/DisplayUpdateProgressLibGraphics.inf
   RebootReasonLib|Silicon/CIX/Sky1/Library/RebootReasonLib/RebootReasonLib.inf
   CsuPmIpcLib|Silicon/CIX/Sky1/Library/CsuPmIpcLib/CsuPmIpcLib.inf
   ShMemLib|Silicon/CIX/Sky1/Library/ShMemLib/ShMemLib.inf
   MailBoxLib|Silicon/CIX/Sky1/Library/MailBoxLib/MailBoxLib.inf
-  RealTimeClockLib|EmbeddedPkg/Library/VirtualRealTimeClockLib/VirtualRealTimeClockLib.inf
   AcpiHelperLib|DynamicTablesPkg/Library/Common/AcpiHelperLib/AcpiHelperLib.inf
   AmlLib|Platform/CIX/Sky1/Library/Acpi/CIX/AmlLib/AmlLib.inf
   TableHelperLib|DynamicTablesPkg/Library/Common/TableHelperLib/TableHelperLib.inf
@@ -171,7 +127,6 @@
   CpuInfoLib|Silicon/CIX/Sky1/Library/CpuInfoLib/CpuInfoLib.inf
   HwHarvestLib|Silicon/CIX/Sky1/Library/HwHarvestLib/HwHarvestLib.inf
   CixS3IoLib|Platform/CIX/Sky1/Library/CixS3IoLib/CixS3IoLib.inf
-  ArmScmiLib|Silicon/CIX/Sky1/Library/ArmScmiLib/ArmScmiLib.inf
   OemMiscLib|Platform/CIX/Sky1/Library/SmbiosMiscLib/SmbiosMiscLib.inf
   CixFwBootPerfLib|Platform/CIX/Sky1/Library/CixFwBootPerfLib/CixFwBootPerfLib.inf
   EfiResetSystemLib|ArmPkg/Library/ArmPsciResetSystemLib/ArmPsciResetSystemLib.inf
@@ -182,7 +137,6 @@
   Tcg2PhysicalPresenceLib|Platform/CIX/Sky1/Library/DxeTcg2PhysicalPresenceLib/DxeTcg2PhysicalPresenceLib.inf
   Tcg2PpVendorLib|SecurityPkg/Library/Tcg2PpVendorLibNull/Tcg2PpVendorLibNull.inf
   TpmMeasurementLib|SecurityPkg/Library/DxeTpmMeasurementLib/DxeTpmMeasurementLib.inf
-  TpmPlatformHierarchyLib|SecurityPkg/Library/PeiDxeTpmPlatformHierarchyLib/PeiDxeTpmPlatformHierarchyLib.inf
   Tpm2DeviceLib|Platform/CIX/Sky1/Library/Tpm2DeviceLib/Tpm2DeviceLib.inf
   DTpmDeviceLib|Platform/CIX/Sky1/Library/DTpmDeviceLib/DTpmDeviceLib.inf
   FTpmDeviceLib|Platform/CIX/Sky1/Library/FTpmDeviceLibNull/FTpmDeviceLibNull.inf
@@ -197,17 +151,10 @@
   TrngLib|Silicon/CIX/Sky1/Library/TrngLib/TrngLib.inf
   RngLib|Silicon/CIX/Sky1/Library/RngLib/RngLib.inf
   DtbUpdateLibSi|Platform/CIX/Sky1/Library/DtbUpdateLibSi/DtbUpdateLib.inf
-  DpcLib|NetworkPkg/Library/DxeDpcLib/DxeDpcLib.inf
   NetLib|NetworkPkg/Library/DxeNetLib/DxeNetLib.inf
-  IpIoLib|NetworkPkg/Library/DxeIpIoLib/DxeIpIoLib.inf
-  UdpIoLib|NetworkPkg/Library/DxeUdpIoLib/DxeUdpIoLib.inf
-  TcpIoLib|NetworkPkg/Library/DxeTcpIoLib/DxeTcpIoLib.inf
-  HttpLib|NetworkPkg/Library/DxeHttpLib/DxeHttpLib.inf
-  HttpIoLib|NetworkPkg/Library/DxeHttpIoLib/DxeHttpIoLib.inf
 
 [LibraryClasses.common.SEC]
   PcdLib|MdePkg/Library/BasePcdLibNull/BasePcdLibNull.inf
-  BaseMemoryLib|MdePkg/Library/BaseMemoryLib/BaseMemoryLib.inf
   MemoryInitPeiLib|Platform/CIX/Sky1/Library/MemoryInitPeiLib/MemoryInitPeiLib.inf
   PlatformPeiLib|ArmPlatformPkg/PlatformPei/PlatformPeiLib.inf
   ExtractGuidedSectionLib|EmbeddedPkg/Library/PrePiExtractGuidedSectionLib/PrePiExtractGuidedSectionLib.inf
@@ -216,13 +163,6 @@
   HobLib|EmbeddedPkg/Library/PrePiHobLib/PrePiHobLib.inf
   PrePiHobListPointerLib|ArmPlatformPkg/Library/PrePiHobListPointerLib/PrePiHobListPointerLib.inf
   MemoryAllocationLib|EmbeddedPkg/Library/PrePiMemoryAllocationLib/PrePiMemoryAllocationLib.inf
-
-[LibraryClasses.common.DXE_CORE]
-  HobLib|MdePkg/Library/DxeCoreHobLib/DxeCoreHobLib.inf
-  MemoryAllocationLib|MdeModulePkg/Library/DxeCoreMemoryAllocationLib/DxeCoreMemoryAllocationLib.inf
-  DxeCoreEntryPoint|MdePkg/Library/DxeCoreEntryPoint/DxeCoreEntryPoint.inf
-  ExtractGuidedSectionLib|MdePkg/Library/DxeExtractGuidedSectionLib/DxeExtractGuidedSectionLib.inf
-  PerformanceLib|MdeModulePkg/Library/DxeCorePerformanceLib/DxeCorePerformanceLib.inf
 
 [LibraryClasses.common.DXE_DRIVER]
   SecurityManagementLib|MdeModulePkg/Library/DxeSecurityManagementLib/DxeSecurityManagementLib.inf
@@ -234,29 +174,20 @@
 [LibraryClasses.common.UEFI_APPLICATION]
   PerformanceLib|MdeModulePkg/Library/DxePerformanceLib/DxePerformanceLib.inf
   MemoryAllocationLib|MdePkg/Library/UefiMemoryAllocationLib/UefiMemoryAllocationLib.inf
-  HiiLib|MdeModulePkg/Library/UefiHiiLib/UefiHiiLib.inf
   ShellLib|ShellPkg/Library/UefiShellLib/UefiShellLib.inf
   FileHandleLib|MdePkg/Library/UefiFileHandleLib/UefiFileHandleLib.inf
-  AblAuthenticateLib|Platform/CIX/Sky1/Library/AblAuthenticateLib/AblAuthenticateLib.inf
 
 [LibraryClasses.common.UEFI_DRIVER]
-  ExtractGuidedSectionLib|MdePkg/Library/DxeExtractGuidedSectionLib/DxeExtractGuidedSectionLib.inf
   PerformanceLib|MdeModulePkg/Library/DxePerformanceLib/DxePerformanceLib.inf
   MemoryAllocationLib|MdePkg/Library/UefiMemoryAllocationLib/UefiMemoryAllocationLib.inf
-  UefiScsiLib|MdePkg/Library/UefiScsiLib/UefiScsiLib.inf
   BaseHidParseReportLib|Platform/CIX/Sky1/Library/BaseHidParseReportLib/BaseHidParseReportLib.inf
 
 [LibraryClasses.common.DXE_RUNTIME_DRIVER]
   DebugLib|MdePkg/Library/DxeRuntimeDebugLibSerialPort/DxeRuntimeDebugLibSerialPort.inf
   MemoryAllocationLib|MdePkg/Library/UefiMemoryAllocationLib/UefiMemoryAllocationLib.inf
-  CapsuleLib|MdeModulePkg/Library/DxeCapsuleLibNull/DxeCapsuleLibNull.inf
-  EfiResetSystemLib|ArmPkg/Library/ArmPsciResetSystemLib/ArmPsciResetSystemLib.inf
-  ArmSmcLib|ArmPkg/Library/ArmSmcLib/ArmSmcLib.inf
   HwMutexLib|Silicon/CIX/Sky1/Library/HwMutexLib/HwMutexRuntimeLib.inf
   PinMuxLib|Silicon/CIX/Sky1/Library/PinMuxLib/PinMuxRuntimeLib.inf
   GpioLib|Silicon/CIX/Sky1/Library/GpioLib/GpioRuntimeLib.inf
-  VariablePolicyLib|MdeModulePkg/Library/VariablePolicyLib/VariablePolicyLibRuntimeDxe.inf
-  BaseCryptLib|CryptoPkg/Library/BaseCryptLib/RuntimeCryptLib.inf
   CapsuleLib|MdeModulePkg/Library/DxeCapsuleLibFmp/DxeRuntimeCapsuleLib.inf
   EfiResetSystemLib|Platform/Radxa/Library/ArmPsciResetSystemLib/ArmPsciResetSystemLib.inf
   EcLib|Platform/CIX/Sky1/Library/Ite5570EcLib/Ite5570EcRuntimeLib.inf
@@ -507,13 +438,6 @@
   gEfiSecurityPkgTokenSpaceGuid.PcdTpmInstanceGuid|{0x5a, 0xf2, 0x6b, 0x28, 0xc3, 0xc2, 0x8c, 0x40, 0xb3, 0xb4, 0x25, 0xe6, 0x75, 0x8b, 0x73, 0x17}
 
 [Components]
-  ArmPlatformPkg/PrePi/PeiUniCore.inf{
-    <LibraryClasses>
-  }
-  MdeModulePkg/Core/Dxe/DxeMain.inf {
-    <LibraryClasses>
-      NULL|MdeModulePkg/Library/DxeCrc32GuidedSectionExtractLib/DxeCrc32GuidedSectionExtractLib.inf
-  }
   MdeModulePkg/Universal/PCD/Dxe/Pcd.inf {
     <LibraryClasses>
       PcdLib|MdePkg/Library/BasePcdLibNull/BasePcdLibNull.inf
@@ -538,7 +462,6 @@
       NULL|SecurityPkg/Library/DxeImageVerificationLib/DxeImageVerificationLib.inf
   }
   SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe.inf
-  SecurityPkg/EnrollFromDefaultKeysApp/EnrollFromDefaultKeysApp.inf
   Platform/CIX/Sky1/Drivers/SecureBootDxe/SecureBootDxe.inf
   SecurityPkg/VariableAuthenticated/SecureBootDefaultKeysDxe/SecureBootDefaultKeysDxe.inf
   Silicon/CIX/Sky1/Drivers/RngDxe/RngDxe.inf
@@ -607,20 +530,13 @@
   MdeModulePkg/Bus/Pci/PciHostBridgeDxe/PciHostBridgeDxe.inf
   Platform/CIX/Sky1/Drivers/Pci/PciBusDxe/PciBusDxe.inf
   EmbeddedPkg/Drivers/NonCoherentIoMmuDxe/NonCoherentIoMmuDxe.inf
-  Silicon/CIX/Sky1/Drivers/DpuDxe/DpuDxe.inf {
-    <LibraryClasses>
-       DisplayLib|Silicon/CIX/Sky1/Library/DisplayLib/DisplayLib.inf
-  }
-  platform/OVERRIDE/Silicon/CIX/Sky1/Drivers/LcdGraphicsOutputDxe/LcdGraphicsOutputDxe.inf {
-    <LibraryClasses>
-      DisplayLib|Silicon/CIX/Sky1/Library/DisplayLib/DisplayLib.inf
-  }
+  Silicon/CIX/Sky1/Drivers/DpuDxe/DpuDxe.inf
+  platform/OVERRIDE/Silicon/CIX/Sky1/Drivers/LcdGraphicsOutputDxe/LcdGraphicsOutputDxe.inf
   Platform/CIX/Sky1/Drivers/NvmExpressDxe/NvmExpressDxe.inf
   Platform/CIX/Sky1/Drivers/ArmScmiDxe/ArmScmiDxe.inf
   Silicon/CIX/Sky1/Drivers/ResetDxe/ResetDxe.inf
   Silicon/CIX/Sky1/Drivers/ClockDxe/ClockDxe.inf
   Silicon/CIX/Sky1/Drivers/PowerDxe/PowerDxe.inf
-  Platform/CIX/Sky1/Drivers/RealtekLan/RealtekLanDxe.inf
   MdeModulePkg/Universal/BootManagerPolicyDxe/BootManagerPolicyDxe.inf
   MdeModulePkg/Universal/BdsDxe/BdsDxe.inf
   MdeModulePkg/Universal/DevicePathDxe/DevicePathDxe.inf
@@ -635,24 +551,16 @@
   }
   MdeModulePkg/Universal/EsrtDxe/EsrtDxe.inf
   Platform/CIX/Sky1/Drivers/SystemFirmwareUpdate/SystemFirmwareReportDxe.inf
-  Platform/CIX/Sky1/Drivers/ABLUpdate/SystemFirmwareReportDxe.inf
-  MdeModulePkg/Application/CapsuleApp/CapsuleApp.inf {
-    <LibraryClasses>
-      PcdLib|MdePkg/Library/DxePcdLib/DxePcdLib.inf
-  }
   Platform/CIX/Sky1/Drivers/CapsuleUpdateDxe/CapsuleUpdateDxe.inf
-  MdeModulePkg/Application/HelloWorld/HelloWorld.inf
   Platform/CIX/Sky1/Drivers/FirmwareUpdateDxe/FwUpdateProtocolDxe.inf
   Platform/CIX/Sky1/Drivers/FwVersionDxe/FwVersionDxe.inf
   Platform/CIX/Sky1/Drivers/FwVersionDxe/FwVersionProtocolTest.inf
-  Silicon/CIX/Sky1/Drivers/ArmPsciMpServicesDxe/ArmPsciMpServicesDxe.inf
   Platform/CIX/Sky1/Drivers/PowerButtonDxe/PowerButtonDxe.inf
   Platform/CIX/Sky1/Drivers/Tcg2Acpi/Tcg2Acpi.inf
   Platform/CIX/Sky1/Drivers/TPMVariableDxe/TPMVariableDxe.inf
   SecurityPkg/Tcg/Tcg2Dxe/Tcg2Dxe.inf {
     <LibraryClasses>
       HashLib|SecurityPkg/Library/HashLibBaseCryptoRouter/HashLibBaseCryptoRouterDxe.inf
-      Tpm2DeviceLib|Platform/CIX/Sky1/Library/Tpm2DeviceLib/Tpm2DeviceLib.inf
       NULL|SecurityPkg/Library/Tpm2DeviceLibDTpm/Tpm2InstanceLibDTpm.inf
       NULL|SecurityPkg/Library/HashInstanceLibSha1/HashInstanceLibSha1.inf
       NULL|SecurityPkg/Library/HashInstanceLibSha256/HashInstanceLibSha256.inf
@@ -690,17 +598,11 @@
       gFmpDevicePkgTokenSpaceGuid.PcdFmpDevicePkcs7CertBufferXdr|{0x00, 0x00, 0x03, 0xF0, 0x30, 0x82, 0x03, 0xEC, 0x30, 0x82, 0x02, 0xD4, 0xA0, 0x03, 0x02, 0x01, 0x02, 0x02, 0x09, 0x00, 0xC0, 0x91, 0xC5, 0xE2, 0xB7, 0x66, 0xC0, 0xF8, 0x30, 0x0D, 0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x0B, 0x05, 0x00, 0x30, 0x81, 0x82, 0x31, 0x0B, 0x30, 0x09, 0x06, 0x03, 0x55, 0x04, 0x06, 0x13, 0x02, 0x43, 0x4E, 0x31, 0x0B, 0x30, 0x09, 0x06, 0x03, 0x55, 0x04, 0x08, 0x0C, 0x02, 0x53, 0x48, 0x31, 0x0B, 0x30, 0x09, 0x06, 0x03, 0x55, 0x04, 0x07, 0x0C, 0x02, 0x53, 0x48, 0x31, 0x12, 0x30, 0x10, 0x06, 0x03, 0x55, 0x04, 0x0A, 0x0C, 0x09, 0x54, 0x69, 0x61, 0x6E, 0x6F, 0x43, 0x6F, 0x72, 0x65, 0x31, 0x0E, 0x30, 0x0C, 0x06, 0x03, 0x55, 0x04, 0x0B, 0x0C, 0x05, 0x45, 0x44, 0x4B, 0x49, 0x49, 0x31, 0x11, 0x30, 0x0F, 0x06, 0x03, 0x55, 0x04, 0x03, 0x0C, 0x08, 0x54, 0x65, 0x73, 0x74, 0x52, 0x6F, 0x6F, 0x74, 0x31, 0x22, 0x30, 0x20, 0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x09, 0x01, 0x16, 0x13, 0x65, 0x64, 0x6B, 0x69, 0x69, 0x40, 0x74, 0x69, 0x61, 0x6E, 0x6F, 0x63, 0x6F, 0x72, 0x65, 0x2E, 0x6F, 0x72, 0x67, 0x30, 0x1E, 0x17, 0x0D, 0x31, 0x37, 0x30, 0x34, 0x31, 0x30, 0x30, 0x38, 0x32, 0x37, 0x34, 0x30, 0x5A, 0x17, 0x0D, 0x31, 0x37, 0x30, 0x35, 0x31, 0x30, 0x30, 0x38, 0x32, 0x37, 0x34, 0x30, 0x5A, 0x30, 0x81, 0x82, 0x31, 0x0B, 0x30, 0x09, 0x06, 0x03, 0x55, 0x04, 0x06, 0x13, 0x02, 0x43, 0x4E, 0x31, 0x0B, 0x30, 0x09, 0x06, 0x03, 0x55, 0x04, 0x08, 0x0C, 0x02, 0x53, 0x48, 0x31, 0x0B, 0x30, 0x09, 0x06, 0x03, 0x55, 0x04, 0x07, 0x0C, 0x02, 0x53, 0x48, 0x31, 0x12, 0x30, 0x10, 0x06, 0x03, 0x55, 0x04, 0x0A, 0x0C, 0x09, 0x54, 0x69, 0x61, 0x6E, 0x6F, 0x43, 0x6F, 0x72, 0x65, 0x31, 0x0E, 0x30, 0x0C, 0x06, 0x03, 0x55, 0x04, 0x0B, 0x0C, 0x05, 0x45, 0x44, 0x4B, 0x49, 0x49, 0x31, 0x11, 0x30, 0x0F, 0x06, 0x03, 0x55, 0x04, 0x03, 0x0C, 0x08, 0x54, 0x65, 0x73, 0x74, 0x52, 0x6F, 0x6F, 0x74, 0x31, 0x22, 0x30, 0x20, 0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x09, 0x01, 0x16, 0x13, 0x65, 0x64, 0x6B, 0x69, 0x69, 0x40, 0x74, 0x69, 0x61, 0x6E, 0x6F, 0x63, 0x6F, 0x72, 0x65, 0x2E, 0x6F, 0x72, 0x67, 0x30, 0x82, 0x01, 0x22, 0x30, 0x0D, 0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x01, 0x05, 0x00, 0x03, 0x82, 0x01, 0x0F, 0x00, 0x30, 0x82, 0x01, 0x0A, 0x02, 0x82, 0x01, 0x01, 0x00, 0xB9, 0x29, 0x29, 0x6C, 0x60, 0x0C, 0xD7, 0x23, 0xF6, 0x7D, 0xEE, 0xF0, 0x62, 0xFF, 0xD9, 0xC9, 0xAA, 0x55, 0x8C, 0x81, 0x95, 0x56, 0x3F, 0xB7, 0x56, 0x53, 0xB0, 0xC2, 0x82, 0x12, 0xC5, 0x3B, 0x75, 0x23, 0xB9, 0x4D, 0xD6, 0xC4, 0x55, 0x73, 0xF3, 0xAA, 0x95, 0xA8, 0x1B, 0xF3, 0x93, 0x7E, 0x9E, 0x40, 0xE4, 0x1D, 0x22, 0x9C, 0x93, 0x07, 0x0B, 0xD7, 0xAA, 0x5B, 0xD7, 0xE4, 0x1A, 0x21, 0x84, 0xD7, 0x63, 0x59, 0x03, 0x50, 0x1F, 0xF5, 0x14, 0x55, 0x93, 0x91, 0x9B, 0xF5, 0x52, 0xB0, 0xBF, 0x0E, 0x5C, 0x68, 0x3B, 0x59, 0x52, 0x98, 0x96, 0x56, 0xE1, 0xAB, 0xC4, 0x43, 0xBB, 0x05, 0x57, 0x78, 0x45, 0x01, 0x9F, 0x58, 0x15, 0x53, 0x0E, 0x11, 0x94, 0x2F, 0x0E, 0xF1, 0xA6, 0x19, 0xA2, 0x6E, 0x86, 0x39, 0x2B, 0x33, 0x8D, 0xC7, 0xC5, 0xEB, 0xEE, 0x1E, 0x33, 0xD3, 0x32, 0x94, 0xC1, 0x59, 0xC4, 0x0C, 0x97, 0x0B, 0x12, 0x48, 0x5F, 0x33, 0xF6, 0x60, 0x74, 0x7D, 0x57, 0xC2, 0x13, 0x2D, 0x7D, 0xA9, 0x87, 0xA3, 0x35, 0xEA, 0x91, 0x83, 0x3F, 0x67, 0x7A, 0x92, 0x1F, 0x01, 0x53, 0x9F, 0x62, 0x5F, 0x99, 0x12, 0xFD, 0x73, 0x1B, 0x2D, 0x9E, 0x2B, 0x6C, 0x34, 0x49, 0xAF, 0x4F, 0x07, 0x8F, 0xC0, 0xE9, 0x6B, 0x9E, 0x5F, 0x79, 0x35, 0xDA, 0x2A, 0x5C, 0x88, 0xEE, 0xF6, 0x48, 0x61, 0xDA, 0x96, 0xE3, 0x48, 0x46, 0xA0, 0x94, 0x1C, 0x9D, 0xF6, 0x5C, 0x87, 0x0E, 0xEF, 0x74, 0x09, 0x91, 0x0D, 0x3D, 0x5A, 0xE7, 0xC5, 0x4C, 0x8A, 0x7A, 0xAC, 0xA1, 0x85, 0xB6, 0x67, 0x44, 0x17, 0x55, 0x52, 0x3A, 0xE8, 0x11, 0x4D, 0x58, 0xA2, 0x93, 0x00, 0x62, 0xEA, 0x7B, 0x80, 0xED, 0xCF, 0xBD, 0xDF, 0x75, 0x80, 0x4B, 0xB9, 0x65, 0x63, 0xAD, 0x0B, 0x4D, 0x74, 0xFA, 0x59, 0x02, 0x03, 0x01, 0x00, 0x01, 0xA3, 0x63, 0x30, 0x61, 0x30, 0x1D, 0x06, 0x03, 0x55, 0x1D, 0x0E, 0x04, 0x16, 0x04, 0x14, 0x16, 0xAA, 0xD6, 0x8E, 0x1B, 0x2D, 0x43, 0xF3, 0x2D, 0xB0, 0x24, 0xAD, 0x36, 0x65, 0x3F, 0xB2, 0xFA, 0xB1, 0x2C, 0xED, 0x30, 0x1F, 0x06, 0x03, 0x55, 0x1D, 0x23, 0x04, 0x18, 0x30, 0x16, 0x80, 0x14, 0x16, 0xAA, 0xD6, 0x8E, 0x1B, 0x2D, 0x43, 0xF3, 0x2D, 0xB0, 0x24, 0xAD, 0x36, 0x65, 0x3F, 0xB2, 0xFA, 0xB1, 0x2C, 0xED, 0x30, 0x0F, 0x06, 0x03, 0x55, 0x1D, 0x13, 0x01, 0x01, 0xFF, 0x04, 0x05, 0x30, 0x03, 0x01, 0x01, 0xFF, 0x30, 0x0E, 0x06, 0x03, 0x55, 0x1D, 0x0F, 0x01, 0x01, 0xFF, 0x04, 0x04, 0x03, 0x02, 0x01, 0x86, 0x30, 0x0D, 0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x0B, 0x05, 0x00, 0x03, 0x82, 0x01, 0x01, 0x00, 0x95, 0xDE, 0xDF, 0xA4, 0x14, 0xDB, 0x92, 0x22, 0x78, 0x1A, 0xBD, 0x31, 0x9D, 0x1E, 0xD7, 0x2F, 0x0A, 0x10, 0x11, 0x5D, 0x74, 0x61, 0xE8, 0x30, 0xC4, 0xF3, 0x15, 0xE9, 0x30, 0x54, 0xF4, 0xBB, 0x0C, 0x04, 0x78, 0x13, 0x5D, 0x2C, 0xDD, 0x8C, 0x92, 0x90, 0xD1, 0x9C, 0xD0, 0xD0, 0x18, 0xA3, 0xA3, 0xFC, 0x8C, 0x28, 0x5A, 0xD4, 0x91, 0x4D, 0x08, 0xC3, 0xF6, 0x1A, 0xC8, 0xDD, 0xA6, 0x08, 0x58, 0xE2, 0x15, 0x95, 0xFB, 0x2D, 0x2D, 0x8A, 0xB1, 0x30, 0x80, 0xBD, 0x9A, 0xB6, 0xE1, 0x2C, 0x20, 0x3E, 0xDD, 0xC4, 0xC7, 0x55, 0x65, 0xCF, 0x28, 0x17, 0xF4, 0xEE, 0xDA, 0xBE, 0x77, 0x70, 0xD5, 0x52, 0xD6, 0x15, 0x7A, 0xFB, 0xAD, 0xAF, 0xFD, 0xD5, 0x45, 0x90, 0x5A, 0xE6, 0x31, 0x42, 0xD7, 0x84, 0xB3, 0x49, 0x56, 0x6A, 0xD3, 0x47, 0xF3, 0xBF, 0x68, 0x60, 0x8B, 0x0F, 0xE2, 0xAF, 0xF4, 0xE3, 0xEC, 0x12, 0xB9, 0xE2, 0x3A, 0x16, 0x11, 0x4E, 0x4D, 0x73, 0x79, 0xAF, 0x47, 0x85, 0x4C, 0x76, 0x26, 0x9E, 0x8B, 0x32, 0xC0, 0x8E, 0xC2, 0xDC, 0x27, 0xA6, 0xEF, 0xAC, 0x93, 0x9E, 0xA1, 0x5E, 0xCF, 0x34, 0x45, 0xE0, 0x2A, 0xC7, 0x9D, 0x4D, 0xD7, 0xD7, 0x37, 0x72, 0x97, 0xF8, 0x58, 0xF9, 0xB6, 0x35, 0x48, 0xF1, 0xD1, 0x0A, 0x72, 0x7F, 0xFD, 0x4D, 0x7C, 0xE9, 0xCC, 0xD8, 0x48, 0x1B, 0x49, 0x52, 0x53, 0xDE, 0x51, 0x01, 0x53, 0x35, 0xBC, 0x90, 0xCD, 0x8C, 0x8A, 0xCC, 0x43, 0x20, 0xA7, 0x45, 0xFF, 0x2B, 0x55, 0xB0, 0x8B, 0x2D, 0xFF, 0x55, 0x15, 0x4B, 0x84, 0xD0, 0xC3, 0xD3, 0x90, 0x9C, 0x94, 0x4B, 0x55, 0xD5, 0x62, 0xEA, 0x22, 0xAB, 0x62, 0x68, 0xDD, 0x53, 0xC6, 0xDC, 0xA5, 0xDD, 0x9A, 0x2D, 0x8E, 0x79, 0x7C, 0x2E, 0x9C, 0xE4, 0x66, 0x80, 0x8C, 0x1D}
     <LibraryClasses>
       FmpPayloadHeaderLib|FmpDevicePkg/Library/FmpPayloadHeaderLibV1/FmpPayloadHeaderLibV1.inf
-      FmpAuthenticationLib|SecurityPkg/Library/FmpAuthenticationLibPkcs7/FmpAuthenticationLibPkcs7.inf
       FmpDependencyLib|FmpDevicePkg/Library/FmpDependencyLib/FmpDependencyLib.inf
       FmpDependencyCheckLib|FmpDevicePkg/Library/FmpDependencyCheckLibNull/FmpDependencyCheckLibNull.inf
       FmpDependencyDeviceLib|FmpDevicePkg/Library/FmpDependencyDeviceLibNull/FmpDependencyDeviceLibNull.inf
       CapsuleUpdatePolicyLib|FmpDevicePkg/Library/CapsuleUpdatePolicyLibNull/CapsuleUpdatePolicyLibNull.inf
       FmpDeviceLib|FmpDevicePkg/Library/FmpDeviceLibNull/FmpDeviceLibNull.inf
-  }
-  NetworkPkg/UefiPxeBcDxe/UefiPxeBcDxe.inf {
-    <PcdsFixedAtBuild>
-      gEfiNetworkPkgTokenSpaceGuid.PcdIPv4PXESupport|TRUE
-      gEfiNetworkPkgTokenSpaceGuid.PcdIPv6PXESupport|TRUE
   }
   Platform/CIX/Sky1/PrePi/PeiUniCore.inf
   ShellPkg/Application/Shell/Shell.inf {
@@ -715,7 +617,6 @@
       NULL|ShellPkg/Library/UefiShellAcpiViewCommandLib/UefiShellAcpiViewCommandLib.inf
       NULL|ShellPkg/Library/UefiShellNetwork1CommandsLib/UefiShellNetwork1CommandsLib.inf
       HandleParsingLib|ShellPkg/Library/UefiHandleParsingLib/UefiHandleParsingLib.inf
-      PrintLib|MdePkg/Library/BasePrintLib/BasePrintLib.inf
       BcfgCommandLib|ShellPkg/Library/UefiShellBcfgCommandLib/UefiShellBcfgCommandLib.inf
     <PcdsFixedAtBuild>
       gEfiShellPkgTokenSpaceGuid.PcdShellLibAutoInitialize|FALSE
@@ -729,7 +630,7 @@
   Platform/Radxa/Orion/O6/DeviceTree/DeviceTree.inf
 
 [BuildOptions]
-  GCC:*_*_*_CC_FLAGS          = -fno-common
+  GCC:*_*_*_CC_FLAGS              = -fno-common
   GCC:*_*_*_CC_FLAGS              = -DCOMPILE_BUILD_DATE=$(BUILD_DATE)
 !if $(TARGET) == RELEASE
   GCC:*_*_*_CC_FLAGS              = -DUEFI_FW_VERSION=9.0.3
@@ -738,7 +639,7 @@
 !endif
   GCC:DEBUG_*_*_CC_FLAGS          = -DDEBUG_MODE
   GCC:RELEASE_*_*_CC_FLAGS        = -DMDEPKG_NDEBUG -DNDEBUG
-  GCC:*_*_*_CC_FLAGS          = -DFASTBOOT_NVME
+  GCC:*_*_*_CC_FLAGS              = -DFASTBOOT_NVME
   GCC:*_*_*_CC_FLAGS              = -DMULTICORE_ENABLE
   GCC:*_*_*_ASLCC_FLAGS           = -DMULTICORE_ENABLE
   GCC:*_*_*_ASLPP_FLAGS           = -DMULTICORE_ENABLE
@@ -753,7 +654,7 @@
   GCC:*_*_*_ASLPP_FLAGS           = -DLINUX_ACPI_CONFIG_OVERRIDE
   GCC:*_*_*_ASLPP_FLAGS           = -I$(WORKSPACE)/../../common/cix-edk2-platforms/Platform/Radxa/Orion/O6/Drivers
   GCC:*_*_*_CC_FLAGS              = -DSTMM_SUPPORT
-  GCC:*_*_*_VFRPP_FLAGS       = -DFW_CONFIG_UPDATE_SUPPORT=1
+  GCC:*_*_*_VFRPP_FLAGS           = -DFW_CONFIG_UPDATE_SUPPORT=1
 
 [BuildOptions.common.EDKII.DXE_RUNTIME_DRIVER]
   GCC:*_*_AARCH64_DLINK_FLAGS = -z common-page-size=0x10000
