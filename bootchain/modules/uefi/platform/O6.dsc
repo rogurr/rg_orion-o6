@@ -152,6 +152,9 @@
   RngLib|Silicon/CIX/Sky1/Library/RngLib/RngLib.inf
   DtbUpdateLibSi|Platform/CIX/Sky1/Library/DtbUpdateLibSi/DtbUpdateLib.inf
   NetLib|NetworkPkg/Library/DxeNetLib/DxeNetLib.inf
+  SecurityManagementLib|MdeModulePkg/Library/DxeSecurityManagementLib/DxeSecurityManagementLib.inf
+  FileHandleLib|MdePkg/Library/UefiFileHandleLib/UefiFileHandleLib.inf
+  NonDiscoverableDeviceRegistrationLib|MdeModulePkg/Library/NonDiscoverableDeviceRegistrationLib/NonDiscoverableDeviceRegistrationLib.inf
 
 [LibraryClasses.common.SEC]
   PcdLib|MdePkg/Library/BasePcdLibNull/BasePcdLibNull.inf
@@ -165,17 +168,13 @@
   MemoryAllocationLib|EmbeddedPkg/Library/PrePiMemoryAllocationLib/PrePiMemoryAllocationLib.inf
 
 [LibraryClasses.common.DXE_DRIVER]
-  SecurityManagementLib|MdeModulePkg/Library/DxeSecurityManagementLib/DxeSecurityManagementLib.inf
   PerformanceLib|MdeModulePkg/Library/DxePerformanceLib/DxePerformanceLib.inf
   MemoryAllocationLib|MdePkg/Library/UefiMemoryAllocationLib/UefiMemoryAllocationLib.inf
-  FileHandleLib|MdePkg/Library/UefiFileHandleLib/UefiFileHandleLib.inf
-  NonDiscoverableDeviceRegistrationLib|MdeModulePkg/Library/NonDiscoverableDeviceRegistrationLib/NonDiscoverableDeviceRegistrationLib.inf
 
 [LibraryClasses.common.UEFI_APPLICATION]
   PerformanceLib|MdeModulePkg/Library/DxePerformanceLib/DxePerformanceLib.inf
   MemoryAllocationLib|MdePkg/Library/UefiMemoryAllocationLib/UefiMemoryAllocationLib.inf
   ShellLib|ShellPkg/Library/UefiShellLib/UefiShellLib.inf
-  FileHandleLib|MdePkg/Library/UefiFileHandleLib/UefiFileHandleLib.inf
 
 [LibraryClasses.common.UEFI_DRIVER]
   PerformanceLib|MdeModulePkg/Library/DxePerformanceLib/DxePerformanceLib.inf
@@ -195,7 +194,6 @@
 [PcdsFeatureFlag]
   gEmbeddedTokenSpaceGuid.PcdPrePiProduceMemoryTypeInformationHob|TRUE
   gEfiMdeModulePkgTokenSpaceGuid.PcdTurnOffUsbLegacySupport|TRUE
-  gEfiMdeModulePkgTokenSpaceGuid.PcdConOutGopSupport|TRUE
   gEfiMdeModulePkgTokenSpaceGuid.PcdInstallAcpiSdtProtocol|TRUE
   gEfiMdeModulePkgTokenSpaceGuid.PcdEnableVariableRuntimeCache|FALSE
   gEfiMdeModulePkgTokenSpaceGuid.PcdVariableCollectStatistics|TRUE
@@ -206,51 +204,23 @@
   gEfiSignedCapsulePkgTokenSpaceGuid.PcdEdkiiSystemFirmwareFileGuid|{0xcf, 0x4f, 0x2e, 0x64, 0xf7, 0x2d, 0x15, 0x44, 0x8b, 0x70, 0xa0, 0x39, 0x09, 0xc5, 0x7b, 0x55}
 
 [PcdsFixedAtBuild]
-  gEfiMdePkgTokenSpaceGuid.PcdMaximumUnicodeStringLength|1000000
-  gEfiMdePkgTokenSpaceGuid.PcdMaximumAsciiStringLength|1000000
-  gEfiMdePkgTokenSpaceGuid.PcdMaximumLinkedListLength|1000000
-  gEfiMdePkgTokenSpaceGuid.PcdSpinLockTimeout|10000000
-  gEfiMdePkgTokenSpaceGuid.PcdDebugClearMemoryValue|0xAF
-  gEfiMdePkgTokenSpaceGuid.PcdPerformanceLibraryPropertyMask|0
   gEfiMdePkgTokenSpaceGuid.PcdPostCodePropertyMask|0x08
-  gEfiMdePkgTokenSpaceGuid.PcdUefiLibMaxPrintBufferSize|320
   gEfiMdePkgTokenSpaceGuid.PcdDebugPrintErrorLevel|0x800000CF
-  gEfiMdePkgTokenSpaceGuid.PcdReportStatusCodePropertyMask|0x07
-  gEmbeddedTokenSpaceGuid.PcdMemoryTypeEfiACPIReclaimMemory|0
-  gEmbeddedTokenSpaceGuid.PcdMemoryTypeEfiACPIMemoryNVS|0
-  gEmbeddedTokenSpaceGuid.PcdMemoryTypeEfiReservedMemoryType|0
   gEmbeddedTokenSpaceGuid.PcdMemoryTypeEfiRuntimeServicesData|0x450
   gEmbeddedTokenSpaceGuid.PcdMemoryTypeEfiRuntimeServicesCode|1200
   gEmbeddedTokenSpaceGuid.PcdMemoryTypeEfiBootServicesCode|1500
   gEmbeddedTokenSpaceGuid.PcdMemoryTypeEfiBootServicesData|13000
   gEmbeddedTokenSpaceGuid.PcdMemoryTypeEfiLoaderCode|0x1000
-  gEmbeddedTokenSpaceGuid.PcdMemoryTypeEfiLoaderData|0
-  gEmbeddedTokenSpaceGuid.PcdDmaDeviceOffset|0x00000000
-  gEfiMdeModulePkgTokenSpaceGuid.PcdFirmwareVersionString|L"cix_sky1_alpha_0.6"
   gEfiMdePkgTokenSpaceGuid.PcdUefiVariableDefaultPlatformLangCodes|"en-US"
   gEfiMdeModulePkgTokenSpaceGuid.PcdFirmwareRevision|0x00000003
-  gArmPlatformTokenSpaceGuid.PcdClusterCount|1
   gArmPlatformTokenSpaceGuid.PcdCoreCount|12
   gArmTokenSpaceGuid.PcdArmPrimaryCore|0x400  #core4
   gArmPlatformTokenSpaceGuid.PcdCPUCorePrimaryStackSize|0x40000
-  gArmTokenSpaceGuid.PcdSystemProductName|L"Sky1"
-  gEfiMdeModulePkgTokenSpaceGuid.PcdEmuVariableNvStoreReserved|0
-  gEfiMdeModulePkgTokenSpaceGuid.PcdEmuVariableNvModeEnable|FALSE
   gEfiMdeModulePkgTokenSpaceGuid.PcdMaxVariableSize|0x2000
   gEfiMdeModulePkgTokenSpaceGuid.PcdMaxAuthVariableSize|0x2800
-  gArmPlatformTokenSpaceGuid.PcdSystemMemoryUefiRegionSize|0x08000000
   gArmTokenSpaceGuid.PcdSystemMemoryBase|0x80000000
-  gArmTokenSpaceGuid.PcdSystemMemorySize|0x100000000
-  gCixPlatformTokenSpaceGuid.PcdKernelBootImgBase|0xA0000000
-  gCixPlatformTokenSpaceGuid.PcdKernelBootImgSize|0x08000000
-  gCixPlatformTokenSpaceGuid.PcdReservedSecureMemoryBase|0x80000000
-  gCixPlatformTokenSpaceGuid.PcdReservedSecureMemorySize|0x02500000
-  gCixPlatformTokenSpaceGuid.PcdReservedShareMemoryBase|0x82500000
-  gCixPlatformTokenSpaceGuid.PcdReservedShareMemorySize|0x01F00000
   gArmPlatformTokenSpaceGuid.PcdArmLcdDdrFrameBufferBase|0x84800000
   gArmPlatformTokenSpaceGuid.PcdArmLcdDdrFrameBufferSize|0x00800000
-  gCixPlatformTokenSpaceGuid.PcdReservedLinuxBase|0x86000000
-  gCixPlatformTokenSpaceGuid.PcdReservedLinuxSize|0x06200000
   gCixPlatformTokenSpaceGuid.PcdReservedAndroidBase|0x140000000
   gCixPlatformTokenSpaceGuid.PcdReservedAndroidSize|0x120000000
   gArmTokenSpaceGuid.PcdGicDistributorBase|0x0e010000    #0x0e001000
@@ -259,19 +229,12 @@
   gArmTokenSpaceGuid.PcdGenericWatchdogControlBase|0x16003000
   gArmTokenSpaceGuid.PcdGenericWatchdogRefreshBase|0x16008000
   gArmTokenSpaceGuid.PcdGenericWatchdogEl2IntrNum|408
-  gEfiMdeModulePkgTokenSpaceGuid.PcdSerialRegisterBase|0x040D0000 #0x091e1000 #0x0a051000
-  gArmPlatformTokenSpaceGuid.PcdSerialDbgRegisterBase|0x040e0000
-  gArmPlatformTokenSpaceGuid.PcdSerialDbgInterrupt|331
   gArmPlatformTokenSpaceGuid.PcdSerialDbgUartBaudRate|115200
-  gEfiMdePkgTokenSpaceGuid.PcdUartDefaultBaudRate|115200 #115200 921600
   gArmPlatformTokenSpaceGuid.PL011UartClkInHz|100000000 #100Mhz 100000000 #25Mhz 25000000
   gArmTokenSpaceGuid.PcdArmArchTimerFreqInHz|1000000000 #1Ghz 1000000000 #1Mhz 1000000
   gEfiMdePkgTokenSpaceGuid.PcdUartDefaultReceiveFifoDepth|0
   gArmPlatformTokenSpaceGuid.PL011UartInterrupt|330
   gEfiMdeModulePkgTokenSpaceGuid.PcdDiskIoDataBufferBlockNum|1024
-  gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiExposedTableVersions|0x20
-  gEmbeddedTokenSpaceGuid.PcdMemoryTypeEfiACPIReclaimMemory|0
-  gEmbeddedTokenSpaceGuid.PcdMemoryTypeEfiACPIMemoryNVS|0
   gEfiMdeModulePkgTokenSpaceGuid.PcdSmbiosVersion|0x0306
   gEfiMdeModulePkgTokenSpaceGuid.PcdSmbiosEntryPointProvideMethod|0x2
   gArmTokenSpaceGuid.PcdProcessorManufacturer|L"Cix Technology Group Co., Ltd."
@@ -291,16 +254,9 @@
   gEfiMdeModulePkgTokenSpaceGuid.PcdFirmwareVersionString|L"9.0.3-$(COMMIT_HASH)-debug:$(BUILD_DATE)"
 !endif
   gRadxaTokenSpaceGuid.PcdEdk2CixCommitHash|L"$(COMMIT_HASH)"
-  gRadxaTokenSpaceGuid.PcdEdk2CommitHash|L""
-  gRadxaTokenSpaceGuid.PcdEdk2NonOSICommitHash|L""
-  gRadxaTokenSpaceGuid.PcdEdk2PlatformsCommitHash|L""
   gEfiMdeModulePkgTokenSpaceGuid.PcdSerialRegisterBase|0x040D0000 #0x091e1000 #0x0a051000
-  gCixTokenSpaceGuid.PcdStateAfterG3|0x01
   gArmPlatformTokenSpaceGuid.PcdSerialDbgRegisterBase|0x040D0000
   gArmPlatformTokenSpaceGuid.PcdSerialDbgInterrupt|330
-  gCixPlatformTokenSpaceGuid.PcdAcpiSpcrEnable|TRUE
-  gEmbeddedTokenSpaceGuid.PcdDefaultDtPref|FALSE
-  gCixPlatformTokenSpaceGuid.PcdAcpiSpcrEnable|TRUE
   gEmbeddedTokenSpaceGuid.PcdDefaultDtPref|FALSE
   gEfiMdePkgTokenSpaceGuid.PcdPerformanceLibraryPropertyMask|1
   gEfiMdePkgTokenSpaceGuid.PcdReportStatusCodePropertyMask|0x07
@@ -313,22 +269,11 @@
   gCixTokenSpaceGuid.PcdPcieRootPort2Enable|TRUE
   gCixTokenSpaceGuid.PcdPcieRootPort3Enable|TRUE
   gCixTokenSpaceGuid.PcdPcieRootPort4Enable|TRUE
-  gCixTokenSpaceGuid.PcdPcieRootPort0MaxSpeed|0x03
-  gCixTokenSpaceGuid.PcdPcieRootPort1MaxSpeed|0x03
-  gCixTokenSpaceGuid.PcdPcieRootPort2MaxSpeed|0x03
-  gCixTokenSpaceGuid.PcdPcieRootPort3MaxSpeed|0x03
-  gCixTokenSpaceGuid.PcdPcieRootPort4MaxSpeed|0x03
-  gCixTokenSpaceGuid.PcdPcieRootPort0LaneNum|0x03
-  gCixTokenSpaceGuid.PcdPcieRootPort1LaneNum|0x02
-  gCixTokenSpaceGuid.PcdPcieRootPort2LaneNum|0x01
-  gCixTokenSpaceGuid.PcdPcieRootPort3LaneNum|0x00
-  gCixTokenSpaceGuid.PcdPcieRootPort4LaneNum|0x00
   gCixTokenSpaceGuid.PcdPcieRootPort0PeResetPin|2
   gCixTokenSpaceGuid.PcdPcieRootPort1PeResetPin|4
   gCixTokenSpaceGuid.PcdPcieRootPort2PeResetPin|5
   gCixTokenSpaceGuid.PcdPcieRootPort3PeResetPin|3
   gCixTokenSpaceGuid.PcdPcieRootPort4PeResetPin|6
-  gCixTokenSpaceGuid.PcdI2c2En|FALSE
   gCixTokenSpaceGuid.PcdI2c2BusFreq|100000
   gCixTokenSpaceGuid.PcdI2c3En|TRUE
   gCixTokenSpaceGuid.PcdI2c3Runtime|TRUE          # For RTC runtime service
@@ -352,8 +297,6 @@
   gCixPlatformTokenSpaceGuid.PcdTypecPortDefaultModes|{ 1, 4, 1, 4}
   gCixTokenSpaceGuid.PcdUsb3Control0Enable|TRUE
   gCixTokenSpaceGuid.PcdUsb3Control1Enable|TRUE
-  gCixTokenSpaceGuid.PcdUsbCDrdControl0Enable|TRUE
-  gCixTokenSpaceGuid.PcdUsbCDrdControl0DataRole|FALSE
   gCixTokenSpaceGuid.PcdUsbCControl0Enable|TRUE
   gCixTokenSpaceGuid.PcdUsbCControl1Enable|TRUE
   gCixTokenSpaceGuid.PcdUsbCControl2Enable|TRUE
@@ -361,15 +304,8 @@
   gCixTokenSpaceGuid.PcdUsb2Control1Enable|TRUE
   gCixTokenSpaceGuid.PcdUsb2Control2Enable|TRUE
   gCixTokenSpaceGuid.PcdUsb2Control3Enable|TRUE
-  gCixTokenSpaceGuid.PcdAcpiI2s5Enable|FALSE
-  gCixTokenSpaceGuid.PcdAcpiI2s6Enable|FALSE
-  gCixTokenSpaceGuid.PcdAcpiI2s7Enable|FALSE
-  gCixTokenSpaceGuid.PcdAcpiI2s8Enable|FALSE
-  gCixTokenSpaceGuid.PcdAcpiI2s9Enable|FALSE
   gArmTokenSpaceGuid.PcdSystemMemorySize|0x400000000
   gEfiNetworkPkgTokenSpaceGuid.PcdNetworkStackSupport|FALSE
-  gEfiNetworkPkgTokenSpaceGuid.PcdIPv4PXESupport|TRUE
-  gEfiNetworkPkgTokenSpaceGuid.PcdIPv6PXESupport|TRUE
   gEfiNetworkPkgTokenSpaceGuid.PcdIPv4HttpSupport|TRUE
   gEfiNetworkPkgTokenSpaceGuid.PcdIPv6HttpSupport|TRUE
   gCixTokenSpaceGuid.PcdSpi0En|TRUE
@@ -385,7 +321,6 @@
   gCixTokenSpaceGuid.PcdDPPriority0|1 # highest priority
   gCixTokenSpaceGuid.PcdDPPriority1|4 #
   gCixTokenSpaceGuid.PcdDPPriority2|0 #
-  gCixTokenSpaceGuid.PcdDPPriority3|3 #
   gCixTokenSpaceGuid.PcdDPPriority4|2 # lowest priority
   gCixPlatformTokenSpaceGuid.PcdAcpiPrefPmProf|0x01  # Desktop
   gCixTokenSpaceGuid.PcdAcpiCsiDmaEnable|FALSE
@@ -395,15 +330,11 @@
   gCixTokenSpaceGuid.PcdCpuCore5En|FALSE
   gCixTokenSpaceGuid.PcdAcpiCpuLpiState|0x1
   gCixTokenSpaceGuid.PcdAcpiCppcType|0x02
-  gCixTokenSpaceGuid.PcdStateAfterG3|0x0
   gCixPlatformTokenSpaceGuid.PcdAcpiSpcrEnable|TRUE
   gCixPlatformTokenSpaceGuid.PcdDTPMSupport|TRUE
-  gCixPlatformTokenSpaceGuid.PcdFTPMSupport|FALSE
-  gCixPlatformTokenSpaceGuid.PcdDTPMSpiBus|0x0          # 0:SPI1=0x04090000  1:SPI2=0x040A0000
   gCixPlatformTokenSpaceGuid.PcdDTPMSpiChipSelect|0x1   # 1:Slave Select 0   2:Slave Select 1
   gCixPlatformTokenSpaceGuid.PcdActiveTpmInterfaceType|0x01
   gCixTokenSpaceGuid.PcdAcpiUart0Enable|FALSE
-  gCixTokenSpaceGuid.PcdAcpiCIXUart1DriverEnable|TRUE
 
 [PcdsPatchableInModule]
   gEfiMdeModulePkgTokenSpaceGuid.PcdSerialClockRate|500000000
@@ -418,23 +349,17 @@
   gEfiMdeModulePkgTokenSpaceGuid.PcdBootDiscoveryPolicy|L"BootDiscoveryPolicy"|gBootDiscoveryPolicyMgrFormsetGuid|0
 
 [PcdsDynamicDefault]
-  gEfiMdeModulePkgTokenSpaceGuid.PcdVideoHorizontalResolution|1920
-  gEfiMdeModulePkgTokenSpaceGuid.PcdVideoVerticalResolution|1080
-  gEfiMdeModulePkgTokenSpaceGuid.PcdSetupVideoHorizontalResolution|640
-  gEfiMdeModulePkgTokenSpaceGuid.PcdSetupVideoVerticalResolution|480
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageVariableSize|0x28000
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwWorkingSize|0x28000
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwSpareSize|0x28000
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageVariableBase64|0x00380000
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwWorkingBase64|(0x00380000 + 0x28000)
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwSpareBase64|(0x00380000 + 0x28000 + 0x28000)
-  gEmbeddedTokenSpaceGuid.PcdDmaDeviceLimit|0x17fffffff
   gEmbeddedTokenSpaceGuid.PcdDmaDeviceLimit|0x47fffffff
   gEfiMdeModulePkgTokenSpaceGuid.PcdVideoHorizontalResolution|1920
   gEfiMdeModulePkgTokenSpaceGuid.PcdVideoVerticalResolution|1080
   gEfiMdeModulePkgTokenSpaceGuid.PcdSetupVideoHorizontalResolution|800
   gEfiMdeModulePkgTokenSpaceGuid.PcdSetupVideoVerticalResolution|600
-  gCixPlatformTokenSpaceGuid.PcdDynamicUint64Test|0x11111111
   gEfiSecurityPkgTokenSpaceGuid.PcdTpmInstanceGuid|{0x5a, 0xf2, 0x6b, 0x28, 0xc3, 0xc2, 0x8c, 0x40, 0xb3, 0xb4, 0x25, 0xe6, 0x75, 0x8b, 0x73, 0x17}
 
 [Components]
