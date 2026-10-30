@@ -95,49 +95,28 @@ READ_LOCK_STATUS   = TRUE
     # ODP: Patina provides CpuDxe support
     # INF ArmPkg/Drivers/CpuDxe/CpuDxe.inf
     INF RuleOverride = COMPILE_TRUE_DEPEX MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
-!if $(SOC_PWR_CLK_RST_ENABLE) == TRUE
     # SCMI Driver
     INF RuleOverride = COMPILE_TRUE_DEPEX Platform/CIX/Sky1/Drivers/ArmScmiDxe/ArmScmiDxe.inf
     # power
     INF RuleOverride = BINARY_TRUE_DEPEX Silicon/CIX/Sky1/Drivers/PowerDxe/PowerDxe.inf
     # clock
     INF RuleOverride = BINARY_TRUE_DEPEX Silicon/CIX/Sky1/Drivers/ClockDxe/ClockDxe.inf
-!endif
     # reset
     INF RuleOverride = BINARY_TRUE_DEPEX Silicon/CIX/Sky1/Drivers/ResetDxe/ResetDxe.inf
     INF RuleOverride = COMPILE_TRUE_DEPEX Platform/CIX/Sky1/Drivers/S3SaveStateDxe/S3SaveStateDxe.inf
     INF RuleOverride = BINARY_TRUE_DEPEX Silicon/CIX/Sky1/Drivers/SocDxe/SocDxe.inf
-!if $(STMM_SUPPORT) == TRUE
     INF RuleOverride = BINARY_TRUE_DEPEX Platform/CIX/Sky1/Drivers/MmCommunicationDxe/ArmMmCommunication.inf
-!endif
-!if $(SOC_XSPI_ENABLE) == TRUE
-!if $(STMM_SUPPORT) == TRUE
     INF RuleOverride = COMPILE_TRUE_DEPEX platform/OVERRIDE/Silicon/CIX/Sky1/Drivers/NorFlashStmmRuntimeDxe/NorFlashStmmRuntimeDxe.inf
-!else
-    INF RuleOverride = BINARY_TRUE_DEPEX Silicon/CIX/Sky1/Drivers/NorFlashDxe/NorFlashDxe.inf
-!endif
-!endif
-!if $(VARIABLE_SUPPORT) == "SPI" && $(STMM_SUPPORT) == FALSE
-    INF RuleOverride = COMPILE_TRUE_DEPEX MdeModulePkg/Universal/FaultTolerantWriteDxe/FaultTolerantWriteDxe.inf
-!endif
-!if $(VARIABLE_SUPPORT) == "SPI" && $(STMM_SUPPORT) == TRUE
     INF RuleOverride = COMPILE_TRUE_DEPEX MdeModulePkg/Universal/Variable/RuntimeDxe/VariableSmmRuntimeDxe.inf
-!else
-    INF RuleOverride = COMPILE_TRUE_DEPEX MdeModulePkg/Universal/Variable/RuntimeDxe/VariableRuntimeDxe.inf
-!endif
 
   # ODP: Patina provides ArmGicDxe support
   # INF ArmPkg/Drivers/ArmGic/ArmGicDxe.inf
   INF RuleOverride = COMPILE_TRUE_DEPEX ArmPkg/Drivers/TimerDxe/TimerDxe.inf
   INF RuleOverride = COMPILE_TRUE_DEPEX Silicon/CIX/Sky1/Drivers/GenericWatchdogDxe/GenericWatchdogDxe.inf
-!if $(CFG_PARAM_MANAGE_ENABLE) == TRUE
     INF RuleOverride = COMPILE_TRUE_DEPEX Platform/CIX/Sky1/Drivers/PlatformConfigParamsManageDxe/PlatformConfigParamsManageDxe.inf
     INF RuleOverride = COMPILE_TRUE_DEPEX Silicon/CIX/Sky1/Drivers/ConfigParamsManageDxe/ConfigParamsManageDxe.inf
-!endif
-!if $(TOKEN_SETUP_SUPPORT) == FALSE
     INF RuleOverride = COMPILE_TRUE_DEPEX Platform/CIX/Sky1/Drivers/PlatformSetupVariableInitDxe/PlatformSetupVariableInitDxe.inf
     INF RuleOverride = COMPILE_TRUE_DEPEX Platform/CIX/Sky1/Drivers/PlatformDxe/PlatformDxe.inf
-!endif
 # ODP_PRIORI  }
 
 # inf file list has be move to Sky1Common.fdf.inc
@@ -177,56 +156,36 @@ READ_LOCK_STATUS   = TRUE
   # INF ArmPkg/Drivers/CpuDxe/CpuDxe.inf
   # ODP_PRIORI INF MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
   # ODP_PRIORI INF Platform/CIX/Sky1/Drivers/S3SaveStateDxe/S3SaveStateDxe.inf
-!if $(CFG_PARAM_MANAGE_ENABLE) == TRUE
   # ODP_PRIORI INF Platform/CIX/Sky1/Drivers/PlatformConfigParamsManageDxe/PlatformConfigParamsManageDxe.inf
   # ODP_PRIORI INF Silicon/CIX/Sky1/Drivers/ConfigParamsManageDxe/ConfigParamsManageDxe.inf
-!endif
-!if $(TOKEN_SETUP_SUPPORT) == TRUE
-  INF Platform/CIX/Sky1/Drivers/PlatformSetupVariableInitDxe/PlatformSetupVariableInitDxe.inf
-!endif
   # ODP_PRIORI INF Silicon/CIX/Sky1/Drivers/SocDxe/SocDxe.inf
   # ODP_PRIORI INF Platform/CIX/Sky1/Drivers/PlatformDxe/PlatformDxe.inf
   INF MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf
   INF Silicon/CIX/Sky1/Drivers/RngDxe/RngDxe.inf
   INF MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
-!if $(SOC_PWR_CLK_RST_ENABLE) == TRUE
   # SCMI Driver
   # ODP_PRIORI INF Platform/CIX/Sky1/Drivers/ArmScmiDxe/ArmScmiDxe.inf
   # power
-!if $(DIAGS_KERNEL_ENABLE) == TRUE
-  # ODP_PRIORI INF CixDiagsKernelPkg/Sky1/Drivers/PowerDxe/PowerDxe.inf
-!else
   # ODP_PRIORI INF Silicon/CIX/Sky1/Drivers/PowerDxe/PowerDxe.inf
-!endif
   # clock
   # ODP_PRIORI !if $(DIAGS_KERNEL_ENABLE) == TRUE
   # ODP_PRIORI   INF CixDiagsKernelPkg/Sky1/Drivers/ClockDxe/ClockDxe.inf
   # ODP_PRIORI !else
   # ODP_PRIORI   INF Silicon/CIX/Sky1/Drivers/ClockDxe/ClockDxe.inf
   # ODP_PRIORI !endif
-!endif
   # reset
   # ODP_PRIORI INF Silicon/CIX/Sky1/Drivers/ResetDxe/ResetDxe.inf
 
-!if $(SOC_CDNSP_ENABLE) == TRUE || $(SOC_CDNSP_HOST_ENABLE) == TRUE
   INF Silicon/CIX/Sky1/Drivers/TypecPhyDxe/TypecPhyDxe.inf
-  !if $(PLATFORM_PD_ENABLE) == TRUE
   INF Platform/CIX/Sky1/Drivers/PdDxe/PdDxe.inf
-  !endif
-!endif
 
-!if $(SOC_USB_DEVICE_ENABLE) == TRUE
-  !if $(SOC_CDNSP_ENABLE) == TRUE
     INF Silicon/CIX/Sky1/Drivers/CdnspDxe/CdnspDxe.inf
-  !endif
     INF Platform/CIX/Sky1/Drivers/UsbDeviceControlDxe/UsbDeviceControlDxe.inf
     INF Platform/CIX/Sky1/Application/Fastboot/Fastboot.inf
     INF Platform/CIX/Sky1/Drivers/LaunchFastbootDxe/LaunchFastbootDxe.inf
-!endif
 
   INF MdeModulePkg/Bus/Pci/NonDiscoverablePciDeviceDxe/NonDiscoverablePciDeviceDxe.inf
 
-!if $(SOC_CDNSP_HOST_ENABLE) == TRUE
   INF MdeModulePkg/Bus/Pci/UhciDxe/UhciDxe.inf
   INF MdeModulePkg/Bus/Pci/EhciDxe/EhciDxe.inf
   INF MdeModulePkg/Bus/Pci/XhciDxe/XhciDxe.inf
@@ -237,37 +196,11 @@ READ_LOCK_STATUS   = TRUE
   INF Silicon/CIX/Sky1/Drivers/UsbCHostDxe/UsbCHostDxe.inf
   INF Silicon/CIX/Sky1/Drivers/Usb32HostDxe/Usb32HostDxe.inf
   INF Silicon/CIX/Sky1/Drivers/Usb20HostDxe/Usb20HostDxe.inf
-!endif
 
-!if $(STMM_SUPPORT) == TRUE
   # ODP_PRIORI INF Platform/CIX/Sky1/Drivers/MmCommunicationDxe/ArmMmCommunication.inf
-!endif
-!if $(SOC_XSPI_ENABLE) == TRUE
-!if $(STMM_SUPPORT) == TRUE
   # ODP_PRIORI INF Silicon/CIX/Sky1/Drivers/NorFlashStmmRuntimeDxe/NorFlashStmmRuntimeDxe.inf
-!else
-  # ODP_PRIORI INF Silicon/CIX/Sky1/Drivers/NorFlashDxe/NorFlashDxe.inf
-!endif
-!endif
-!if $(VARIABLE_SUPPORT) == "SPI" && $(STMM_SUPPORT) == FALSE
-  # ODP_PRIORI INF MdeModulePkg/Universal/FaultTolerantWriteDxe/FaultTolerantWriteDxe.inf
-!endif
-!if $(VARIABLE_SUPPORT) == "SPI" && $(STMM_SUPPORT) == TRUE
   # ODP_PRIORI INF MdeModulePkg/Universal/Variable/RuntimeDxe/VariableSmmRuntimeDxe.inf
-!else
-  # ODP_PRIORI INF MdeModulePkg/Universal/Variable/RuntimeDxe/VariableRuntimeDxe.inf
-!endif
-!if $(EFUSE_OEM_KEY_ENABLE) == TRUE
-  INF Platform/CIX/Sky1/Drivers/EfuseOemKeyDxe/EfuseOemKeyDxe.inf
-  FILE FREEFORM = PCD(gCixPlatformTokenSpaceGuid.PcdOemPublicKeyFileGuid) {
-     SECTION RAW = Platform/CIX/Sky1/Drivers/EfuseOemKeyDxe/OemPublicKey.bin
-     SECTION UI = "OemPublicKey"
-  }
-!endif
-!if $(PCIE_HOST_ENABLE) == TRUE
   INF Silicon/CIX/Sky1/Drivers/PcieInitDxe/PcieInitDxe.inf
-!endif
-!if $(SECURE_BOOT_ENABLE) == TRUE
 ## @file
 # FDF include file which allows to embed Secure Boot keys
 #
@@ -277,71 +210,33 @@ READ_LOCK_STATUS   = TRUE
 #  SPDX-License-Identifier: BSD-2-Clause-Patent
 #
 
-!if $(DEFAULT_KEYS) == TRUE
   FILE FREEFORM = 85254ea7-4759-4fc4-82d4-5eed5fb0a4a0 {
-  !ifdef $(PK_DEFAULT_FILE)
-    SECTION RAW = $(PK_DEFAULT_FILE)
-  !endif
+    SECTION RAW = Platform/CIX/Sky1/Drivers/SecureBootDxe/PK.cer
     SECTION UI = "PK Default"
   }
 
   FILE FREEFORM = 6f64916e-9f7a-4c35-b952-cd041efb05a3 {
-  !ifdef $(KEK_DEFAULT_FILE1)
-    SECTION RAW = $(KEK_DEFAULT_FILE1)
-  !endif
-  !ifdef $(KEK_DEFAULT_FILE2)
-    SECTION RAW = $(KEK_DEFAULT_FILE2)
-  !endif
-  !ifdef $(KEK_DEFAULT_FILE3)
-    SECTION RAW = $(KEK_DEFAULT_FILE3)
-  !endif
+    SECTION RAW = Platform/CIX/Sky1/Drivers/SecureBootDxe/KEK.cer
     SECTION UI = "KEK Default"
   }
 
   FILE FREEFORM = c491d352-7623-4843-accc-2791a7574421 {
-  !ifdef $(DB_DEFAULT_FILE1)
-    SECTION RAW = $(DB_DEFAULT_FILE1)
-  !endif
-  !ifdef $(DB_DEFAULT_FILE2)
-    SECTION RAW = $(DB_DEFAULT_FILE2)
-  !endif
-  !ifdef $(DB_DEFAULT_FILE3)
-    SECTION RAW = $(DB_DEFAULT_FILE3)
-  !endif
+    SECTION RAW = Platform/CIX/Sky1/Drivers/SecureBootDxe/DB.cer
     SECTION UI = "DB Default"
   }
 
   FILE FREEFORM = 36c513ee-a338-4976-a0fb-6ddba3dafe87 {
-  !ifdef $(DBT_DEFAULT_FILE1)
-    SECTION RAW = $(DBT_DEFAULT_FILE1)
-  !endif
-  !ifdef $(DBT_DEFAULT_FILE2)
-    SECTION RAW = $(DBT_DEFAULT_FILE2)
-  !endif
-  !ifdef $(DBT_DEFAULT_FILE3)
-    SECTION RAW = $(DBT_DEFAULT_FILE3)
-  !endif
     SECTION UI = "DBT Default"
   }
 
   FILE FREEFORM = 5740766a-718e-4dc0-9935-c36f7d3f884f {
-  !ifdef $(DBX_DEFAULT_FILE1)
-    SECTION RAW = $(DBX_DEFAULT_FILE1)
-  !endif
-  !ifdef $(DBX_DEFAULT_FILE2)
-    SECTION RAW = $(DBX_DEFAULT_FILE2)
-  !endif
-  !ifdef $(DBX_DEFAULT_FILE3)
-    SECTION RAW = $(DBX_DEFAULT_FILE3)
-  !endif
+    SECTION RAW = Platform/CIX/Sky1/Drivers/SecureBootDxe/DBX.cer
     SECTION UI = "DBX Default"
   }
 
-!endif
   INF SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe.inf
   INF SecurityPkg/VariableAuthenticated/SecureBootDefaultKeysDxe/SecureBootDefaultKeysDxe.inf
   INF Platform/CIX/Sky1/Drivers/SecureBootDxe/SecureBootDxe.inf
-!endif
   INF MdeModulePkg/Universal/MonotonicCounterRuntimeDxe/MonotonicCounterRuntimeDxe.inf
   INF EmbeddedPkg/ResetRuntimeDxe/ResetRuntimeDxe.inf
   INF EmbeddedPkg/RealTimeClockRuntimeDxe/RealTimeClockRuntimeDxe.inf
@@ -350,18 +245,12 @@ READ_LOCK_STATUS   = TRUE
   #
   # Multiple Console IO support
   #
-!if $(SLT_ENABLE) == TRUE
-  INF EmbeddedPkg/SimpleTextInOutSerial/SimpleTextInOutSerial.inf
-!else
   INF MdeModulePkg/Universal/Console/ConPlatformDxe/ConPlatformDxe.inf
   INF MdeModulePkg/Universal/Console/ConSplitterDxe/ConSplitterDxe.inf
   INF MdeModulePkg/Universal/Console/GraphicsConsoleDxe/GraphicsConsoleDxe.inf
   INF MdeModulePkg/Universal/Console/TerminalDxe/TerminalDxe.inf
   INF MdeModulePkg/Universal/SerialDxe/SerialDxe.inf
-!if $(TOKEN_CONSOLE_PREF_SUPPORT) == TRUE
   INF EmbeddedPkg/Drivers/ConsolePrefDxe/ConsolePrefDxe.inf
-!endif
-!endif
 
 # ODP: Patina provides ArmGicDxe support
 # !if $(DIAGS_KERNEL_ENABLE) == TRUE
@@ -370,50 +259,21 @@ READ_LOCK_STATUS   = TRUE
 # INF ArmPkg/Drivers/ArmGic/ArmGicDxe.inf
 # !endif
   # ODP_PRIORI INF ArmPkg/Drivers/TimerDxe/TimerDxe.inf
-!if $(POWER_BUTTON_ENABLE) == TRUE
   INF Platform/CIX/Sky1/Drivers/PowerButtonDxe/PowerButtonDxe.inf
-!endif
 
 #  INF MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
   # ODP_PRIORI INF Silicon/CIX/Sky1/Drivers/GenericWatchdogDxe/GenericWatchdogDxe.inf
   INF MdeModulePkg/Universal/EbcDxe/EbcDxe.inf
 
-!if $(SOC_GPIO_INTR_ENABLE) == TRUE
-  INF Silicon/CIX/Sky1/Drivers/GpioInterruptDxe/GpioInterruptDxe.inf
-!endif
-!if $(SOC_GMAC_ENABLE) == TRUE
-  INF Silicon/CIX/Sky1/Drivers/GmacSnpDxe/GmacSnpDxe.inf
-!endif
-!if $(DTB_UPDATE_ENABLE) == TRUE
-  INF Platform/CIX/Sky1/Drivers/DtbUpdateDxe/DtbUpdateDxe.inf
-!endif
-!if $(PLATFORM_DTB_UPDATE_ENABLE) == TRUE
-  INF Platform/CIX/Sky1/Drivers/PlatformDtbUpdateDxe/PlatformDtbUpdateDxe.inf
-!endif
-!if $(RLOG_DUMP_ENABLE) == TRUE
-  INF Platform/CIX/Sky1/Drivers/RamLogDumpDxe/RamLogDumpDxe.inf
-!endif
-!if $(SOC_I2C_ENABLE) == TRUE
   INF Silicon/CIX/Sky1/Drivers/I2cDxe/I2cDxe.inf
-  !if $(I2C_EC_ENABLE) == TRUE
   INF Platform/CIX/Sky1/Drivers/EcPlatformDxe/EcPlatformDxe.inf
-  !endif
-  !if $(I2C_HID_ENABLE) == TRUE
   INF Platform/CIX/Sky1/Drivers/I2cHidKeyboard/I2cHidKeyboard.inf
   INF Platform/CIX/Sky1/Drivers/I2cHidServiceDriver/I2cHidServiceDriver.inf
   INF Platform/CIX/Sky1/Drivers/I2cHidDeviceDxe/I2cHidDeviceDxe.inf
-  !endif
-!endif
 
-!if $(SOC_SPI_ENABLE) == TRUE
   INF Silicon/CIX/Sky1/Drivers/SpiDxe/SpiDxe.inf
-!endif
 
-!if $(SOC_HDA_ENABLE) == TRUE
-  INF Silicon/CIX/Sky1/Drivers/HdaDxe/HdaDxe.inf
-!endif
 
-!if $(SOC_GOP_ENABLE) == TRUE
   #
   # GOP Support
   #
@@ -426,14 +286,11 @@ READ_LOCK_STATUS   = TRUE
   # TianoCore logo (splash screen)
   #
   #INF MdeModulePkg/Logo/LogoDxe.inf
-!endif
-!if $(AMD_GOP_DRIVER_SUPPORT) == TRUE
  FILE DRIVER = 27E5BA77-5839-400b-A7DA-5F5D78F0C539
  {
    SECTION PE32 = Platform/CIX/Sky1/Drivers/AmdGop/Arm64Gop_1_68.efi
    SECTION UI = "AmdGop"
  }
-!endif
   #
   # FAT filesystem + GPT/MBR partitioning
   #
@@ -441,65 +298,16 @@ READ_LOCK_STATUS   = TRUE
   INF MdeModulePkg/Universal/Disk/PartitionDxe/PartitionDxe.inf
   INF FatPkg/EnhancedFatDxe/Fat.inf
 
-!if $(NTFS_DRIVER_SUPPORT) == TRUE
- FILE DRIVER = D3E589F2-010A-4438-B4E5-7620C403D26F
- {
-   SECTION PE32 = Platform/CIX/Sky1/Drivers/NTFS/NTFS.efi
-   SECTION UI = "NTFS"
- }
-!endif
 
-!if $(EXT4_DRIVER_SUPPORT) == TRUE
-## @file
-# Ext4 FDF include file for All Architectures.
-#
-# SPDX-FileCopyrightText: Copyright (c) 2022 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
-# SPDX-License-Identifier: BSD-2-Clause-Patent
-#
-##
 
-!if $(EXT4_ENABLE) == TRUE
-  INF Features/Ext4Pkg/Ext4Dxe/Ext4Dxe.inf
-!endif
-!endif
-
-!if $(REALTEK_LAN_DRIVER_SUPPORT) == TRUE
- INF Platform/CIX/Sky1/Drivers/RealtekLan/RealtekLanDxe.inf
- FILE DRIVER = 785277C5-20B9-4940-8D9F-341AEAAB4DEF
- {
-   SECTION PE32 = Platform/CIX/Sky1/Drivers/RealtekLan/RtkUndiDxe.efi
-   SECTION UI = "Realtek"
-   SECTION DXE_DEPEX = Platform/CIX/Sky1/Drivers/RealtekLan/RealtekLan.depex
- }
-
- FILE DRIVER = 2367AC97-E2F5-470C-8DE6-C481F2640928
- {
-   SECTION PE32 = Platform/CIX/Sky1/Drivers/RealtekLan/RtkUsbUndiDxe.efi
-   SECTION UI = "Realtek-USB-LAN"
-   SECTION DXE_DEPEX = Platform/CIX/Sky1/Drivers/RealtekLan/RealtekLan.depex
- }
-!endif
   INF MdeModulePkg/Universal/Disk/UnicodeCollation/EnglishDxe/EnglishDxe.inf
   # FV FileSystem
-!if $(FV_SIMPLE_FILE_SUPPORT) == TRUE
-  INF MdeModulePkg/Universal/FvSimpleFileSystemDxe/FvSimpleFileSystemDxe.inf
-!endif
-!if $(TOKEN_RAM_DISK_SUPPORT) == TRUE
-  INF MdeModulePkg/Universal/Disk/RamDiskDxe/RamDiskDxe.inf
-  INF Platform/CIX/Sky1/Drivers/CreateRamDiskDxe/CreateRamDiskDxe.inf
-!endif
 
-!if $(COMPILE_SYSTEM_LOADER) == android
-  INF Platform/CIX/Sky1/Application/LinuxLoader/LinuxLoader.inf
-  INF Platform/CIX/Sky1/Application/ABSelect/ABSelect.inf
-  INF Platform/CIX/Sky1/Drivers/AndroidConfigDxe/AndroidConfigDxe.inf
-!endif
   #INF Platform/CIX/Sky1/Application/HelloWorld/HelloWorld.inf
   #INF MdeModulePkg/Application/HelloWorld/HelloWorld.inf
   #
   # ACPI Support
   #
-!if $(ACPI_ENABLE) == TRUE
   INF MdeModulePkg/Universal/Acpi/AcpiTableDxe/AcpiTableDxe.inf
   INF RuleOverride = ACPITABLE Platform/CIX/Sky1/Drivers/AcpiSocTables/AcpiSocTables.inf
   INF Platform/CIX/Sky1/Drivers/AcpiSocDxe/AcpiSocDxe.inf
@@ -507,25 +315,18 @@ READ_LOCK_STATUS   = TRUE
   INF Platform/CIX/Sky1/Drivers/ConfigurationManagerDxe/ConfigurationManagerDxe.inf
   INF DynamicTablesPkg/Drivers/DynamicTableFactoryDxe/DynamicTableFactoryDxe.inf
   INF Platform/CIX/Sky1/Drivers/DynamicTableManagerDxe/DynamicTableManagerDxe.inf
-!endif
   #
   # boot logo
   #
-!if $(BOOT_LOGO_ENABLE) == TRUE
-  INF Platform/CIX/Sky1/Drivers/Logo/LogoDxe.inf
-!endif
   #
   # SMBIOS/DMI
   #
-!if $(SMBIOS_ENABLE) == TRUE
   INF MdeModulePkg/Universal/SmbiosDxe/SmbiosDxe.inf
   INF ArmPkg/Universal/Smbios/ProcessorSubClassDxe/ProcessorSubClassDxe.inf
   INF Platform/CIX/Sky1/Drivers/CixSmbiosDxe/CixSmbiosDxe.inf
-!endif
   #
   # PCI Support
   #
-!if $(PCIE_HOST_ENABLE) == TRUE
   INF ArmPkg/Drivers/ArmPciCpuIo2Dxe/ArmPciCpuIo2Dxe.inf
   INF MdeModulePkg/Bus/Pci/PciHostBridgeDxe/PciHostBridgeDxe.inf
   INF Platform/CIX/Sky1/Drivers/Pci/PciBusDxe/PciBusDxe.inf
@@ -534,151 +335,35 @@ READ_LOCK_STATUS   = TRUE
   # NVMe boot devices
   #
   INF Platform/CIX/Sky1/Drivers/NvmExpressDxe/NvmExpressDxe.inf
-!endif
 
-!if $(CAPSULE_ENABLE) == TRUE
   INF  MdeModulePkg/Universal/EsrtDxe/EsrtDxe.inf
 #  INF  SignedCapsulePkg/Universal/SystemFirmwareUpdate/SystemFirmwareReportDxe.inf
-!if $(COMPILE_SYSTEM_LOADER) == android
-  INF  Platform/CIX/Sky1/Drivers/ABLUpdate/SystemFirmwareReportDxe.inf
-!else
   INF  Platform/CIX/Sky1/Drivers/SystemFirmwareUpdate/SystemFirmwareReportDxe.inf
-!endif
   INF Platform/CIX/Sky1/Drivers/CapsuleUpdateDxe/CapsuleUpdateDxe.inf
   FILE FREEFORM = PCD(gEfiSignedCapsulePkgTokenSpaceGuid.PcdEdkiiPkcs7TestPublicKeyFileGuid) {
      SECTION RAW = BaseTools/Source/Python/Pkcs7Sign/TestRoot.cer
      SECTION UI = "Pkcs7TestRoot"
      }
-!endif
-!if $(FW_UPDATE_ENABLE) == TRUE
   # firmware update protocol
   INF Platform/CIX/Sky1/Drivers/FirmwareUpdateDxe/FwUpdateProtocolDxe.inf
   # FILE FREEFORM  = C0903BAC-CC0D-C264-B85B-70F1821A45C6 { # gEcFirmwareFileGuid
   #     SECTION RAW = Platform/CIX/Sky1/Drivers/FirmwareUpdateDxe/ec.bin
   # }
-!endif
-!if $(PM_CONFIG_UPDATE_SUPPORT) == TRUE
-  INF Platform/CIX/Sky1/Drivers/PmConfigUpdateDxe/PmConfigUpdateDxe.inf
-!endif
-!if $(SE_CONFIG_UPDATE_SUPPORT) == TRUE
-  INF Platform/CIX/Sky1/Drivers/SeConfigUpdateDxe/SeConfigUpdateDxe.inf
-!endif
-!if $(MEM_CONFIG_UPDATE_SUPPORT) == TRUE
-  INF Platform/CIX/Sky1/Drivers/MemConfigUpdateDxe/MemConfigUpdateDxe.inf
-!endif
-!if $(FW_VERSION_ENABLE) == TRUE
   INF Platform/CIX/Sky1/Drivers/FwVersionDxe/FwVersionProtocolTest.inf
-!endif
-!if $(NETWORK_ENABLE) == TRUE
-  #
-  # Network Modules
-  #
-## @file
-# Network FDF include file for All Architectures.
-#
-# This file can be included to a platform FDF by using
-# "!include NetworkPkg/Network.fdf.inc" to add EDKII network stack drivers
-# according to the value of flags described in "NetworkPkg/Network.dsc.inc".
-#
-# Copyright (c) 2019, Intel Corporation. All rights reserved.<BR>
-#
-#    SPDX-License-Identifier: BSD-2-Clause-Patent
-#
-
-!if $(NETWORK_ENABLE) == TRUE
-  INF  NetworkPkg/DpcDxe/DpcDxe.inf
-
-  !if $(NETWORK_SNP_ENABLE) == TRUE
-    INF  NetworkPkg/SnpDxe/SnpDxe.inf
-  !endif
-
-  !if $(NETWORK_VLAN_ENABLE) == TRUE
-    INF  NetworkPkg/VlanConfigDxe/VlanConfigDxe.inf
-  !endif
-
-  INF  NetworkPkg/MnpDxe/MnpDxe.inf
-
-  !if $(NETWORK_IP4_ENABLE) == TRUE
-    INF  NetworkPkg/ArpDxe/ArpDxe.inf
-    INF  NetworkPkg/Dhcp4Dxe/Dhcp4Dxe.inf
-    INF  NetworkPkg/Ip4Dxe/Ip4Dxe.inf
-    INF  NetworkPkg/Udp4Dxe/Udp4Dxe.inf
-    INF  NetworkPkg/Mtftp4Dxe/Mtftp4Dxe.inf
-  !endif
-
-  !if $(NETWORK_IP6_ENABLE) == TRUE
-    INF  NetworkPkg/Dhcp6Dxe/Dhcp6Dxe.inf
-    INF  NetworkPkg/Ip6Dxe/Ip6Dxe.inf
-    INF  NetworkPkg/Udp6Dxe/Udp6Dxe.inf
-    INF  NetworkPkg/Mtftp6Dxe/Mtftp6Dxe.inf
-  !endif
-
-  INF  NetworkPkg/TcpDxe/TcpDxe.inf
-  INF  NetworkPkg/UefiPxeBcDxe/UefiPxeBcDxe.inf
-
-  !if $(NETWORK_TLS_ENABLE) == TRUE
-    INF  NetworkPkg/TlsDxe/TlsDxe.inf
-    INF  NetworkPkg/TlsAuthConfigDxe/TlsAuthConfigDxe.inf
-  !endif
-
-  !if ($(NETWORK_HTTP_BOOT_ENABLE) == TRUE) OR ($(NETWORK_HTTP_ENABLE) == TRUE)
-    INF  NetworkPkg/DnsDxe/DnsDxe.inf
-    INF  NetworkPkg/HttpDxe/HttpDxe.inf
-    INF  NetworkPkg/HttpUtilitiesDxe/HttpUtilitiesDxe.inf
-  !endif
-
-  !if $(NETWORK_HTTP_BOOT_ENABLE) == TRUE
-    INF  NetworkPkg/HttpBootDxe/HttpBootDxe.inf
-  !endif
-
-  !if $(NETWORK_ISCSI_ENABLE) == TRUE
-    INF  NetworkPkg/IScsiDxe/IScsiDxe.inf
-  !endif
-
-!endif
-!endif
-  !if $(SETUP_DEBUG_CFG_ENABLE) == TRUE
-    INF Platform/CIX/Sky1/Drivers/DebugConfigDxe/DebugConfigDxe.inf
-  !endif
   # Bds
   #
   INF MdeModulePkg/Universal/BootManagerPolicyDxe/BootManagerPolicyDxe.inf
-!if $(TOKEN_SETUP_SUPPORT) == TRUE
-  INF Platform/CIX/Sky1/Drivers/SetupManagerDxe/SetupManagerDxe.inf
-!endif
   INF MdeModulePkg/Application/UiApp/UiApp.inf
   INF MdeModulePkg/Universal/DevicePathDxe/DevicePathDxe.inf
   INF MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe.inf
   INF MdeModulePkg/Universal/SetupBrowserDxe/SetupBrowserDxe.inf
   INF MdeModulePkg/Universal/BdsDxe/BdsDxe.inf
-!if $(INCLUDE_TFTP_COMMAND) == TRUE
-  INF ShellPkg/DynamicCommand/TftpDynamicCommand/TftpDynamicCommand.inf
-  INF ShellPkg/DynamicCommand/HttpDynamicCommand/HttpDynamicCommand.inf
-!endif
-!if $(VARIABLE_SUPPORT) == "SPI" && $(STMM_SUPPORT) == TRUE
-!else
-  INF MdeModulePkg/Application/VariableInfo/VariableInfo.inf
-!endif
-!if $(I2S_MC_SUPPORT) == TRUE
-  INF Silicon/CIX/Sky1/Drivers/I2sDxe/I2sDxe.inf
-!endif
   # INF Platform/CIX/Sky1/Drivers/ScmiRuntimeDxe/ScmiRuntimeDxe.inf
-!if $(PI_TEST_SUPPORT) == TRUE
-  INF Silicon/CIX/Sky1/Drivers/ArmPsciMpServicesDxe/ArmPsciMpServicesDxe.inf
-!endif
 
-!if $(DTPM_SUPPORT) == TRUE || $(FTPM_SUPPORT) == TRUE
-  !if $(FTPM_SUPPORT) == TRUE
-    FILE FREEFORM = BC50D971-D4C9-42C4-82CB-343FB7F37896 {
-      SECTION RAW = Platform/CIX/Sky1/Bin/fTPM.bin
-    }
-    INF Platform/CIX/Sky1/Drivers/FTPMDxe/FTPMProtocol.inf
-  !endif
   INF Platform/CIX/Sky1/Drivers/TPMVariableDxe/TPMVariableDxe.inf
   INF SecurityPkg/Tcg/Tcg2Dxe/Tcg2Dxe.inf
   INF Platform/CIX/Sky1/Drivers/Tcg2Acpi/Tcg2Acpi.inf
   INF Platform/CIX/Sky1/Drivers/Tcg2Config/Tcg2ConfigDxe.inf
-!endif
 ## @file
 #
 #  Copyright 2024 Radxa Computer (Shenzhen) Co., Ltd. All Rights Reserved.
@@ -691,29 +376,19 @@ READ_LOCK_STATUS   = TRUE
   INF Platform/Radxa/Drivers/Logo/LogoDxe.inf
   INF Platform/Radxa/Platforms/CIX/Sky1/Drivers/SystemInfoDxe/SystemInfoDxe.inf
 
-!if $(TOKEN_SETUP_SUPPORT) == FALSE
   # ODP_PRIORI INF Platform/CIX/Sky1/Drivers/PlatformSetupVariableInitDxe/PlatformSetupVariableInitDxe.inf
   INF Platform/Radxa/Platforms/CIX/Sky1/Drivers/PlatformConfigDxe/PlatformConfigDxe.inf
-!endif
 
-!if $(FW_CONFIG_UPDATE_SUPPORT) == TRUE
   INF Platform/Radxa/Platforms/CIX/Sky1/Drivers/RadxaSetupVariableInitDxe/RadxaSetupVariableInitDxe.inf
   INF Platform/Radxa/Platforms/CIX/Sky1/Drivers/FirmwareConfigUpdateDxe/FirmwareConfigUpdateDxe.inf
-!endif
   INF Platform/Radxa/Platforms/CIX/Sky1/Drivers/SeConfigUpdateDxe/SeConfigUpdateDxe.inf
   INF EmbeddedPkg/Drivers/DtPlatformDxe/DtPlatformDxe.inf
 
-!if $(VARIABLE_SUPPORT) == "SPI" && $(STMM_SUPPORT) == TRUE
   INF MdeModulePkg/Application/VariableInfo/VariableInfo.inf
-!endif
 
-!if $(TOKEN_RAM_DISK_SUPPORT) == FALSE
   INF MdeModulePkg/Universal/Disk/RamDiskDxe/RamDiskDxe.inf
-!endif
 
-!if $(ARCH) == AARCH64
   INF Emulator/X86EmulatorDxe/X86EmulatorDxe.inf
-!endif
 
   #
   # AHCI Support
@@ -732,37 +407,26 @@ READ_LOCK_STATUS   = TRUE
   INF MdeModulePkg/Universal/ReportStatusCodeRouter/RuntimeDxe/ReportStatusCodeRouterRuntimeDxe.inf
   INF MdeModulePkg/Universal/Acpi/FirmwarePerformanceDataTableDxe/FirmwarePerformanceDxe.inf
 
-!if $(CAPSULE_ENABLE)
   INF MdeModulePkg/Universal/EsrtFmpDxe/EsrtFmpDxe.inf
-  INF FILE_GUID = $(SYSTEM_FMP_ESRT_GUID) FmpDevicePkg/FmpDxe/FmpDxe.inf
-!else
-  INF MdeModulePkg/Universal/EsrtDxe/EsrtDxe.inf
-  INF Platform/CIX/Sky1/Drivers/SystemFirmwareUpdate/SystemFirmwareReportDxe.inf
-!endif
+  INF FILE_GUID = 351c9808-4b53-4363-9314-d339386e5685 FmpDevicePkg/FmpDxe/FmpDxe.inf
   INF Platform/CIX/Sky1/Drivers/DtbUpdateDxeSi/DtbUpdateDxe.inf
 
-!if $(ACPI_ENABLE) == TRUE
-  INF RuleOverride = ACPITABLE2 $(ODP_O6_PLATFORM_PATH)/Drivers/AcpiPlatfomTables/AcpiPlatfomTables.inf
+  INF RuleOverride = ACPITABLE2 Platform/Radxa/Orion/O6/Drivers/AcpiPlatfomTables/AcpiPlatfomTables.inf
   INF Platform/Radxa/Drivers/AcpiPlatformDxe/AcpiPlatformDxe.inf
-!endif
 
   #
   # UEFI application (Shell Embedded Boot Loader)
   #
-!if $(SHELL_EMBEDDED_ENABLE) == TRUE
   INF ShellPkg/Application/Shell/Shell.inf
-!endif
   //{8943387b-c4ad-3199-42a9-dabc5b411615}
   FILE FREEFORM  = 8943387b-c4ad-3199-42a9-dabc5b411615 { # gPkcs7CertDataGuid
       SECTION RAW = Platform/CIX/Sky1/Bin/ntroot.cer //root pubkey
   }
-!if $(SMBIOS_ENABLE) == TRUE
-  INF $(ODP_O6_PLATFORM_PATH)/Drivers/PlatformSmbios/PlatformSmbios.inf
-!endif
+  INF Platform/Radxa/Orion/O6/Drivers/PlatformSmbios/PlatformSmbios.inf
 
   INF Platform/Radxa/Drivers/RTL8126/RtkUndiDxe.inf
 
-  INF $(ODP_O6_PLATFORM_PATH)/DeviceTree/DeviceTree.inf
+  INF Platform/Radxa/Orion/O6/DeviceTree/DeviceTree.inf
 
 [FV.FVMAIN_COMPACT]
 FvAlignment        = 16
@@ -783,9 +447,7 @@ READ_LOCK_CAP      = TRUE
 READ_LOCK_STATUS   = TRUE
 
   INF Platform/CIX/Sky1/PrePi/PeiUniCore.inf
-  !if $(FW_VERSION_ENABLE) == TRUE
   INF Platform/CIX/Sky1/Drivers/FwVersionDxe/FwVersionDxe.inf
-  !endif
   FILE FV_IMAGE = 9E21FD93-9C72-4c15-8C4B-E77F1DB2D792 {
     SECTION GUIDED EE4E5898-3914-4259-9D6E-DC7BD79403CF PROCESSING_REQUIRED = TRUE {
       SECTION FV_IMAGE = FVMAIN
