@@ -1,0 +1,50 @@
+## @file
+#  Slim BDS: boots Windows from NVMe with the minimum of platform handshakes, and only on failure loads the
+#  fallback tier (USB, display, console, shell).
+#
+#  SPDX-License-Identifier: BSD-2-Clause-Patent
+##
+
+[Defines]
+  INF_VERSION                    = 0x0001001A
+  BASE_NAME                      = SlimBdsDxe
+  FILE_GUID                      = 3c405cba-46d5-4291-beca-e1be79fd47c0
+  MODULE_TYPE                    = DXE_DRIVER
+  VERSION_STRING                 = 1.0
+  ENTRY_POINT                    = SlimBdsDxeEntryPoint
+
+[Sources]
+  SlimBdsDxe.c
+  SlimBdsFallback.h
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+
+[LibraryClasses]
+  BaseLib
+  BaseMemoryLib
+  DebugLib
+  DevicePathLib
+  MemoryAllocationLib
+  PcdLib
+  UefiBootServicesTableLib
+  UefiDriverEntryPoint
+  UefiLib
+
+[Guids]
+  gEfiEndOfDxeEventGroupGuid
+
+[Protocols]
+  gEfiBdsArchProtocolGuid                       ## PRODUCES
+  gEfiFirmwareVolume2ProtocolGuid               ## CONSUMES
+  gEfiLoadedImageProtocolGuid                   ## CONSUMES
+  gEfiPciRootBridgeIoProtocolGuid               ## CONSUMES
+  gEfiSimpleFileSystemProtocolGuid              ## CONSUMES
+
+[Pcd]
+  gEfiMdeModulePkgTokenSpaceGuid.PcdFirmwareVendor      ## CONSUMES
+  gEfiMdeModulePkgTokenSpaceGuid.PcdFirmwareRevision    ## CONSUMES
+
+[Depex]
+  TRUE

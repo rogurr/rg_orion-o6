@@ -76,51 +76,24 @@
     SECTION UI = "DxeCore"
   }
 
+  # ODP: Slim boot.  Each remaining driver is either required to boot an OS from NVMe (core tier, dispatched
+  #      normally) or is a fallback-only image (see the FALLBACK rules) that SlimBdsDxe loads on demand when the
+  #      NVMe boot fails.  Everything else was removed from the image.
   INF MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf
   INF Silicon/CIX/Sky1/Drivers/RngDxe/RngDxe.inf
   INF MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
-  INF Silicon/CIX/Sky1/Drivers/TypecPhyDxe/TypecPhyDxe.inf
-  INF Platform/CIX/Sky1/Drivers/PdDxe/PdDxe.inf
-  INF Silicon/CIX/Sky1/Drivers/CdnspDxe/CdnspDxe.inf
-  INF Platform/CIX/Sky1/Drivers/UsbDeviceControlDxe/UsbDeviceControlDxe.inf
-  INF Platform/CIX/Sky1/Application/Fastboot/Fastboot.inf
-  INF Platform/CIX/Sky1/Drivers/LaunchFastbootDxe/LaunchFastbootDxe.inf
-  INF MdeModulePkg/Bus/Pci/NonDiscoverablePciDeviceDxe/NonDiscoverablePciDeviceDxe.inf
-  INF MdeModulePkg/Bus/Pci/UhciDxe/UhciDxe.inf
-  INF MdeModulePkg/Bus/Pci/EhciDxe/EhciDxe.inf
-  INF MdeModulePkg/Bus/Pci/XhciDxe/XhciDxe.inf
-  INF MdeModulePkg/Bus/Usb/UsbBusDxe/UsbBusDxe.inf
-  INF MdeModulePkg/Bus/Usb/UsbMassStorageDxe/UsbMassStorageDxe.inf
-  INF MdeModulePkg/Bus/Usb/UsbKbDxe/UsbKbDxe.inf
-  INF MdeModulePkg/Bus/Usb/UsbMouseDxe/UsbMouseDxe.inf
-  INF Silicon/CIX/Sky1/Drivers/UsbCHostDxe/UsbCHostDxe.inf
-  INF Silicon/CIX/Sky1/Drivers/Usb32HostDxe/Usb32HostDxe.inf
-  INF Silicon/CIX/Sky1/Drivers/Usb20HostDxe/Usb20HostDxe.inf
   INF Silicon/CIX/Sky1/Drivers/PcieInitDxe/PcieInitDxe.inf
-  INF SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe.inf
   INF SecurityPkg/VariableAuthenticated/SecureBootDefaultKeysDxe/SecureBootDefaultKeysDxe.inf
   INF Platform/CIX/Sky1/Drivers/SecureBootDxe/SecureBootDxe.inf
   INF MdeModulePkg/Universal/MonotonicCounterRuntimeDxe/MonotonicCounterRuntimeDxe.inf
   INF EmbeddedPkg/ResetRuntimeDxe/ResetRuntimeDxe.inf
   INF EmbeddedPkg/RealTimeClockRuntimeDxe/RealTimeClockRuntimeDxe.inf
   INF EmbeddedPkg/MetronomeDxe/MetronomeDxe.inf
-  INF MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe.inf
-  INF MdeModulePkg/Universal/Console/ConPlatformDxe/ConPlatformDxe.inf
+  # Only provides the always-present virtual console handles in the system table that OS loaders expect.
   INF MdeModulePkg/Universal/Console/ConSplitterDxe/ConSplitterDxe.inf
-  INF MdeModulePkg/Universal/Console/GraphicsConsoleDxe/GraphicsConsoleDxe.inf
-  INF MdeModulePkg/Universal/Console/TerminalDxe/TerminalDxe.inf
-  INF MdeModulePkg/Universal/SerialDxe/SerialDxe.inf
-  INF EmbeddedPkg/Drivers/ConsolePrefDxe/ConsolePrefDxe.inf
-  INF Platform/CIX/Sky1/Drivers/PowerButtonDxe/PowerButtonDxe.inf
-  INF MdeModulePkg/Universal/EbcDxe/EbcDxe.inf
   INF Silicon/CIX/Sky1/Drivers/I2cDxe/I2cDxe.inf
+  # Feeds FwVersionDxe (compact FV), which publishes the EC board ID/version to shared memory outside UEFI.
   INF Platform/CIX/Sky1/Drivers/EcPlatformDxe/EcPlatformDxe.inf
-  INF Platform/CIX/Sky1/Drivers/I2cHidKeyboard/I2cHidKeyboard.inf
-  INF Platform/CIX/Sky1/Drivers/I2cHidServiceDriver/I2cHidServiceDriver.inf
-  INF Platform/CIX/Sky1/Drivers/I2cHidDeviceDxe/I2cHidDeviceDxe.inf
-  INF Silicon/CIX/Sky1/Drivers/SpiDxe/SpiDxe.inf
-  INF Silicon/CIX/Sky1/Drivers/DpuDxe/DpuDxe.inf
-  INF platform/OVERRIDE/Silicon/CIX/Sky1/Drivers/LcdGraphicsOutputDxe/LcdGraphicsOutputDxe.inf
   INF MdeModulePkg/Universal/Disk/DiskIoDxe/DiskIoDxe.inf
   INF MdeModulePkg/Universal/Disk/PartitionDxe/PartitionDxe.inf
   INF FatPkg/EnhancedFatDxe/Fat.inf
@@ -131,58 +104,35 @@
   INF Platform/CIX/Sky1/Drivers/ConfigurationManagerDxe/ConfigurationManagerDxe.inf
   INF DynamicTablesPkg/Drivers/DynamicTableFactoryDxe/DynamicTableFactoryDxe.inf
   INF Platform/CIX/Sky1/Drivers/DynamicTableManagerDxe/DynamicTableManagerDxe.inf
-  INF MdeModulePkg/Universal/SmbiosDxe/SmbiosDxe.inf
-  INF ArmPkg/Universal/Smbios/ProcessorSubClassDxe/ProcessorSubClassDxe.inf
-  INF Platform/CIX/Sky1/Drivers/CixSmbiosDxe/CixSmbiosDxe.inf
   INF ArmPkg/Drivers/ArmPciCpuIo2Dxe/ArmPciCpuIo2Dxe.inf
   INF MdeModulePkg/Bus/Pci/PciHostBridgeDxe/PciHostBridgeDxe.inf
   INF Platform/CIX/Sky1/Drivers/Pci/PciBusDxe/PciBusDxe.inf
   INF EmbeddedPkg/Drivers/NonCoherentIoMmuDxe/NonCoherentIoMmuDxe.inf
   INF Platform/CIX/Sky1/Drivers/NvmExpressDxe/NvmExpressDxe.inf
-  INF MdeModulePkg/Universal/EsrtDxe/EsrtDxe.inf
-  INF Platform/CIX/Sky1/Drivers/SystemFirmwareUpdate/SystemFirmwareReportDxe.inf
-  INF Platform/CIX/Sky1/Drivers/CapsuleUpdateDxe/CapsuleUpdateDxe.inf
-  INF Platform/CIX/Sky1/Drivers/FirmwareUpdateDxe/FwUpdateProtocolDxe.inf
-  INF Platform/CIX/Sky1/Drivers/FwVersionDxe/FwVersionProtocolTest.inf
-  INF MdeModulePkg/Universal/BootManagerPolicyDxe/BootManagerPolicyDxe.inf
-  INF MdeModulePkg/Application/UiApp/UiApp.inf
   INF MdeModulePkg/Universal/DevicePathDxe/DevicePathDxe.inf
-  INF MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe.inf
-  INF MdeModulePkg/Universal/SetupBrowserDxe/SetupBrowserDxe.inf
-  INF MdeModulePkg/Universal/BdsDxe/BdsDxe.inf
-  INF Platform/CIX/Sky1/Drivers/TPMVariableDxe/TPMVariableDxe.inf
-  INF SecurityPkg/Tcg/Tcg2Dxe/Tcg2Dxe.inf
-  INF Platform/CIX/Sky1/Drivers/Tcg2Acpi/Tcg2Acpi.inf
-  INF Platform/CIX/Sky1/Drivers/Tcg2Config/Tcg2ConfigDxe.inf
-  INF Platform/Radxa/Drivers/Logo/LogoDxe.inf
-  INF Platform/Radxa/Platforms/CIX/Sky1/Drivers/SystemInfoDxe/SystemInfoDxe.inf
-  INF Platform/Radxa/Platforms/CIX/Sky1/Drivers/PlatformConfigDxe/PlatformConfigDxe.inf
-  INF Platform/Radxa/Platforms/CIX/Sky1/Drivers/RadxaSetupVariableInitDxe/RadxaSetupVariableInitDxe.inf
-  INF Platform/Radxa/Platforms/CIX/Sky1/Drivers/FirmwareConfigUpdateDxe/FirmwareConfigUpdateDxe.inf
-  INF Platform/Radxa/Platforms/CIX/Sky1/Drivers/SeConfigUpdateDxe/SeConfigUpdateDxe.inf
-  INF EmbeddedPkg/Drivers/DtPlatformDxe/DtPlatformDxe.inf
-  INF MdeModulePkg/Application/VariableInfo/VariableInfo.inf
-  INF MdeModulePkg/Universal/Disk/RamDiskDxe/RamDiskDxe.inf
-  INF Emulator/X86EmulatorDxe/X86EmulatorDxe.inf
-  INF MdeModulePkg/Bus/Ata/AtaAtapiPassThru/AtaAtapiPassThru.inf
-  INF MdeModulePkg/Bus/Ata/AtaBusDxe/AtaBusDxe.inf
-  INF MdeModulePkg/Bus/Pci/SataControllerDxe/SataControllerDxe.inf
-  INF MdeModulePkg/Universal/ReportStatusCodeRouter/RuntimeDxe/ReportStatusCodeRouterRuntimeDxe.inf
-  INF MdeModulePkg/Universal/Acpi/FirmwarePerformanceDataTableDxe/FirmwarePerformanceDxe.inf
-  INF MdeModulePkg/Universal/EsrtFmpDxe/EsrtFmpDxe.inf
-  INF FILE_GUID = 351c9808-4b53-4363-9314-d339386e5685 FmpDevicePkg/FmpDxe/FmpDxe.inf
-  INF Platform/CIX/Sky1/Drivers/DtbUpdateDxeSi/DtbUpdateDxe.inf
   INF RuleOverride = ACPITABLE2 Platform/Radxa/Orion/O6/Drivers/AcpiPlatfomTables/AcpiPlatfomTables.inf
   INF Platform/Radxa/Drivers/AcpiPlatformDxe/AcpiPlatformDxe.inf
-  INF ShellPkg/Application/Shell/Shell.inf
-  INF Platform/Radxa/Orion/O6/Drivers/PlatformSmbios/PlatformSmbios.inf
-  INF Platform/Radxa/Drivers/RTL8126/RtkUndiDxe.inf
-  INF Platform/Radxa/Orion/O6/DeviceTree/DeviceTree.inf
+  INF platform/Drivers/SlimBdsDxe/SlimBdsDxe.inf
 
-  FILE DRIVER = 27E5BA77-5839-400b-A7DA-5F5D78F0C539 {
-    SECTION PE32 = Platform/CIX/Sky1/Drivers/AmdGop/Arm64Gop_1_68.efi
-    SECTION UI = "AmdGop"
-  }
+  # ODP: Fallback tier.  These images are packaged as FFS APPLICATION files so the dispatcher never runs them;
+  #      SlimBdsDxe starts them in the order listed in SlimBdsFallback.h only when the NVMe boot fails.
+  INF RuleOverride = BINARY_FALLBACK Silicon/CIX/Sky1/Drivers/TypecPhyDxe/TypecPhyDxe.inf
+  INF RuleOverride = BINARY_FALLBACK Silicon/CIX/Sky1/Drivers/UsbCHostDxe/UsbCHostDxe.inf
+  INF RuleOverride = BINARY_FALLBACK Silicon/CIX/Sky1/Drivers/Usb32HostDxe/Usb32HostDxe.inf
+  INF RuleOverride = BINARY_FALLBACK Silicon/CIX/Sky1/Drivers/Usb20HostDxe/Usb20HostDxe.inf
+  INF RuleOverride = FALLBACK MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe.inf
+  INF RuleOverride = BINARY_FALLBACK Silicon/CIX/Sky1/Drivers/DpuDxe/DpuDxe.inf
+  INF RuleOverride = FALLBACK Platform/CIX/Sky1/Drivers/PdDxe/PdDxe.inf
+  INF RuleOverride = FALLBACK MdeModulePkg/Bus/Pci/NonDiscoverablePciDeviceDxe/NonDiscoverablePciDeviceDxe.inf
+  INF RuleOverride = FALLBACK MdeModulePkg/Bus/Pci/XhciDxe/XhciDxe.inf
+  INF RuleOverride = FALLBACK MdeModulePkg/Bus/Usb/UsbBusDxe/UsbBusDxe.inf
+  INF RuleOverride = FALLBACK MdeModulePkg/Bus/Usb/UsbMassStorageDxe/UsbMassStorageDxe.inf
+  INF RuleOverride = FALLBACK MdeModulePkg/Bus/Usb/UsbKbDxe/UsbKbDxe.inf
+  INF RuleOverride = FALLBACK MdeModulePkg/Universal/Console/ConPlatformDxe/ConPlatformDxe.inf
+  INF RuleOverride = FALLBACK MdeModulePkg/Universal/Console/GraphicsConsoleDxe/GraphicsConsoleDxe.inf
+  INF RuleOverride = BINARY_FALLBACK platform/OVERRIDE/Silicon/CIX/Sky1/Drivers/LcdGraphicsOutputDxe/LcdGraphicsOutputDxe.inf
+  INF platform/Drivers/SlimFallbackBdsApp/SlimFallbackBdsApp.inf
+  INF ShellPkg/Application/Shell/Shell.inf
 
   FILE FREEFORM = 85254ea7-4759-4fc4-82d4-5eed5fb0a4a0 {
     SECTION RAW = Platform/CIX/Sky1/Drivers/SecureBootDxe/PK.cer
@@ -202,13 +152,6 @@
   FILE FREEFORM = 5740766a-718e-4dc0-9935-c36f7d3f884f {
     SECTION RAW = Platform/CIX/Sky1/Drivers/SecureBootDxe/DBX.cer
     SECTION UI = "DBX Default"
-  }
-  FILE FREEFORM = PCD(gEfiSignedCapsulePkgTokenSpaceGuid.PcdEdkiiPkcs7TestPublicKeyFileGuid) {
-    SECTION RAW = BaseTools/Source/Python/Pkcs7Sign/TestRoot.cer
-    SECTION UI = "Pkcs7TestRoot"
-  }
-  FILE FREEFORM  = 8943387b-c4ad-3199-42a9-dabc5b411615 {
-    SECTION RAW = Platform/CIX/Sky1/Bin/ntroot.cer            //root pubkey
   }
 
 [FV.FVMAIN_COMPACT]
@@ -244,25 +187,6 @@
     TE  TE Align = Auto                 $(INF_OUTPUT)/$(MODULE_NAME).efi
   }
 
-[Rule.Common.PEI_CORE]
-  FILE PEI_CORE = $(NAMED_GUID) FIXED {
-    TE     TE Align = Auto              $(INF_OUTPUT)/$(MODULE_NAME).efi
-    UI     STRING ="$(MODULE_NAME)" Optional
-  }
-
-[Rule.Common.PEIM]
-  FILE PEIM = $(NAMED_GUID) FIXED {
-     PEI_DEPEX PEI_DEPEX Optional       $(INF_OUTPUT)/$(MODULE_NAME).depex
-     TE       TE Align = Auto           $(INF_OUTPUT)/$(MODULE_NAME).efi
-     UI       STRING="$(MODULE_NAME)" Optional
-  }
-
-[Rule.Common.DXE_CORE]
-  FILE DXE_CORE = $(NAMED_GUID) {
-    PE32     PE32                       $(INF_OUTPUT)/$(MODULE_NAME).efi
-    UI       STRING="$(MODULE_NAME)" Optional
-  }
-
 [Rule.Common.UEFI_DRIVER]
   FILE DRIVER = $(NAMED_GUID) {
     DXE_DEPEX    DXE_DEPEX              Optional $(INF_OUTPUT)/$(MODULE_NAME).depex
@@ -292,21 +216,6 @@
     PE32   PE32                         $(INF_OUTPUT)/$(MODULE_NAME).efi
   }
 
-[Rule.Common.UEFI_DRIVER.BINARY]
-  FILE DRIVER = $(NAMED_GUID) {
-    DXE_DEPEX DXE_DEPEX Optional      |.depex
-    PE32      PE32                    |.efi
-    UI        STRING="$(MODULE_NAME)" Optional
-    VERSION   STRING="$(INF_VERSION)" Optional BUILD_NUM=$(BUILD_NUMBER)
-  }
-
-[Rule.Common.UEFI_APPLICATION.BINARY]
-  FILE APPLICATION = $(NAMED_GUID) {
-    PE32      PE32                    |.efi
-    UI        STRING="$(MODULE_NAME)" Optional
-    VERSION   STRING="$(INF_VERSION)" Optional BUILD_NUM=$(BUILD_NUMBER)
-  }
-
 [Rule.Common.USER_DEFINED.ACPITABLE]
   FILE FREEFORM = $(NAMED_GUID) {
     RAW ACPI               |.acpi
@@ -323,25 +232,6 @@
     DXE_DEPEX DXE_DEPEX Optional      |.depex
     PE32      PE32                    |.efi
     UI        STRING="$(MODULE_NAME)" Optional
-  }
-
-[Rule.Common.DXE_RUNTIME_DRIVER.BINARY]
-  FILE DRIVER = $(NAMED_GUID) {
-    DXE_DEPEX DXE_DEPEX Optional      |.depex
-    PE32      PE32                    |.efi
-    UI        STRING="$(MODULE_NAME)" Optional
-  }
-
-[Rule.Common.USER_DEFINED]
-  FILE FREEFORM = $(NAMED_GUID) {
-    UI  STRING="$(MODULE_NAME)" Optional
-    RAW BIN                |.bin
-  }
-
-[Rule.Common.USER_DEFINED.BINARY]
-  FILE FREEFORM = $(NAMED_GUID) {
-    UI  STRING="$(MODULE_NAME)" Optional
-    RAW BIN                |.bin
   }
 
 # ODP: The following rules are to allow overriding the DEPEX binary in an FFS file to use a TRUE expression
@@ -372,6 +262,33 @@
 [Rule.Common.DXE_DRIVER.BINARY_TRUE_DEPEX]
   FILE DRIVER = $(NAMED_GUID) {
     DXE_DEPEX DXE_DEPEX               $(WORKSPACE)/platform/bins/True.depex
+    PE32      PE32                    |.efi
+    UI        STRING="$(MODULE_NAME)" Optional
+  }
+
+# ODP: The following rules package a driver as an FFS APPLICATION file with no DEPEX.  The dispatcher only runs
+#      DRIVER files, so these are left alone until SlimBdsDxe loads them explicitly.
+
+[Rule.Common.DXE_DRIVER.FALLBACK]
+  FILE APPLICATION = $(NAMED_GUID) {
+    PE32         PE32                   $(INF_OUTPUT)/$(MODULE_NAME).efi
+    UI           STRING="$(MODULE_NAME)" Optional
+  }
+
+[Rule.Common.UEFI_DRIVER.FALLBACK]
+  FILE APPLICATION = $(NAMED_GUID) {
+    PE32         PE32                   $(INF_OUTPUT)/$(MODULE_NAME).efi
+    UI           STRING="$(MODULE_NAME)" Optional
+  }
+
+[Rule.Common.DXE_DRIVER.BINARY_FALLBACK]
+  FILE APPLICATION = $(NAMED_GUID) {
+    PE32      PE32                    |.efi
+    UI        STRING="$(MODULE_NAME)" Optional
+  }
+
+[Rule.Common.DXE_RUNTIME_DRIVER.BINARY_FALLBACK]
+  FILE APPLICATION = $(NAMED_GUID) {
     PE32      PE32                    |.efi
     UI        STRING="$(MODULE_NAME)" Optional
   }

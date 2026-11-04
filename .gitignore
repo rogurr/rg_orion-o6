@@ -8,3 +8,6 @@
 /os_image/build/
 **/target
 **/Cargo.lock
+
+
+**/build*/

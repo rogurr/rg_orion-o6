@@ -38,6 +38,7 @@ make -C modules/uefi
 | Platform DSC | `platform/O6.dsc` |
 | Variable Store | SPI flash |
 | Secure MM | StandaloneMM (via OP-TEE) |
+| Boot Flow | `SlimBdsDxe` boots Windows from NVMe; USB, display and shell are a fallback tier. See [SLIM_BOOT.md](SLIM_BOOT.md). |
 
 ### Rust Components
 

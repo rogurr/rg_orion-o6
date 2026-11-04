@@ -1,0 +1,46 @@
+## @file
+#  Fallback boot application run by SlimBdsDxe when NVMe boot fails: display and USB keyboard console, USB
+#  boot, then the UEFI shell.
+#
+#  SPDX-License-Identifier: BSD-2-Clause-Patent
+##
+
+[Defines]
+  INF_VERSION                    = 0x0001001A
+  BASE_NAME                      = SlimFallbackBdsApp
+  FILE_GUID                      = b072eb23-4a43-4ad0-895d-5049f5ee8080
+  MODULE_TYPE                    = UEFI_APPLICATION
+  VERSION_STRING                 = 1.0
+  ENTRY_POINT                    = SlimFallbackMain
+
+[Sources]
+  SlimFallbackBdsApp.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  ShellPkg/ShellPkg.dec
+
+[LibraryClasses]
+  BaseLib
+  BaseMemoryLib
+  DebugLib
+  DevicePathLib
+  MemoryAllocationLib
+  UefiApplicationEntryPoint
+  UefiBootManagerLib
+  UefiBootServicesTableLib
+  UefiLib
+  UefiRuntimeServicesTableLib
+
+[Guids]
+  gUefiShellFileGuid
+  gEdkiiNonDiscoverableEhciDeviceGuid
+  gEdkiiNonDiscoverableUhciDeviceGuid
+  gEdkiiNonDiscoverableXhciDeviceGuid
+
+[Protocols]
+  gEdkiiNonDiscoverableDeviceProtocolGuid       ## CONSUMES
+  gEfiDevicePathProtocolGuid                    ## CONSUMES
+  gEfiGraphicsOutputProtocolGuid                ## CONSUMES
+  gEfiLoadedImageProtocolGuid                   ## CONSUMES
