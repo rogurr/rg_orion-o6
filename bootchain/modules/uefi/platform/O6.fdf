@@ -78,13 +78,8 @@
 
   INF MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf
   INF Silicon/CIX/Sky1/Drivers/RngDxe/RngDxe.inf
-  INF MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
   INF Silicon/CIX/Sky1/Drivers/TypecPhyDxe/TypecPhyDxe.inf
   INF Platform/CIX/Sky1/Drivers/PdDxe/PdDxe.inf
-  INF Silicon/CIX/Sky1/Drivers/CdnspDxe/CdnspDxe.inf
-  INF Platform/CIX/Sky1/Drivers/UsbDeviceControlDxe/UsbDeviceControlDxe.inf
-  INF Platform/CIX/Sky1/Application/Fastboot/Fastboot.inf
-  INF Platform/CIX/Sky1/Drivers/LaunchFastbootDxe/LaunchFastbootDxe.inf
   INF MdeModulePkg/Bus/Pci/NonDiscoverablePciDeviceDxe/NonDiscoverablePciDeviceDxe.inf
   INF MdeModulePkg/Bus/Pci/UhciDxe/UhciDxe.inf
   INF MdeModulePkg/Bus/Pci/EhciDxe/EhciDxe.inf
@@ -112,7 +107,6 @@
   INF MdeModulePkg/Universal/SerialDxe/SerialDxe.inf
   INF EmbeddedPkg/Drivers/ConsolePrefDxe/ConsolePrefDxe.inf
   INF Platform/CIX/Sky1/Drivers/PowerButtonDxe/PowerButtonDxe.inf
-  INF MdeModulePkg/Universal/EbcDxe/EbcDxe.inf
   INF Silicon/CIX/Sky1/Drivers/I2cDxe/I2cDxe.inf
   INF Platform/CIX/Sky1/Drivers/EcPlatformDxe/EcPlatformDxe.inf
   INF Platform/CIX/Sky1/Drivers/I2cHidKeyboard/I2cHidKeyboard.inf
@@ -139,11 +133,7 @@
   INF Platform/CIX/Sky1/Drivers/Pci/PciBusDxe/PciBusDxe.inf
   INF EmbeddedPkg/Drivers/NonCoherentIoMmuDxe/NonCoherentIoMmuDxe.inf
   INF Platform/CIX/Sky1/Drivers/NvmExpressDxe/NvmExpressDxe.inf
-  INF MdeModulePkg/Universal/EsrtDxe/EsrtDxe.inf
-  INF Platform/CIX/Sky1/Drivers/SystemFirmwareUpdate/SystemFirmwareReportDxe.inf
-  INF Platform/CIX/Sky1/Drivers/CapsuleUpdateDxe/CapsuleUpdateDxe.inf
   INF Platform/CIX/Sky1/Drivers/FirmwareUpdateDxe/FwUpdateProtocolDxe.inf
-  INF Platform/CIX/Sky1/Drivers/FwVersionDxe/FwVersionProtocolTest.inf
   INF MdeModulePkg/Universal/BootManagerPolicyDxe/BootManagerPolicyDxe.inf
   INF MdeModulePkg/Application/UiApp/UiApp.inf
   INF MdeModulePkg/Universal/DevicePathDxe/DevicePathDxe.inf
@@ -162,21 +152,13 @@
   INF Platform/Radxa/Platforms/CIX/Sky1/Drivers/SeConfigUpdateDxe/SeConfigUpdateDxe.inf
   INF EmbeddedPkg/Drivers/DtPlatformDxe/DtPlatformDxe.inf
   INF MdeModulePkg/Application/VariableInfo/VariableInfo.inf
-  INF MdeModulePkg/Universal/Disk/RamDiskDxe/RamDiskDxe.inf
-  INF Emulator/X86EmulatorDxe/X86EmulatorDxe.inf
-  INF MdeModulePkg/Bus/Ata/AtaAtapiPassThru/AtaAtapiPassThru.inf
-  INF MdeModulePkg/Bus/Ata/AtaBusDxe/AtaBusDxe.inf
-  INF MdeModulePkg/Bus/Pci/SataControllerDxe/SataControllerDxe.inf
   INF MdeModulePkg/Universal/ReportStatusCodeRouter/RuntimeDxe/ReportStatusCodeRouterRuntimeDxe.inf
   INF MdeModulePkg/Universal/Acpi/FirmwarePerformanceDataTableDxe/FirmwarePerformanceDxe.inf
-  INF MdeModulePkg/Universal/EsrtFmpDxe/EsrtFmpDxe.inf
-  INF FILE_GUID = 351c9808-4b53-4363-9314-d339386e5685 FmpDevicePkg/FmpDxe/FmpDxe.inf
   INF Platform/CIX/Sky1/Drivers/DtbUpdateDxeSi/DtbUpdateDxe.inf
   INF RuleOverride = ACPITABLE2 Platform/Radxa/Orion/O6/Drivers/AcpiPlatfomTables/AcpiPlatfomTables.inf
   INF Platform/Radxa/Drivers/AcpiPlatformDxe/AcpiPlatformDxe.inf
   INF ShellPkg/Application/Shell/Shell.inf
   INF Platform/Radxa/Orion/O6/Drivers/PlatformSmbios/PlatformSmbios.inf
-  INF Platform/Radxa/Drivers/RTL8126/RtkUndiDxe.inf
   INF Platform/Radxa/Orion/O6/DeviceTree/DeviceTree.inf
 
   FILE DRIVER = 27E5BA77-5839-400b-A7DA-5F5D78F0C539 {
@@ -202,13 +184,6 @@
   FILE FREEFORM = 5740766a-718e-4dc0-9935-c36f7d3f884f {
     SECTION RAW = Platform/CIX/Sky1/Drivers/SecureBootDxe/DBX.cer
     SECTION UI = "DBX Default"
-  }
-  FILE FREEFORM = PCD(gEfiSignedCapsulePkgTokenSpaceGuid.PcdEdkiiPkcs7TestPublicKeyFileGuid) {
-    SECTION RAW = BaseTools/Source/Python/Pkcs7Sign/TestRoot.cer
-    SECTION UI = "Pkcs7TestRoot"
-  }
-  FILE FREEFORM  = 8943387b-c4ad-3199-42a9-dabc5b411615 {
-    SECTION RAW = Platform/CIX/Sky1/Bin/ntroot.cer            //root pubkey
   }
 
 [FV.FVMAIN_COMPACT]
@@ -375,4 +350,3 @@
     PE32      PE32                    |.efi
     UI        STRING="$(MODULE_NAME)" Optional
   }
-
