@@ -1,0 +1,16 @@
+[env]
+PATINA_CONFIG_VERSION = "1"
+
+[build]
+target = "aarch64-unknown-uefi"
+
+[unstable]
+build-std = ["core", "compiler_builtins", "alloc"]
+build-std-features = ["compiler-builtins-mem"]
+
+[target.aarch64-unknown-uefi]
+rustflags = [
+    "-C", "link-arg=/base:0x0",
+    "-C", "link-arg=/subsystem:efi_boot_service_driver",
+    "-C", "force-unwind-tables",
+]
