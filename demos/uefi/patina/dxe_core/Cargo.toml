@@ -1,0 +1,30 @@
+[package]
+name = "orion_o6_dxe_core"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+description = "ODP-derived Patina DXE core integration demo for the Radxa Orion O6."
+
+[[bin]]
+name = "dxe_core"
+path = "src/main.rs"
+test = false
+bench = false
+
+[dependencies]
+log = { version = "0.4", features = ["max_level_info"] }
+patina = "=21.0.3"
+patina_dxe_core = { version = "=21.0.3", features = ["compatibility_mode_allowed"] }
+# The stock O6 FDF uses LZMA, not Brotli.
+patina_ffs_extractors = { version = "=21.0.3", default-features = false, features = ["lzma", "crc32"] }
+
+[profile.dev]
+opt-level = "s"
+lto = true
+codegen-units = 1
+
+[profile.release]
+opt-level = "s"
+debug = true
+lto = true
+codegen-units = 1

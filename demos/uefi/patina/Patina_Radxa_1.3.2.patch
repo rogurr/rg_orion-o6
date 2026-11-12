@@ -1,0 +1,642 @@
+diff --git a/Platform/CIX/Sky1/Library/PlatformLib/ArmPlatformLibMem.c b/Platform/CIX/Sky1/Library/PlatformLib/ArmPlatformLibMem.c
+index 32bfb979..8287cc38 100644
+--- a/Platform/CIX/Sky1/Library/PlatformLib/ArmPlatformLibMem.c
++++ b/Platform/CIX/Sky1/Library/PlatformLib/ArmPlatformLibMem.c
+@@ -11,6 +11,9 @@
+  **/
+ 
+ #include <Library/ArmPlatformLib.h>
++// Patina Demo:  Supply CpuDeadLoop and ZeroMem for the v2 resource HOB helper.
++#include <Library/BaseLib.h>
++#include <Library/BaseMemoryLib.h>
+ #include <Library/DebugLib.h>
+ #include <Library/MemoryAllocationLib.h>
+ #include <Library/PcdLib.h>
+@@ -23,6 +26,45 @@ extern UINT64  mSystemMemoryEnd;
+ // The total number of descriptors, including the final "end-of-table" descriptor.
+ #define MAX_VIRTUAL_MEMORY_MAP_DESCRIPTORS  11
+ 
++// Patina Demo:  Declare the allocator used to create Resource Descriptor v2 HOBs.
++VOID *
++CreateHob (
++  IN UINT16  HobType,
++  IN UINT16  HobLength
++  );
++
++// Patina Demo:  Resource Descriptor v2 adds the active cache attributes.
++STATIC
++VOID
++BuildPlatformResourceHob (
++  IN EFI_RESOURCE_TYPE            ResourceType,
++  IN EFI_RESOURCE_ATTRIBUTE_TYPE  ResourceAttributes,
++  IN EFI_PHYSICAL_ADDRESS         PhysicalStart,
++  IN UINT64                       Length,
++  IN UINT64                       Attributes
++  )
++{
++  typedef struct {
++    EFI_HOB_RESOURCE_DESCRIPTOR  Resource;
++    UINT64                       Attributes;
++  } PATINA_RESOURCE_DESCRIPTOR_V2;
++
++  PATINA_RESOURCE_DESCRIPTOR_V2  *Hob;
++
++  Hob = CreateHob (0x000D, sizeof (*Hob));
++  if (Hob == NULL) {
++    DEBUG ((DEBUG_ERROR, "Patina: cannot allocate Resource Descriptor v2 HOB\n"));
++    CpuDeadLoop ();
++  }
++
++  ZeroMem (&Hob->Resource.Owner, sizeof (Hob->Resource.Owner));
++  Hob->Resource.ResourceType      = ResourceType;
++  Hob->Resource.ResourceAttribute = ResourceAttributes;
++  Hob->Resource.PhysicalStart     = PhysicalStart;
++  Hob->Resource.ResourceLength    = Length;
++  Hob->Attributes                 = Attributes;
++}
++
+ BOOLEAN
+ ReportDramHighSpace (
+   IN OUT UINT64  *DramHighSize
+@@ -82,54 +124,105 @@ ArmPlatformGetVirtualMemoryMap (
+   DramHigh = ReportDramHighSpace (&DramHighSize);
+ 
+   // Reserved secure memory
+-  BuildResourceDescriptorHob (
++// Patina Demo:  Replace the v1 HOB with a v2 descriptor using write-combining.
++  BuildPlatformResourceHob (
+     EFI_RESOURCE_SYSTEM_MEMORY,
+     ResourceAttributes,
+     PcdGet32 (PcdReservedSecureMemoryBase),
+-    PcdGet32 (PcdReservedSecureMemorySize)
++    PcdGet32 (PcdReservedSecureMemorySize),
++    EFI_MEMORY_WC
+     );
++// Patina Demo:    BuildResourceDescriptorHob (
++// Patina Demo:      EFI_RESOURCE_SYSTEM_MEMORY,
++// Patina Demo:      ResourceAttributes,
++// Patina Demo:      PcdGet32 (PcdReservedSecureMemoryBase),
++// Patina Demo:      PcdGet32 (PcdReservedSecureMemorySize)
++// Patina Demo:      );
+ 
+   // Reserved share memory
+-  BuildResourceDescriptorHob (
++// Patina Demo:  Replace the v1 HOB with a v2 descriptor using write-combining.
++  BuildPlatformResourceHob (
+     EFI_RESOURCE_SYSTEM_MEMORY,
+     ResourceAttributes,
+     PcdGet32 (PcdReservedShareMemoryBase),
+-    PcdGet32 (PcdReservedShareMemorySize)
++    PcdGet32 (PcdReservedShareMemorySize),
++    EFI_MEMORY_WC
+     );
++// Patina Demo:    BuildResourceDescriptorHob (
++// Patina Demo:      EFI_RESOURCE_SYSTEM_MEMORY,
++// Patina Demo:      ResourceAttributes,
++// Patina Demo:      PcdGet32 (PcdReservedShareMemoryBase),
++// Patina Demo:      PcdGet32 (PcdReservedShareMemorySize)
++// Patina Demo:      );
+ 
+   // Create the System Memory HOB for the firmware
+-  BuildResourceDescriptorHob (
++// Patina Demo:  Replace the v1 HOB with a v2 descriptor using write-back.
++  BuildPlatformResourceHob (
+     EFI_RESOURCE_SYSTEM_MEMORY,
+     ResourceAttributes,
+     PcdGet64 (PcdFdBaseAddress),
+-    PcdGet32 (PcdFdSize)
++    PcdGet32 (PcdFdSize),
++    EFI_MEMORY_WB
+     );
++// Patina Demo:    BuildResourceDescriptorHob (
++// Patina Demo:      EFI_RESOURCE_SYSTEM_MEMORY,
++// Patina Demo:      ResourceAttributes,
++// Patina Demo:      PcdGet64 (PcdFdBaseAddress),
++// Patina Demo:      PcdGet32 (PcdFdSize)
++// Patina Demo:      );
+ 
+   // Reserved framebuffer memory
+-  BuildResourceDescriptorHob (
++// Patina Demo:  Describe write-combining capability and active caching in a v2 HOB.
++  BuildPlatformResourceHob (
+     EFI_RESOURCE_MEMORY_RESERVED,
+     EFI_RESOURCE_ATTRIBUTE_PRESENT |
+     EFI_RESOURCE_ATTRIBUTE_INITIALIZED |
+-    EFI_RESOURCE_ATTRIBUTE_TESTED,
++    EFI_RESOURCE_ATTRIBUTE_TESTED |
++    EFI_RESOURCE_ATTRIBUTE_WRITE_COMBINEABLE,
+     PcdGet64 (PcdArmLcdDdrFrameBufferBase),
+-    PcdGet32 (PcdArmLcdDdrFrameBufferSize)
++    PcdGet32 (PcdArmLcdDdrFrameBufferSize),
++    EFI_MEMORY_WC
+     );
++// Patina Demo:    BuildResourceDescriptorHob (
++// Patina Demo:      EFI_RESOURCE_MEMORY_RESERVED,
++// Patina Demo:      EFI_RESOURCE_ATTRIBUTE_PRESENT |
++// Patina Demo:      EFI_RESOURCE_ATTRIBUTE_INITIALIZED |
++// Patina Demo:      EFI_RESOURCE_ATTRIBUTE_TESTED,
++// Patina Demo:      PcdGet64 (PcdArmLcdDdrFrameBufferBase),
++// Patina Demo:      PcdGet32 (PcdArmLcdDdrFrameBufferSize)
++// Patina Demo:      );
+ 
+   // Create initial Base Hob for system memory.
+-  BuildResourceDescriptorHob (
++// Patina Demo:  Replace the v1 HOB with a v2 descriptor using write-back.
++  BuildPlatformResourceHob (
+     EFI_RESOURCE_SYSTEM_MEMORY,
+     ResourceAttributes,
+     FixedPcdGet64 (PcdArmLcdDdrFrameBufferBase) + FixedPcdGet32 (PcdArmLcdDdrFrameBufferSize),
+-    mSystemMemoryEnd + 1 - (FixedPcdGet64 (PcdArmLcdDdrFrameBufferBase) + FixedPcdGet32 (PcdArmLcdDdrFrameBufferSize))
++    mSystemMemoryEnd + 1 - (FixedPcdGet64 (PcdArmLcdDdrFrameBufferBase) + FixedPcdGet32 (PcdArmLcdDdrFrameBufferSize)),
++    EFI_MEMORY_WB
+     );
++// Patina Demo:    BuildResourceDescriptorHob (
++// Patina Demo:      EFI_RESOURCE_SYSTEM_MEMORY,
++// Patina Demo:      ResourceAttributes,
++// Patina Demo:      FixedPcdGet64 (PcdArmLcdDdrFrameBufferBase) + FixedPcdGet32 (PcdArmLcdDdrFrameBufferSize),
++// Patina Demo:      mSystemMemoryEnd + 1 - (FixedPcdGet64 (PcdArmLcdDdrFrameBufferBase) + FixedPcdGet32 (PcdArmLcdDdrFrameBufferSize))
++// Patina Demo:      );
+ 
+   if (DramHigh) {
+-    BuildResourceDescriptorHob (
++// Patina Demo:  Replace the high-DRAM v1 HOB with a v2 descriptor using write-back.
++    BuildPlatformResourceHob (
+       EFI_RESOURCE_SYSTEM_MEMORY,
+       ResourceAttributes,
+       FixedPcdGet64 (PcdDramHighSpaceBase),
+-      DramHighSize
++      DramHighSize,
++      EFI_MEMORY_WB
+       );
++// Patina Demo:      BuildResourceDescriptorHob (
++// Patina Demo:        EFI_RESOURCE_SYSTEM_MEMORY,
++// Patina Demo:        ResourceAttributes,
++// Patina Demo:        FixedPcdGet64 (PcdDramHighSpaceBase),
++// Patina Demo:        DramHighSize
++// Patina Demo:        );
+   }
+ 
+   VirtualMemoryTable = (ARM_MEMORY_REGION_DESCRIPTOR *)AllocatePages (
+@@ -143,19 +236,32 @@ ArmPlatformGetVirtualMemoryMap (
+   }
+ 
+   // device
+-  VirtualMemoryTable[Index].PhysicalBase = 0;
++// Patina Demo:  Match ODP by leaving the NULL page unmapped.
++  VirtualMemoryTable[Index].PhysicalBase = SIZE_4KB;
++// Patina Demo:    VirtualMemoryTable[Index].PhysicalBase = 0;
+   VirtualMemoryTable[Index].VirtualBase  = VirtualMemoryTable[Index].PhysicalBase;
+-  VirtualMemoryTable[Index].Length       = 0x80000000;
++// Patina Demo:  Shorten the MMIO aperture by the excluded NULL page.
++  VirtualMemoryTable[Index].Length       = 0x80000000 - VirtualMemoryTable[Index].PhysicalBase;
++// Patina Demo:    VirtualMemoryTable[Index].Length       = 0x80000000;
++// Patina Demo:  Publish the lower MMIO aperture with active uncached attributes.
++  BuildPlatformResourceHob (
++    EFI_RESOURCE_MEMORY_MAPPED_IO,
++    EFI_RESOURCE_ATTRIBUTE_PRESENT | EFI_RESOURCE_ATTRIBUTE_INITIALIZED |
++    EFI_RESOURCE_ATTRIBUTE_TESTED | EFI_RESOURCE_ATTRIBUTE_UNCACHEABLE,
++    VirtualMemoryTable[Index].PhysicalBase,
++    VirtualMemoryTable[Index].Length,
++    EFI_MEMORY_UC
++    );
+   VirtualMemoryTable[Index++].Attributes = ARM_MEMORY_REGION_ATTRIBUTE_DEVICE;
+ 
+-  /*
+-    BuildResourceDescriptorHob (
+-        EFI_RESOURCE_MEMORY_MAPPED_IO,
+-        EFI_RESOURCE_ATTRIBUTE_UNCACHEABLE,
+-        VirtualMemoryTable[Index].VirtualBase,
+-        VirtualMemoryTable[Index].Length
+-    );
+-  */
++// Patina Demo:    /*
++// Patina Demo:      BuildResourceDescriptorHob (
++// Patina Demo:          EFI_RESOURCE_MEMORY_MAPPED_IO,
++// Patina Demo:          EFI_RESOURCE_ATTRIBUTE_UNCACHEABLE,
++// Patina Demo:          VirtualMemoryTable[Index].VirtualBase,
++// Patina Demo:          VirtualMemoryTable[Index].Length
++// Patina Demo:      );
++// Patina Demo:    */
+   // reserved 0x80000000 ~ 0x824fffff secure memory
+   VirtualMemoryTable[Index].PhysicalBase = FixedPcdGet32 (PcdReservedSecureMemoryBase);
+   VirtualMemoryTable[Index].VirtualBase  = FixedPcdGet32 (PcdReservedSecureMemoryBase);
+@@ -186,6 +292,20 @@ ArmPlatformGetVirtualMemoryMap (
+   VirtualMemoryTable[Index].Length       = mSystemMemoryEnd + 1 - VirtualMemoryTable[Index].PhysicalBase;
+   VirtualMemoryTable[Index++].Attributes = ARM_MEMORY_REGION_ATTRIBUTE_WRITE_BACK;
+ 
++// Patina Demo:  Match ODP by describing the PCIe/upper MMIO aperture before high DRAM.
++  VirtualMemoryTable[Index].PhysicalBase = mSystemMemoryEnd + 1;
++  VirtualMemoryTable[Index].VirtualBase  = VirtualMemoryTable[Index].PhysicalBase;
++  VirtualMemoryTable[Index].Length       = FixedPcdGet64 (PcdDramHighSpaceBase) - VirtualMemoryTable[Index].PhysicalBase;
++  BuildPlatformResourceHob (
++    EFI_RESOURCE_MEMORY_MAPPED_IO,
++    EFI_RESOURCE_ATTRIBUTE_PRESENT | EFI_RESOURCE_ATTRIBUTE_INITIALIZED |
++    EFI_RESOURCE_ATTRIBUTE_TESTED | EFI_RESOURCE_ATTRIBUTE_UNCACHEABLE,
++    VirtualMemoryTable[Index].PhysicalBase,
++    VirtualMemoryTable[Index].Length,
++    EFI_MEMORY_UC
++    );
++  VirtualMemoryTable[Index++].Attributes = ARM_MEMORY_REGION_ATTRIBUTE_DEVICE;
++
+   // system Dram high space 0x80_0000_0000
+   if (DramHigh) {
+     VirtualMemoryTable[Index].PhysicalBase = FixedPcdGet64 (PcdDramHighSpaceBase);
+diff --git a/Platform/CIX/Sky1/Sky1Common.dsc.inc b/Platform/CIX/Sky1/Sky1Common.dsc.inc
+index 6edb11f9..8684baec 100644
+--- a/Platform/CIX/Sky1/Sky1Common.dsc.inc
++++ b/Platform/CIX/Sky1/Sky1Common.dsc.inc
+@@ -672,18 +672,20 @@
+   #
+   # DXE
+   #
+-!if $(DIAGS_KERNEL_ENABLE) == TRUE
+-  Edk2OverridePkg/MdeModulePkg/Core/Dxe/DxeMain.inf {
+-    <LibraryClasses>
+-      NULL|MdeModulePkg/Library/DxeCrc32GuidedSectionExtractLib/DxeCrc32GuidedSectionExtractLib.inf
+-#      DebugLib|MdePkg/Library/BaseDebugLibNull/BaseDebugLibNull.inf
+-  }
+-!else
+-  MdeModulePkg/Core/Dxe/DxeMain.inf {
+-    <LibraryClasses>
+-      NULL|MdeModulePkg/Library/DxeCrc32GuidedSectionExtractLib/DxeCrc32GuidedSectionExtractLib.inf
+-  }
+-!endif
++
++# Patina Demo:  The EDKII DXE core is no longer needed due to being replaced by the Patina DXE core.
++# Patina Demo:  !if $(DIAGS_KERNEL_ENABLE) == TRUE
++# Patina Demo:    Edk2OverridePkg/MdeModulePkg/Core/Dxe/DxeMain.inf {
++# Patina Demo:      <LibraryClasses>
++# Patina Demo:        NULL|MdeModulePkg/Library/DxeCrc32GuidedSectionExtractLib/DxeCrc32GuidedSectionExtractLib.inf
++# Patina Demo:  #      DebugLib|MdePkg/Library/BaseDebugLibNull/BaseDebugLibNull.inf
++# Patina Demo:    }
++# Patina Demo:  !else
++# Patina Demo:    MdeModulePkg/Core/Dxe/DxeMain.inf {
++# Patina Demo:      <LibraryClasses>
++# Patina Demo:        NULL|MdeModulePkg/Library/DxeCrc32GuidedSectionExtractLib/DxeCrc32GuidedSectionExtractLib.inf
++# Patina Demo:    }
++# Patina Demo:  !endif
+   MdeModulePkg/Universal/PCD/Dxe/Pcd.inf {
+     <LibraryClasses>
+       PcdLib|MdePkg/Library/BasePcdLibNull/BasePcdLibNull.inf
+@@ -692,7 +694,8 @@
+   #
+   # Architectural Protocols
+   #
+-  ArmPkg/Drivers/CpuDxe/CpuDxe.inf
++# Patina Demo:  The CpuDxe driver support is part of the Patina DXE core
++# Patina Demo:    ArmPkg/Drivers/CpuDxe/CpuDxe.inf
+   MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
+   Platform/CIX/Sky1/Drivers/PlatformConfigParamsManageDxe/PlatformConfigParamsManageDxe.inf
+   Silicon/CIX/Sky1/Drivers/ConfigParamsManageDxe/ConfigParamsManageDxe.inf
+@@ -769,11 +772,12 @@
+ !endif
+   MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe.inf
+ 
+-!if $(DIAGS_KERNEL_ENABLE) == TRUE
+-  Edk2OverridePkg/ArmPkg/Drivers/ArmGic/ArmGicDxe.inf
+-!else
+-  ArmPkg/Drivers/ArmGic/ArmGicDxe.inf
+-!endif
++# Patina Demo:  The ArmGic driver support is part of the Patina DXE core
++# Patina Demo:  !if $(DIAGS_KERNEL_ENABLE) == TRUE
++# Patina Demo:    Edk2OverridePkg/ArmPkg/Drivers/ArmGic/ArmGicDxe.inf
++# Patina Demo:  !else
++# Patina Demo:    ArmPkg/Drivers/ArmGic/ArmGicDxe.inf
++# Patina Demo:  !endif
+ 
+   ArmPkg/Drivers/TimerDxe/TimerDxe.inf
+   #MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
+diff --git a/Platform/CIX/Sky1/Sky1Common.fdf.inc b/Platform/CIX/Sky1/Sky1Common.fdf.inc
+index b9583207..d96b4067 100644
+--- a/Platform/CIX/Sky1/Sky1Common.fdf.inc
++++ b/Platform/CIX/Sky1/Sky1Common.fdf.inc
+@@ -6,49 +6,56 @@
+ #
+ ##
+ 
+-!if $(DIAGS_KERNEL_ENABLE) == TRUE
+-  INF Edk2OverridePkg/MdeModulePkg/Core/Dxe/DxeMain.inf
+-!else
+-  INF MdeModulePkg/Core/Dxe/DxeMain.inf
+-!endif
++# Patina Demo:  Replace the C core with the Patina DXE core.  Including
++# Patina Demo:  it as a binary .efi file due to it being compiled independely
++# Patina Demo:  from this repository.
++  FILE DXE_CORE = 23C9322F-2AF2-476A-BC4C-26BC88266C71 {
++    SECTION PE32 = ../patina_dxe_core/target/aarch64-unknown-uefi/debug/dxe_core.efi
++    SECTION UI = "DxeCore"
++  }
++# Patina Demo:  !if $(DIAGS_KERNEL_ENABLE) == TRUE
++# Patina Demo:    INF Edk2OverridePkg/MdeModulePkg/Core/Dxe/DxeMain.inf
++# Patina Demo:  !else
++# Patina Demo:    INF MdeModulePkg/Core/Dxe/DxeMain.inf
++# Patina Demo:  !endif
+ 
+-  INF MdeModulePkg/Universal/PCD/Dxe/Pcd.inf
++# Patina Demo EMULATED_APRIORI:   INF MdeModulePkg/Universal/PCD/Dxe/Pcd.inf
+   #
+   # PI DXE Drivers producing Architectural Protocols (EFI Services)
+   #
+-  INF ArmPkg/Drivers/CpuDxe/CpuDxe.inf
+-  INF MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
+-  INF Platform/CIX/Sky1/Drivers/S3SaveStateDxe/S3SaveStateDxe.inf
++# Patina Demo EMULATED_APRIORI:    INF ArmPkg/Drivers/CpuDxe/CpuDxe.inf
++# Patina Demo EMULATED_APRIORI:    INF MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
++# Patina Demo EMULATED_APRIORI:    INF Platform/CIX/Sky1/Drivers/S3SaveStateDxe/S3SaveStateDxe.inf
+ !if $(CFG_PARAM_MANAGE_ENABLE) == TRUE
+-  INF Platform/CIX/Sky1/Drivers/PlatformConfigParamsManageDxe/PlatformConfigParamsManageDxe.inf
+-  INF Silicon/CIX/Sky1/Drivers/ConfigParamsManageDxe/ConfigParamsManageDxe.inf
++# Patina Demo EMULATED_APRIORI:    INF Platform/CIX/Sky1/Drivers/PlatformConfigParamsManageDxe/PlatformConfigParamsManageDxe.inf
++# Patina Demo EMULATED_APRIORI:    INF Silicon/CIX/Sky1/Drivers/ConfigParamsManageDxe/ConfigParamsManageDxe.inf
+ !endif
+ !if $(TOKEN_SETUP_SUPPORT) == TRUE
+-  INF Platform/CIX/Sky1/Drivers/PlatformSetupVariableInitDxe/PlatformSetupVariableInitDxe.inf
++# Patina Demo EMULATED_APRIORI:    INF Platform/CIX/Sky1/Drivers/PlatformSetupVariableInitDxe/PlatformSetupVariableInitDxe.inf
+ !endif
+-  INF Silicon/CIX/Sky1/Drivers/SocDxe/SocDxe.inf
+-  INF Platform/CIX/Sky1/Drivers/PlatformDxe/PlatformDxe.inf
++# Patina Demo EMULATED_APRIORI:    INF Silicon/CIX/Sky1/Drivers/SocDxe/SocDxe.inf
++# Patina Demo EMULATED_APRIORI:    INF Platform/CIX/Sky1/Drivers/PlatformDxe/PlatformDxe.inf
+   INF MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf
+   INF Silicon/CIX/Sky1/Drivers/RngDxe/RngDxe.inf
+   INF MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
+ !if $(SOC_PWR_CLK_RST_ENABLE) == TRUE
+   # SCMI Driver
+-  INF Platform/CIX/Sky1/Drivers/ArmScmiDxe/ArmScmiDxe.inf
++# Patina Demo EMULATED_APRIORI:    INF Platform/CIX/Sky1/Drivers/ArmScmiDxe/ArmScmiDxe.inf
+   # power
+ !if $(DIAGS_KERNEL_ENABLE) == TRUE
+-  INF CixDiagsKernelPkg/Sky1/Drivers/PowerDxe/PowerDxe.inf
++# Patina Demo EMULATED_APRIORI:    INF CixDiagsKernelPkg/Sky1/Drivers/PowerDxe/PowerDxe.inf
+ !else
+-  INF Silicon/CIX/Sky1/Drivers/PowerDxe/PowerDxe.inf
++# Patina Demo EMULATED_APRIORI:    INF Silicon/CIX/Sky1/Drivers/PowerDxe/PowerDxe.inf
+ !endif
+   # clock
+   !if $(DIAGS_KERNEL_ENABLE) == TRUE
+-    INF CixDiagsKernelPkg/Sky1/Drivers/ClockDxe/ClockDxe.inf
++# Patina Demo EMULATED_APRIORI:      INF CixDiagsKernelPkg/Sky1/Drivers/ClockDxe/ClockDxe.inf
+   !else
+-    INF Silicon/CIX/Sky1/Drivers/ClockDxe/ClockDxe.inf
++# Patina Demo EMULATED_APRIORI:      INF Silicon/CIX/Sky1/Drivers/ClockDxe/ClockDxe.inf
+   !endif
+ !endif
+   # reset
+-  INF Silicon/CIX/Sky1/Drivers/ResetDxe/ResetDxe.inf
++# Patina Demo EMULATED_APRIORI:    INF Silicon/CIX/Sky1/Drivers/ResetDxe/ResetDxe.inf
+ 
+ !if $(SOC_CDNSP_ENABLE) == TRUE || $(SOC_CDNSP_HOST_ENABLE) == TRUE
+   INF Silicon/CIX/Sky1/Drivers/TypecPhyDxe/TypecPhyDxe.inf
+@@ -82,22 +89,22 @@
+ !endif
+ 
+ !if $(STMM_SUPPORT) == TRUE
+-  INF Platform/CIX/Sky1/Drivers/MmCommunicationDxe/ArmMmCommunication.inf
++# Patina Demo EMULATED_APRIORI:    INF Platform/CIX/Sky1/Drivers/MmCommunicationDxe/ArmMmCommunication.inf
+ !endif
+ !if $(SOC_XSPI_ENABLE) == TRUE
+ !if $(STMM_SUPPORT) == TRUE
+-  INF Silicon/CIX/Sky1/Drivers/NorFlashStmmRuntimeDxe/NorFlashStmmRuntimeDxe.inf
++# Patina Demo EMULATED_APRIORI:    INF Silicon/CIX/Sky1/Drivers/NorFlashStmmRuntimeDxe/NorFlashStmmRuntimeDxe.inf
+ !else
+-  INF Silicon/CIX/Sky1/Drivers/NorFlashDxe/NorFlashDxe.inf
++# Patina Demo EMULATED_APRIORI:    INF Silicon/CIX/Sky1/Drivers/NorFlashDxe/NorFlashDxe.inf
+ !endif
+ !endif
+ !if $(VARIABLE_SUPPORT) == "SPI" && $(STMM_SUPPORT) == FALSE
+-  INF MdeModulePkg/Universal/FaultTolerantWriteDxe/FaultTolerantWriteDxe.inf
++# Patina Demo EMULATED_APRIORI:    INF MdeModulePkg/Universal/FaultTolerantWriteDxe/FaultTolerantWriteDxe.inf
+ !endif
+ !if $(VARIABLE_SUPPORT) == "SPI" && $(STMM_SUPPORT) == TRUE
+-  INF MdeModulePkg/Universal/Variable/RuntimeDxe/VariableSmmRuntimeDxe.inf
++# Patina Demo EMULATED_APRIORI:    INF MdeModulePkg/Universal/Variable/RuntimeDxe/VariableSmmRuntimeDxe.inf
+ !else
+-  INF MdeModulePkg/Universal/Variable/RuntimeDxe/VariableRuntimeDxe.inf
++# Patina Demo EMULATED_APRIORI:    INF MdeModulePkg/Universal/Variable/RuntimeDxe/VariableRuntimeDxe.inf
+ !endif
+ !if $(EFUSE_OEM_KEY_ENABLE) == TRUE
+   INF Platform/CIX/Sky1/Drivers/EfuseOemKeyDxe/EfuseOemKeyDxe.inf
+@@ -137,17 +144,17 @@
+ !endif
+ 
+ !if $(DIAGS_KERNEL_ENABLE) == TRUE
+-  INF Edk2OverridePkg/ArmPkg/Drivers/ArmGic/ArmGicDxe.inf
++# Patina Demo EMULATED_APRIORI:    INF Edk2OverridePkg/ArmPkg/Drivers/ArmGic/ArmGicDxe.inf
+ !else
+-  INF ArmPkg/Drivers/ArmGic/ArmGicDxe.inf
++# Patina Demo EMULATED_APRIORI:    INF ArmPkg/Drivers/ArmGic/ArmGicDxe.inf
+ !endif
+-  INF ArmPkg/Drivers/TimerDxe/TimerDxe.inf
++# Patina Demo EMULATED_APRIORI:    INF ArmPkg/Drivers/TimerDxe/TimerDxe.inf
+ !if $(POWER_BUTTON_ENABLE) == TRUE
+   INF Platform/CIX/Sky1/Drivers/PowerButtonDxe/PowerButtonDxe.inf
+ !endif
+ 
+ #  INF MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
+-  INF Silicon/CIX/Sky1/Drivers/GenericWatchdogDxe/GenericWatchdogDxe.inf
++# Patina Demo EMULATED_APRIORI:    INF Silicon/CIX/Sky1/Drivers/GenericWatchdogDxe/GenericWatchdogDxe.inf
+   INF MdeModulePkg/Universal/EbcDxe/EbcDxe.inf
+ 
+ !if $(SOC_GPIO_INTR_ENABLE) == TRUE
+diff --git a/Platform/Radxa/Orion/O6/O6.fdf b/Platform/Radxa/Orion/O6/O6.fdf
+index ed857c59..2566fa22 100644
+--- a/Platform/Radxa/Orion/O6/O6.fdf
++++ b/Platform/Radxa/Orion/O6/O6.fdf
+@@ -86,54 +86,63 @@ READ_STATUS        = TRUE
+ READ_LOCK_CAP      = TRUE
+ READ_LOCK_STATUS   = TRUE
+ 
+-
+-  APRIORI DXE {
+-    INF MdeModulePkg/Universal/PCD/Dxe/Pcd.inf
+-    INF ArmPkg/Drivers/CpuDxe/CpuDxe.inf
+-    INF MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
++# Patina Demo:  Patina does not support an APRIORI file as discussed in the Patina book:
++# Patina Demo:  https://opendevicepartnership.github.io/patina/integrate/patina_dxe_core_requirements.html#12-a-priori-driver-dispatch-is-not-allowed
++# Patina Demo:  Since this platform build has up to 20 INF files in the APRIORI, the EMULATED_APRIORI_??? rules are being
++# Patina Demo:  used.  The following changes force the .FFS file to contain a TRUE depex, and by removing the APRIORI DXE
++# Patina Demo:  declaration but keeping all the same files in the provided order and at the top of the firmware volume, the
++# Patina Demo:  dipatcher will process them in the same order that an APRIORI listing. This is strictly a work-around to get
++# Patina Demo:  a bootable codebase as quickly as possible and should not be considered a shippable solution.  Proper dependency
++# Patina Demo:  expressions should be used instead.
++# Patina Demo:    APRIORI DXE {
++    INF RuleOverride = EMULATED_APRIORI_SOURCE MdeModulePkg/Universal/PCD/Dxe/Pcd.inf
++# Patina Demo:  The CpuDxe support is provided by the Patina DXE core
++# Patina Demo:      INF ArmPkg/Drivers/CpuDxe/CpuDxe.inf
++    INF RuleOverride = EMULATED_APRIORI_SOURCE MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
+ !if $(SOC_PWR_CLK_RST_ENABLE) == TRUE
+     # SCMI Driver
+-    INF Platform/CIX/Sky1/Drivers/ArmScmiDxe/ArmScmiDxe.inf
++    INF RuleOverride = EMULATED_APRIORI_SOURCE Platform/CIX/Sky1/Drivers/ArmScmiDxe/ArmScmiDxe.inf
+     # power
+-    INF Silicon/CIX/Sky1/Drivers/PowerDxe/PowerDxe.inf
++    INF RuleOverride = EMULATED_APRIORI_BINARY Silicon/CIX/Sky1/Drivers/PowerDxe/PowerDxe.inf
+     # clock
+-    INF Silicon/CIX/Sky1/Drivers/ClockDxe/ClockDxe.inf
++    INF RuleOverride = EMULATED_APRIORI_BINARY Silicon/CIX/Sky1/Drivers/ClockDxe/ClockDxe.inf
+ !endif
+     # reset
+-    INF Silicon/CIX/Sky1/Drivers/ResetDxe/ResetDxe.inf
+-    INF Platform/CIX/Sky1/Drivers/S3SaveStateDxe/S3SaveStateDxe.inf
+-    INF Silicon/CIX/Sky1/Drivers/SocDxe/SocDxe.inf
++    INF RuleOverride = EMULATED_APRIORI_BINARY Silicon/CIX/Sky1/Drivers/ResetDxe/ResetDxe.inf
++    INF RuleOverride = EMULATED_APRIORI_SOURCE Platform/CIX/Sky1/Drivers/S3SaveStateDxe/S3SaveStateDxe.inf
++    INF RuleOverride = EMULATED_APRIORI_BINARY Silicon/CIX/Sky1/Drivers/SocDxe/SocDxe.inf
+ !if $(STMM_SUPPORT) == TRUE
+-    INF Platform/CIX/Sky1/Drivers/MmCommunicationDxe/ArmMmCommunication.inf
++    INF RuleOverride = EMULATED_APRIORI_BINARY Platform/CIX/Sky1/Drivers/MmCommunicationDxe/ArmMmCommunication.inf
+ !endif
+ !if $(SOC_XSPI_ENABLE) == TRUE
+ !if $(STMM_SUPPORT) == TRUE
+-    INF Silicon/CIX/Sky1/Drivers/NorFlashStmmRuntimeDxe/NorFlashStmmRuntimeDxe.inf
++    INF RuleOverride = EMULATED_APRIORI_SOURCE Silicon/CIX/Sky1/Drivers/NorFlashStmmRuntimeDxe/NorFlashStmmRuntimeDxe.inf
+ !else
+-    INF Silicon/CIX/Sky1/Drivers/NorFlashDxe/NorFlashDxe.inf
++    INF RuleOverride = EMULATED_APRIORI_SOURCE Silicon/CIX/Sky1/Drivers/NorFlashDxe/NorFlashDxe.inf
+ !endif
+ !endif
+ !if $(VARIABLE_SUPPORT) == "SPI" && $(STMM_SUPPORT) == FALSE
+-    INF MdeModulePkg/Universal/FaultTolerantWriteDxe/FaultTolerantWriteDxe.inf
++    INF RuleOverride = EMULATED_APRIORI_SOURCE MdeModulePkg/Universal/FaultTolerantWriteDxe/FaultTolerantWriteDxe.inf
+ !endif
+ !if $(VARIABLE_SUPPORT) == "SPI" && $(STMM_SUPPORT) == TRUE
+-    INF MdeModulePkg/Universal/Variable/RuntimeDxe/VariableSmmRuntimeDxe.inf
++    INF RuleOverride = EMULATED_APRIORI_SOURCE MdeModulePkg/Universal/Variable/RuntimeDxe/VariableSmmRuntimeDxe.inf
+ !else
+-    INF MdeModulePkg/Universal/Variable/RuntimeDxe/VariableRuntimeDxe.inf
++    INF RuleOverride = EMULATED_APRIORI_SOURCE MdeModulePkg/Universal/Variable/RuntimeDxe/VariableRuntimeDxe.inf
+ !endif
+ 
+-  INF ArmPkg/Drivers/ArmGic/ArmGicDxe.inf
+-  INF ArmPkg/Drivers/TimerDxe/TimerDxe.inf
+-  INF Silicon/CIX/Sky1/Drivers/GenericWatchdogDxe/GenericWatchdogDxe.inf
++# Patina Demo:  The GIC DXE support is provided by the Patina DXE core
++# Patina Demo:     INF ArmPkg/Drivers/ArmGic/ArmGicDxe.inf
++    INF RuleOverride = EMULATED_APRIORI_SOURCE ArmPkg/Drivers/TimerDxe/TimerDxe.inf
++    INF RuleOverride = EMULATED_APRIORI_SOURCE Silicon/CIX/Sky1/Drivers/GenericWatchdogDxe/GenericWatchdogDxe.inf
+ !if $(CFG_PARAM_MANAGE_ENABLE) == TRUE
+-    INF Platform/CIX/Sky1/Drivers/PlatformConfigParamsManageDxe/PlatformConfigParamsManageDxe.inf
+-    INF Silicon/CIX/Sky1/Drivers/ConfigParamsManageDxe/ConfigParamsManageDxe.inf
++    INF RuleOverride = EMULATED_APRIORI_SOURCE Platform/CIX/Sky1/Drivers/PlatformConfigParamsManageDxe/PlatformConfigParamsManageDxe.inf
++    INF RuleOverride = EMULATED_APRIORI_SOURCE Silicon/CIX/Sky1/Drivers/ConfigParamsManageDxe/ConfigParamsManageDxe.inf
+ !endif
+ !if $(TOKEN_SETUP_SUPPORT) == FALSE
+-    INF Platform/CIX/Sky1/Drivers/PlatformSetupVariableInitDxe/PlatformSetupVariableInitDxe.inf
+-    INF Platform/CIX/Sky1/Drivers/PlatformDxe/PlatformDxe.inf
++    INF RuleOverride = EMULATED_APRIORI_SOURCE Platform/CIX/Sky1/Drivers/PlatformSetupVariableInitDxe/PlatformSetupVariableInitDxe.inf
++    INF RuleOverride = EMULATED_APRIORI_SOURCE Platform/CIX/Sky1/Drivers/PlatformDxe/PlatformDxe.inf
+ !endif
+-  }
++# Patina Demo:    }
+ 
+ # inf file list has be move to Sky1Common.fdf.inc
+ # please put xxx.inf to Sky1Common.fdf.inc
+@@ -326,3 +335,33 @@ READ_LOCK_STATUS   = TRUE
+     UI  STRING="$(MODULE_NAME)" Optional
+     RAW BIN                |.bin
+   }
++
++# Patina Demo:  The following rules are a duplicate of the original with a change to force the dependency expression to TRUE
++# Patina Demo:  patch.sh prepares target/True.depex before the standalone Cargo and vendor builds.
++[Rule.Common.DXE_DRIVER.EMULATED_APRIORI_SOURCE]
++  FILE DRIVER = $(NAMED_GUID) {
++    DXE_DEPEX DXE_DEPEX $(WORKSPACE)/../patina_dxe_core/target/True.depex
++    PE32 PE32 $(INF_OUTPUT)/$(MODULE_NAME).efi
++    UI STRING="$(MODULE_NAME)" Optional
++  }
++
++[Rule.Common.DXE_RUNTIME_DRIVER.EMULATED_APRIORI_SOURCE]
++  FILE DRIVER = $(NAMED_GUID) {
++    DXE_DEPEX DXE_DEPEX $(WORKSPACE)/../patina_dxe_core/target/True.depex
++    PE32 PE32 $(INF_OUTPUT)/$(MODULE_NAME).efi
++    UI STRING="$(MODULE_NAME)" Optional
++  }
++
++[Rule.Common.DXE_DRIVER.EMULATED_APRIORI_BINARY]
++  FILE DRIVER = $(NAMED_GUID) {
++    DXE_DEPEX DXE_DEPEX $(WORKSPACE)/../patina_dxe_core/target/True.depex
++    PE32 PE32 |.efi
++    UI STRING="$(MODULE_NAME)" Optional
++  }
++
++[Rule.Common.DXE_RUNTIME_DRIVER.EMULATED_APRIORI_BINARY]
++  FILE DRIVER = $(NAMED_GUID) {
++    DXE_DEPEX DXE_DEPEX $(WORKSPACE)/../patina_dxe_core/target/True.depex
++    PE32 PE32 |.efi
++    UI STRING="$(MODULE_NAME)" Optional
++  }
+diff --git a/Platform/Radxa/Platforms/CIX/Sky1/Sky1Common.fdf.inc b/Platform/Radxa/Platforms/CIX/Sky1/Sky1Common.fdf.inc
+index 5fc0ede7..58a773e0 100644
+--- a/Platform/Radxa/Platforms/CIX/Sky1/Sky1Common.fdf.inc
++++ b/Platform/Radxa/Platforms/CIX/Sky1/Sky1Common.fdf.inc
+@@ -11,7 +11,8 @@
+   INF Platform/Radxa/Platforms/CIX/Sky1/Drivers/SystemInfoDxe/SystemInfoDxe.inf
+ 
+ !if $(TOKEN_SETUP_SUPPORT) == FALSE
+-  INF Platform/CIX/Sky1/Drivers/PlatformSetupVariableInitDxe/PlatformSetupVariableInitDxe.inf
++# Patina Demo:  Remove due to EMULATED_APRIORI_???
++# Patina Demo:    INF Platform/CIX/Sky1/Drivers/PlatformSetupVariableInitDxe/PlatformSetupVariableInitDxe.inf
+   INF Platform/Radxa/Platforms/CIX/Sky1/Drivers/PlatformConfigDxe/PlatformConfigDxe.inf
+ !endif
+ 
+diff --git a/Silicon/CIX/Sky1/Drivers/NorFlashStmmRuntimeDxe/NorFlashStmmRuntimeDxe.c b/Silicon/CIX/Sky1/Drivers/NorFlashStmmRuntimeDxe/NorFlashStmmRuntimeDxe.c
+index ca6f4c27..546be3db 100644
+--- a/Silicon/CIX/Sky1/Drivers/NorFlashStmmRuntimeDxe/NorFlashStmmRuntimeDxe.c
++++ b/Silicon/CIX/Sky1/Drivers/NorFlashStmmRuntimeDxe/NorFlashStmmRuntimeDxe.c
+@@ -99,7 +99,9 @@ NOR_FLASH_INSTANCE  mNorFlashInstanceTemplate = {
+ STATIC NOR_FLASH_REGION_DESCRIPTION  mNorFlashDevices[] = {
+   {
+     XSPI_FLASH_DIRECT_MMIO_ADDR,  // Memory mapped IO base address for nor flash
+-    SIZE_16MB,
++// Patina Demo:  Describe the Orion O6 SPI-NOR capacity as in the ODP override.
++    SIZE_8MB,
++// Patina Demo:      SIZE_16MB,
+     FixedPcdGet32 (PcdNorFlashNvramAddr),
+     FixedPcdGet32 (PcdNorFlashNvramSize),
+     SIZE_4KB,
+@@ -125,25 +127,26 @@ FlashMemoryInitEventNotify (
+   //       even if we only use the small block region of the NOR Flash.
+   //       The reason is when the NOR Flash memory is set into program mode, the command
+   //       is written as the base of the flash region (ie: Instance->DeviceBaseAddress)
+-  Status = gDS->AddMemorySpace (
+-                  EfiGcdMemoryTypeMemoryMappedIo,
+-                  NorFlashDevices->DeviceBaseAddress,
+-                  NorFlashDevices->DeviceSize,
+-                  EFI_MEMORY_UC | EFI_MEMORY_RUNTIME
+-                  );
+-  if (EFI_ERROR (Status)) {
+-    DebugPrint (
+-      DEBUG_ERROR,
+-      "%a: fail to add memory space base 0x%x, size 0x%x, status %r\n",
+-      __FUNCTION__,
+-      NorFlashDevices->DeviceBaseAddress,
+-      NorFlashDevices->DeviceSize,
+-      Status
+-      );
+-    ASSERT_EFI_ERROR (Status);
+-  }
+-
+-  DEBUG ((DEBUG_INFO, "%a: add flash space base 0x%x, length 0x%x to memory space\n", __FUNCTION__, NorFlashDevices->DeviceBaseAddress, NorFlashDevices->DeviceSize));
++// Patina Demo:  Omit duplicate registration; the v2 MMIO HOB already describes this range.
++// Patina Demo:    Status = gDS->AddMemorySpace (
++// Patina Demo:                    EfiGcdMemoryTypeMemoryMappedIo,
++// Patina Demo:                    NorFlashDevices->DeviceBaseAddress,
++// Patina Demo:                    NorFlashDevices->DeviceSize,
++// Patina Demo:                    EFI_MEMORY_UC | EFI_MEMORY_RUNTIME
++// Patina Demo:                    );
++// Patina Demo:    if (EFI_ERROR (Status)) {
++// Patina Demo:      DebugPrint (
++// Patina Demo:        DEBUG_ERROR,
++// Patina Demo:        "%a: fail to add memory space base 0x%x, size 0x%x, status %r\n",
++// Patina Demo:        __FUNCTION__,
++// Patina Demo:        NorFlashDevices->DeviceBaseAddress,
++// Patina Demo:        NorFlashDevices->DeviceSize,
++// Patina Demo:        Status
++// Patina Demo:        );
++// Patina Demo:      ASSERT_EFI_ERROR (Status);
++// Patina Demo:    }
++
++// Patina Demo:    DEBUG ((DEBUG_INFO, "%a: add flash space base 0x%x, length 0x%x to memory space\n", __FUNCTION__, NorFlashDevices->DeviceBaseAddress, NorFlashDevices->DeviceSize));
+ 
+   Status = gDS->SetMemorySpaceAttributes (
+                   NorFlashDevices->DeviceBaseAddress,
