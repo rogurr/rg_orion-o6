@@ -1,5 +1,5 @@
 diff --git a/Platform/CIX/Sky1/Library/PlatformLib/ArmPlatformLibMem.c b/Platform/CIX/Sky1/Library/PlatformLib/ArmPlatformLibMem.c
-index 32bfb979..8287cc38 100644
+index 32bfb979d76d02674bad2f75cb82df5f7c51c875..8287cc38b47bfb605c35612cd738a336f7e9be6e 100644
 --- a/Platform/CIX/Sky1/Library/PlatformLib/ArmPlatformLibMem.c
 +++ b/Platform/CIX/Sky1/Library/PlatformLib/ArmPlatformLibMem.c
 @@ -11,6 +11,9 @@
@@ -242,7 +242,7 @@ index 32bfb979..8287cc38 100644
    if (DramHigh) {
      VirtualMemoryTable[Index].PhysicalBase = FixedPcdGet64 (PcdDramHighSpaceBase);
 diff --git a/Platform/CIX/Sky1/Sky1Common.dsc.inc b/Platform/CIX/Sky1/Sky1Common.dsc.inc
-index 6edb11f9..8684baec 100644
+index 6edb11f9aa29f6ed078eae97b807687678312d9b..8684baecf9416a46f08fe06789a7ca2c2f8e1e22 100644
 --- a/Platform/CIX/Sky1/Sky1Common.dsc.inc
 +++ b/Platform/CIX/Sky1/Sky1Common.dsc.inc
 @@ -672,18 +672,20 @@
@@ -307,7 +307,7 @@ index 6edb11f9..8684baec 100644
    ArmPkg/Drivers/TimerDxe/TimerDxe.inf
    #MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
 diff --git a/Platform/CIX/Sky1/Sky1Common.fdf.inc b/Platform/CIX/Sky1/Sky1Common.fdf.inc
-index b9583207..d96b4067 100644
+index b9583207242ed7092cee95f9db02efec9014176f..3d0758d0430f797ec63168993d1080d0c5d375cc 100644
 --- a/Platform/CIX/Sky1/Sky1Common.fdf.inc
 +++ b/Platform/CIX/Sky1/Sky1Common.fdf.inc
 @@ -6,49 +6,56 @@
@@ -323,7 +323,7 @@ index b9583207..d96b4067 100644
 +# Patina Demo:  it as a binary .efi file due to it being compiled independely
 +# Patina Demo:  from this repository.
 +  FILE DXE_CORE = 23C9322F-2AF2-476A-BC4C-26BC88266C71 {
-+    SECTION PE32 = ../patina_dxe_core/target/aarch64-unknown-uefi/debug/dxe_core.efi
++    SECTION PE32 = ../dxe_core.efi
 +    SECTION UI = "DxeCore"
 +  }
 +# Patina Demo:  !if $(DIAGS_KERNEL_ENABLE) == TRUE
@@ -439,7 +439,7 @@ index b9583207..d96b4067 100644
  
  !if $(SOC_GPIO_INTR_ENABLE) == TRUE
 diff --git a/Platform/Radxa/Orion/O6/O6.fdf b/Platform/Radxa/Orion/O6/O6.fdf
-index ed857c59..2566fa22 100644
+index ed857c593a722c679a52e6e36a1c35f67f72b5ac..3854da24cf23f61222e70f0b98a23ceacb9f629c 100644
 --- a/Platform/Radxa/Orion/O6/O6.fdf
 +++ b/Platform/Radxa/Orion/O6/O6.fdf
 @@ -86,54 +86,63 @@ READ_STATUS        = TRUE
@@ -540,47 +540,54 @@ index ed857c59..2566fa22 100644
 +# Patina Demo:  patch.sh prepares target/True.depex before the standalone Cargo and vendor builds.
 +[Rule.Common.DXE_DRIVER.EMULATED_APRIORI_SOURCE]
 +  FILE DRIVER = $(NAMED_GUID) {
-+    DXE_DEPEX DXE_DEPEX $(WORKSPACE)/../patina_dxe_core/target/True.depex
++    DXE_DEPEX DXE_DEPEX $(WORKSPACE)/edk2-platforms/Platform/Radxa/Orion/O6/True.depex
 +    PE32 PE32 $(INF_OUTPUT)/$(MODULE_NAME).efi
 +    UI STRING="$(MODULE_NAME)" Optional
 +  }
 +
 +[Rule.Common.DXE_RUNTIME_DRIVER.EMULATED_APRIORI_SOURCE]
 +  FILE DRIVER = $(NAMED_GUID) {
-+    DXE_DEPEX DXE_DEPEX $(WORKSPACE)/../patina_dxe_core/target/True.depex
++    DXE_DEPEX DXE_DEPEX $(WORKSPACE)/edk2-platforms/Platform/Radxa/Orion/O6/True.depex
 +    PE32 PE32 $(INF_OUTPUT)/$(MODULE_NAME).efi
 +    UI STRING="$(MODULE_NAME)" Optional
 +  }
 +
 +[Rule.Common.DXE_DRIVER.EMULATED_APRIORI_BINARY]
 +  FILE DRIVER = $(NAMED_GUID) {
-+    DXE_DEPEX DXE_DEPEX $(WORKSPACE)/../patina_dxe_core/target/True.depex
++    DXE_DEPEX DXE_DEPEX $(WORKSPACE)/edk2-platforms/Platform/Radxa/Orion/O6/True.depex
 +    PE32 PE32 |.efi
 +    UI STRING="$(MODULE_NAME)" Optional
 +  }
 +
 +[Rule.Common.DXE_RUNTIME_DRIVER.EMULATED_APRIORI_BINARY]
 +  FILE DRIVER = $(NAMED_GUID) {
-+    DXE_DEPEX DXE_DEPEX $(WORKSPACE)/../patina_dxe_core/target/True.depex
++    DXE_DEPEX DXE_DEPEX $(WORKSPACE)/edk2-platforms/Platform/Radxa/Orion/O6/True.depex
 +    PE32 PE32 |.efi
 +    UI STRING="$(MODULE_NAME)" Optional
 +  }
+diff --git a/Platform/Radxa/Orion/O6/True.depex b/Platform/Radxa/Orion/O6/True.depex
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a47cc2299e27df4eb093f8e50dfc4f570edaff1
+--- /dev/null
++++ b/Platform/Radxa/Orion/O6/True.depex
+@@ -0,0 +1 @@
++
+\ No newline at end of file
 diff --git a/Platform/Radxa/Platforms/CIX/Sky1/Sky1Common.fdf.inc b/Platform/Radxa/Platforms/CIX/Sky1/Sky1Common.fdf.inc
-index 5fc0ede7..58a773e0 100644
+index 5fc0ede7ef1664e0453823461d7a87dbd2e276f9..3794f13de21a5b459b1f746f72530f409eddc705 100644
 --- a/Platform/Radxa/Platforms/CIX/Sky1/Sky1Common.fdf.inc
 +++ b/Platform/Radxa/Platforms/CIX/Sky1/Sky1Common.fdf.inc
-@@ -11,7 +11,8 @@
+@@ -11,7 +11,7 @@
    INF Platform/Radxa/Platforms/CIX/Sky1/Drivers/SystemInfoDxe/SystemInfoDxe.inf
  
  !if $(TOKEN_SETUP_SUPPORT) == FALSE
 -  INF Platform/CIX/Sky1/Drivers/PlatformSetupVariableInitDxe/PlatformSetupVariableInitDxe.inf
-+# Patina Demo:  Remove due to EMULATED_APRIORI_???
-+# Patina Demo:    INF Platform/CIX/Sky1/Drivers/PlatformSetupVariableInitDxe/PlatformSetupVariableInitDxe.inf
++# Patina Demo EMULATED_APRIORI:    INF Platform/CIX/Sky1/Drivers/PlatformSetupVariableInitDxe/PlatformSetupVariableInitDxe.inf
    INF Platform/Radxa/Platforms/CIX/Sky1/Drivers/PlatformConfigDxe/PlatformConfigDxe.inf
  !endif
  
 diff --git a/Silicon/CIX/Sky1/Drivers/NorFlashStmmRuntimeDxe/NorFlashStmmRuntimeDxe.c b/Silicon/CIX/Sky1/Drivers/NorFlashStmmRuntimeDxe/NorFlashStmmRuntimeDxe.c
-index ca6f4c27..546be3db 100644
+index ca6f4c272ce7519900bba158d36374026ee06506..546be3db27cec28d031f75c0ca968293da7e655d 100644
 --- a/Silicon/CIX/Sky1/Drivers/NorFlashStmmRuntimeDxe/NorFlashStmmRuntimeDxe.c
 +++ b/Silicon/CIX/Sky1/Drivers/NorFlashStmmRuntimeDxe/NorFlashStmmRuntimeDxe.c
 @@ -99,7 +99,9 @@ NOR_FLASH_INSTANCE  mNorFlashInstanceTemplate = {

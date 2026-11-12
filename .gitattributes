@@ -6,3 +6,6 @@
 # Windows registry files must remain UTF-16 LE with CRLF line endings to be properly processed by the Windows registry
 # editor. Marking them as binary to prevent Git from altering the file at commit or checkout.
 *.reg binary
+
+# Patch contains a 2 byte binary that should not be treated as text
+demos/uefi/patina/edk2-platforms_1.3.2.patch -text
