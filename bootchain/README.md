@@ -46,6 +46,11 @@ Note that Dockerfiles chain commands in each instruction section with `&&` to mi
 
 ## Make Targets
 
+The shared CIX EDK II submodules use the paths listed in [common/README.md](../common/README.md).
+The platform override under `OVERRIDE/cix_opensource__release__edk2-platforms/` still targets
+its recorded pre-update base revision; it has not been rebased for the new CIX release.
+The path updates do not adapt ODP platform sources to that release.
+
 Running `make` (or `make all`) in this directory creates an output `build/` directory to hold all build artifacts.  It will download and verify the necessary build tools, collect all pre-compiled binaries, build the platform-specific binaries, then stitch them into the final firmware binary.  The table below describes each target available in this Makefile.  Individual modules can be rebuilt by running `make` from their own directory under `modules/`, or with `make -C modules/<name>` from this directory; a subsequent `make all` will re-stitch the bootchain image using the freshly built module binaries.
 
 | Command | Description |

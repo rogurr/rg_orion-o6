@@ -54,8 +54,7 @@ mod tests {
     /// Root of the ACPI platform tables for Radxa Orion O6.
     fn acpi_tables_dir() -> PathBuf {
         // Path to the ACPI tables submodule relative to the workspace root.
-        const ACPI_SUBMODULE_PATH: &str =
-            "common/cix-edk2-platforms/Platform/Radxa/Orion/O6/Drivers/AcpiPlatfomTables";
+        const ACPI_SUBMODULE_PATH: &str = "common/cix_opensource__release__edk2-platforms/Platform/Radxa/Orion/O6/Drivers/AcpiPlatfomTables";
 
         // Cargo sets CARGO_MANIFEST_DIR to the directory containing this crate's Cargo.toml
         // (tests/acpi). Derive paths from this instead of the process current working directory.

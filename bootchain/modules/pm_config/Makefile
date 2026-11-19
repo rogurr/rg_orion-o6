@@ -14,7 +14,7 @@ endif
 all:
 	rm -rf $(ODP_PATH_TARGET_OUTPUT)/pm_config
 	mkdir -p $(ODP_PATH_TARGET_OUTPUT)
-	cp -rf $(ODP_PATH_COMMON)/cix-edk2-platforms/Platform/Radxa/Orion/O6/pm_config/ $(ODP_PATH_TARGET_OUTPUT)/pm_config/
+	cp -rf $(ODP_PATH_COMMON)/cix_opensource__release__edk2-platforms/Platform/Radxa/Orion/O6/pm_config/ $(ODP_PATH_TARGET_OUTPUT)/pm_config/
 	$(MAKE) -C $(ODP_PATH_TARGET_OUTPUT)/pm_config
 
 	mkdir -p $(ODP_PATH_BINS_OUTPUT)

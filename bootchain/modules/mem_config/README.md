@@ -11,7 +11,7 @@ parameters consumed during early boot initialization.
 The configuration source files are located in the shared common tree at:
 
 ```text
-common/cix-edk2-platforms/Platform/Radxa/Orion/O6/mem_config/
+common/cix_opensource__release__edk2-platforms/Platform/Radxa/Orion/O6/mem_config/
 ```
 
 ## Build

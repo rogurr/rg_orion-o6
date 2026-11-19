@@ -13,7 +13,7 @@ UEFI_OUT_DIR               := $(ODP_PATH_TARGET_OUTPUT)/uefi
 RUST_OUT_DIR               := $(UEFI_OUT_DIR)/Rust
 SHELL                      := /bin/bash
 export WORKSPACE           := $(CURDIR)
-export PACKAGES_PATH       := $(CURDIR)/edk2:$(CURDIR)/platform:$(ODP_PATH_COMMON)/cix-edk2-platforms:$(ODP_PATH_COMMON)/cix-edk2-non-osi:$(RUST_OUT_DIR)
+export PACKAGES_PATH       := $(CURDIR)/edk2:$(CURDIR)/platform:$(ODP_PATH_COMMON)/cix_opensource__release__edk2-platforms:$(ODP_PATH_COMMON)/cix_opensource__release__edk2-non-osi:$(RUST_OUT_DIR)
 export GCC5_AARCH64_PREFIX := $(ODP_PATH_GCC5_PREFIX)
 
 # Select matching EDK II and Cargo build profiles.
@@ -40,7 +40,7 @@ all: PatinaDxeCore_ru
 		-e 's/^\(#define MPTF_POWERLIMIT_ENABLE\) .*/\1 1/' \
 		-e 's/^\(#define MPTF_CUSTOMIZE_IO_SIGNALSS_ENABLE\) .*/\1 1/' \
 		-e 's/^\(#define MPTF_POWER_TRACKER\) .*/\1 1/' \
-		$(ODP_PATH_COMMON)/cix-edk2-platforms/Platform/Radxa/Orion/O6/Drivers/AcpiPlatfomTables/MSFTThermal.asl
+		$(ODP_PATH_COMMON)/cix_opensource__release__edk2-platforms/Platform/Radxa/Orion/O6/Drivers/AcpiPlatfomTables/MSFTThermal.asl
 
 	. edk2/edksetup.sh --reconfig && \
 	build \
@@ -71,7 +71,7 @@ PatinaDxeCore_ru:
 # Specific clean to remove remnants from tools that don't have a way to put remnants in the Build directory
 distclean:
 	$(MAKE) -C edk2/BaseTools clean
-	git -C $(ODP_PATH_COMMON)/cix-edk2-platforms checkout -- Platform/Radxa/Orion/O6/Drivers/AcpiPlatfomTables/MSFTThermal.asl 2>/dev/null || true
+	git -C $(ODP_PATH_COMMON)/cix_opensource__release__edk2-platforms checkout -- Platform/Radxa/Orion/O6/Drivers/AcpiPlatfomTables/MSFTThermal.asl 2>/dev/null || true
 
 # Run unit tests on the host
 test:

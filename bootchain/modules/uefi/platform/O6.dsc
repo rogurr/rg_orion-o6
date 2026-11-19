@@ -587,7 +587,7 @@
   GCC:*_*_*_ASLPP_FLAGS           = -DDYNAMIC_ACPI_CPU_ENABLE
   GCC:*_*_*_ASLPP_FLAGS           = -DDYNAMIC_ACPI_CPU_ENABLE
   GCC:*_*_*_ASLPP_FLAGS           = -DLINUX_ACPI_CONFIG_OVERRIDE
-  GCC:*_*_*_ASLPP_FLAGS           = -I$(WORKSPACE)/../../common/cix-edk2-platforms/Platform/Radxa/Orion/O6/Drivers
+  GCC:*_*_*_ASLPP_FLAGS           = -I$(WORKSPACE)/../../../common/cix_opensource__release__edk2-platforms/Platform/Radxa/Orion/O6/Drivers
   GCC:*_*_*_CC_FLAGS              = -DSTMM_SUPPORT
   GCC:*_*_*_VFRPP_FLAGS           = -DFW_CONFIG_UPDATE_SUPPORT=1
 

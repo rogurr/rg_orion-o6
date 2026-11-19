@@ -58,11 +58,11 @@ test:
 	cd $(ODP_PATH_COMMON)/tests/acpi && cargo test
 
 # Apply bootchain-only fixups (e.g. GCC 15.2.rel1 fixes) on top of the
-# upstream Trusted_Execution_Environment and cix-edk2-platforms submodules.
+# upstream Trusted_Execution_Environment and cix_opensource__release__edk2-platforms submodules.
 # Verifies the submodules are at the expected commit before patching.
 patch-submodules:
 	$(CURDIR)/OVERRIDE/op-tee-cix-odp/patch-op-tee-cix-odp.sh
-	$(CURDIR)/OVERRIDE/cix-edk2-platforms/patch-cix-edk2-platforms.sh
+	$(CURDIR)/OVERRIDE/cix_opensource__release__edk2-platforms/patch-cix_opensource__release__edk2-platforms.sh
 
 # Bootchain stitch and packaging targets
 stitch-all: bootloader2 bootloader3
@@ -76,7 +76,7 @@ stitch-all: bootloader2 bootloader3
 pre-built:
 	mkdir -p $(ODP_PATH_BINS_OUTPUT)
 	cp -f $(ODP_PATH_PACKAGE_TOOL)/Firmwares/* $(ODP_PATH_BINS_OUTPUT)/
-	cp -f $(ODP_PATH_COMMON)/cix-edk2-platforms/Platform/Radxa/Orion/O6/Firmwares/* $(ODP_PATH_BINS_OUTPUT)/
+	cp -f $(ODP_PATH_COMMON)/cix_opensource__release__edk2-platforms/Platform/Radxa/Orion/O6/Firmwares/* $(ODP_PATH_BINS_OUTPUT)/
 	head -c 8192 /dev/zero | tr '\000' '\377' > $(ODP_PATH_BINS_OUTPUT)/dummy.bin
 
 bootloader2:

@@ -15,7 +15,8 @@ CIX Sky1 SoC.
 | `platform/` | Platform-specific DSC, FDF, drivers, and Rust modules |
 
 Additional platform packages are referenced from the shared common tree
-(`common/cix-edk2-platforms` and `common/cix-edk2-non-osi`).
+(`common/cix_opensource__release__edk2-platforms` and
+`common/cix_opensource__release__edk2-non-osi`).
 
 ## Build
 

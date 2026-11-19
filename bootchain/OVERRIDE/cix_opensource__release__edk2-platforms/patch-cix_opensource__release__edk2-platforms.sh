@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Verify the cix-edk2-platforms submodule revision and apply its bootchain fixups.
+# Verify the CIX EDK II platforms submodule revision and apply its bootchain fixups.
 #
 # SPDX-License-Identifier: MIT
 #
@@ -9,9 +9,9 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
-PATCH_FILE="$SCRIPT_DIR/cix-edk2-platforms.patch"
+PATCH_FILE="$SCRIPT_DIR/cix_opensource__release__edk2-platforms.patch"
 
-submodule_path=common/cix-edk2-platforms
+submodule_path=common/cix_opensource__release__edk2-platforms
 expected_commit=1a48c6523a3225f3ef01b1c91eb3e3dc0dd1857f
 submodule_dir="$REPO_ROOT/$submodule_path"
 
