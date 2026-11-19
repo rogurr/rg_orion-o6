@@ -18,16 +18,6 @@
 	path = bootchain/modules/tf-a/arm-trusted-firmware-cix-odp
 	url = https://github.com/cixtech/cix_opensource__arm-trusted-firmware.git
 
-# CIX provided version of the EDK II Platforms repository
-[submodule "cix-edk2-platforms"]
-	path = common/cix-edk2-platforms
-	url = https://github.com/cixtech/edk2-platforms.git
-
-# CIX provided version of the Tianocore EDK II NonOSI repository
-[submodule "cix-edk2-non-osi"]
-	path = common/cix-edk2-non-osi
-	url = https://github.com/cixtech/edk2-non-osi.git
-
 # CIX provided version of their packaging tool
 [submodule "cix_package-tool"]
 	path = bootchain/cix_package-tool
@@ -37,3 +27,15 @@
 [submodule "odp-secure-services"]
 	path = bootchain/modules/secure-services/odp-secure-services
 	url = https://github.com/OpenDevicePartnership/odp-secure-services.git
+
+# CIX provided version of the Tianocore EDK II NonOSI repository
+[submodule "cix_opensource__release__edk2-non-osi"]
+	path = common/cix_opensource__release__edk2-non-osi
+	url = https://github.com/cixtech/cix_opensource__release__edk2-non-osi.git
+	branch = cix_p1_dev
+
+# CIX provided version of the EDK II Platforms repository
+[submodule "cix_opensource__release__edk2-platforms"]
+	path = common/cix_opensource__release__edk2-platforms
+	url = https://github.com/cixtech/cix_opensource__release__edk2-platforms.git
+	branch = cix_p1_dev
